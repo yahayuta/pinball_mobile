@@ -6,6 +6,7 @@ import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 
 class DefaultPinballTable extends PinballGame {
   bool _isInitialized = false;
@@ -19,12 +20,12 @@ class DefaultPinballTable extends PinballGame {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     if (!_isInitialized) {
-      _initializeGameElements(size);
+      _initializeGameElements(size, audioManager);
       _isInitialized = true;
     }
   }
 
-  Future<void> _initializeGameElements(Vector2 size) async {
+  Future<void> _initializeGameElements(Vector2 size, AudioManager audioManager) async {
     // Add a platform for the launcher
     await add(
       WallBody(
@@ -42,6 +43,7 @@ class DefaultPinballTable extends PinballGame {
       position: Vector2(size.x * 0.3, size.y * 0.8),
       isLeft: false,
       length: flipperLength,
+      audioManager: audioManager,
     );
     await add(leftFlipper);
 
@@ -49,6 +51,7 @@ class DefaultPinballTable extends PinballGame {
       position: Vector2(size.x * 0.7, size.y * 0.8),
       isLeft: true,
       length: flipperLength,
+      audioManager: audioManager,
     );
     await add(rightFlipper);
 
@@ -134,18 +137,21 @@ class DefaultPinballTable extends PinballGame {
       PopBumper(
         position: Vector2(size.x * 0.3, size.y * 0.3),
         onHit: (ball) => addScore(50, ball.body.position),
+        audioManager: audioManager,
       ),
     );
     await add(
       PopBumper(
         position: Vector2(size.x * 0.5, size.y * 0.2),
         onHit: (ball) => addScore(50, ball.body.position),
+        audioManager: audioManager,
       ),
     );
     await add(
       PopBumper(
         position: Vector2(size.x * 0.7, size.y * 0.3),
         onHit: (ball) => addScore(50, ball.body.position),
+        audioManager: audioManager,
       ),
     );
 
@@ -154,18 +160,21 @@ class DefaultPinballTable extends PinballGame {
       DropTarget(
         position: Vector2(size.x * 0.4, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
+        audioManager: audioManager,
       ),
     );
     await add(
       DropTarget(
         position: Vector2(size.x * 0.5, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
+        audioManager: audioManager,
       ),
     );
     await add(
       DropTarget(
         position: Vector2(size.x * 0.6, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
+        audioManager: audioManager,
       ),
     );
   }

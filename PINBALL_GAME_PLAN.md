@@ -181,7 +181,5 @@ dependencies:
 - Engaging game mechanics
 - Stable performance
 - Bug-free experience
-- Audio (background music and sound effects) is not working on Flutter web due to asset loading issues.
-- Audio playback is currently disabled due to audioplayers issues on Android.
-- Persistent issues with launching the Android emulator, preventing testing on this platform.
-- Could not download new sound assets from the web.
+- Audio playback has been re-enabled and integrated, but requires actual sound assets (e.g., background.mp3, score.mp3, flipper_press.mp3, flipper_release.mp3, bumper.mp3, drop_target.mp3) to be placed in the `assets/audio/` directory.
+- Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)

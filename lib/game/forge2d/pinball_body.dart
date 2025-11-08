@@ -1,6 +1,7 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../components/visual_effects.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 export '../components/target.dart' show PinballTarget;
 
 class PinballBall extends BodyComponent {
@@ -142,6 +143,7 @@ class PinballFlipper extends BodyComponent {
   final bool isLeft;
   final double length;
   final Color color;
+  final AudioManager audioManager;
 
   static const double flipperUpAngle = -0.6; // In radians, ~35 degrees up
   static const double flipperDownAngle = 0.2; // In radians, ~12 degrees down
@@ -154,6 +156,7 @@ class PinballFlipper extends BodyComponent {
     required this.isLeft,
     this.length = 2.0,
     this.color = Colors.purple,
+    required this.audioManager,
   });
 
   @override
@@ -237,9 +240,11 @@ class PinballFlipper extends BodyComponent {
 
   void press() {
     _isPressed = true;
+    audioManager.playSoundEffect('audio/flipper_press.mp3');
   }
 
   void release() {
     _isPressed = false;
+    audioManager.playSoundEffect('audio/flipper_release.mp3');
   }
 }

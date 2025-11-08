@@ -2,6 +2,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/components/visual_effects.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 
 class PopBumper extends BodyComponent with ContactCallbacks {
   @override
@@ -9,6 +10,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   final double radius;
   final Function(PinballBall)? onHit;
   final Color color;
+  final AudioManager audioManager;
 
   bool _isActivated = false;
   double _activationTime = 0.0;
@@ -19,6 +21,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
     this.radius = 1.0,
     this.onHit,
     this.color = Colors.orange,
+    required this.audioManager,
   });
 
   @override
@@ -57,6 +60,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   void activate() {
     _isActivated = true;
     _activationTime = 0.0;
+    audioManager.playSoundEffect('audio/bumper.mp3');
     parent?.add(BumperHitEffect(position: position, color: color));
   }
 

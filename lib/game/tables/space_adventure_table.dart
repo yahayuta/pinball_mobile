@@ -7,6 +7,7 @@ import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 
 class SpaceAdventureTable extends PinballGame {
   bool _isInitialized = false;
@@ -20,12 +21,12 @@ class SpaceAdventureTable extends PinballGame {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     if (!_isInitialized) {
-      _initializeGameElements(size);
+      _initializeGameElements(size, audioManager);
       _isInitialized = true;
     }
   }
 
-  Future<void> _initializeGameElements(Vector2 size) async {
+  Future<void> _initializeGameElements(Vector2 size, AudioManager audioManager) async {
     // Add a platform for the launcher
     await add(
       WallBody(
@@ -45,6 +46,7 @@ class SpaceAdventureTable extends PinballGame {
       isLeft: false,
       length: flipperLength,
       color: Colors.purple,
+      audioManager: audioManager,
     );
     await add(leftFlipper);
 
@@ -53,6 +55,7 @@ class SpaceAdventureTable extends PinballGame {
       isLeft: true,
       length: flipperLength,
       color: Colors.purple,
+      audioManager: audioManager,
     );
     await add(rightFlipper);
 
@@ -144,6 +147,7 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.3, size.y * 0.3),
         onHit: (ball) => addScore(50, ball.body.position),
         color: Colors.cyan,
+        audioManager: audioManager,
       ),
     );
     await add(
@@ -151,6 +155,7 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.5, size.y * 0.2),
         onHit: (ball) => addScore(50, ball.body.position),
         color: Colors.cyan,
+        audioManager: audioManager,
       ),
     );
     await add(
@@ -158,6 +163,7 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.7, size.y * 0.3),
         onHit: (ball) => addScore(50, ball.body.position),
         color: Colors.cyan,
+        audioManager: audioManager,
       ),
     );
 
@@ -167,6 +173,7 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.4, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
         color: Colors.pink,
+        audioManager: audioManager,
       ),
     );
     await add(
@@ -174,6 +181,7 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.5, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
         color: Colors.pink,
+        audioManager: audioManager,
       ),
     );
     await add(
@@ -181,6 +189,7 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.6, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
         color: Colors.pink,
+        audioManager: audioManager,
       ),
     );
   }

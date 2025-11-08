@@ -6,6 +6,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 import 'components/launcher.dart';
 import 'components/visual_effects.dart';
 import 'components/power_up.dart';
@@ -91,6 +92,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   late final Launcher launcher;
 
   late HighScoreManager _highScoreManager;
+  late final AudioManager audioManager;
   final int _highScore = 0;
   int get highScore => _highScore;
 
@@ -127,6 +129,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
 
   void addScore(int points, Vector2 position) {
     score += points * (combo + 1);
+    audioManager.playSoundEffect('audio/score.mp3');
     add(ScorePopup(position: position, score: points, combo: combo));
     if (combo > 0) {
       add(
@@ -186,6 +189,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   void onRemove() {
     _ballSaveTimer?.cancel();
     _powerUpTimer?.cancel();
+    audioManager.dispose();
     super.onRemove();
   }
 
@@ -201,7 +205,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // _initAccelerometer();
+    audioManager = AudioManager();
+    await audioManager.init();
+    audioManager.playBackgroundMusic('audio/background.mp3');
     _initPowerUpTimer();
   }
 
@@ -212,11 +218,13 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
       position: Vector2(size.x * 0.3, size.y * 0.9),
       isLeft: true,
       length: flipperLength,
+      audioManager: audioManager,
     );
     rightFlipper = PinballFlipper(
       position: Vector2(size.x * 0.7, size.y * 0.9),
       isLeft: false,
       length: flipperLength,
+      audioManager: audioManager,
     );
     add(leftFlipper);
     add(rightFlipper);

@@ -1,6 +1,7 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 
 class DropTarget extends BodyComponent with ContactCallbacks {
   @override
@@ -8,6 +9,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
   final Vector2 size;
   final Function(PinballBall)? onHit;
   final Color color;
+  final AudioManager audioManager;
 
   bool _isDown = false;
   late final PrismaticJoint _joint;
@@ -17,6 +19,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     Vector2? size,
     this.onHit,
     this.color = Colors.green,
+    required this.audioManager,
   }) : size = size ?? Vector2(1.0, 2.0);
 
   @override
@@ -67,6 +70,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
 
   void hit() {
     _isDown = true;
+    audioManager.playSoundEffect('audio/drop_target.mp3');
     _joint.motorSpeed = -10.0; // Move down
     Future.delayed(const Duration(seconds: 3), () => reset());
   }
