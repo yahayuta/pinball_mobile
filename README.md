@@ -4,7 +4,7 @@ A realistic pinball machine emulation game built with Flutter and Flame.
 
 ## Project Status
 
-This project is currently in active development. Please see the [PINBALL_ENHANCEMENT_PLAN.md](PINBALL_ENHANCEMENT_PLAN.md) for a detailed breakdown of the project's status and future plans.
+This project is currently in active development. Many core features and enhancements have been implemented. Please see the [PINBALL_ENHANCEMENT_PLAN.md](PINBALL_ENHANCEMENT_PLAN.md) for a detailed breakdown of the project's status and future plans.
 
 ## Features
 
@@ -14,6 +14,8 @@ This project is currently in active development. Please see the [PINBALL_ENHANCE
 *   High score list.
 *   Sound effects and background music.
 *   Settings menu to control audio.
+*   Multiple pinball tables, including a "Space Adventure" themed table.
+*   Table selection feature in the main menu.
 
 ## Getting Started
 
