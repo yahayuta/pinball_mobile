@@ -12,23 +12,16 @@ class PinballHole extends BodyComponent with ContactCallbacks {
     Vector2? exitPosition,
     Vector2? exitVelocity,
   }) : exitPosition = exitPosition ?? Vector2.zero(),
-        exitVelocity = exitVelocity ?? Vector2.zero(),
-        super(
-          bodyDef: BodyDef(
-            position: position,
-            type: BodyType.static,
-          ),
-        );
+       exitVelocity = exitVelocity ?? Vector2.zero(),
+       super(
+         bodyDef: BodyDef(position: position, type: BodyType.static),
+       );
 
   @override
   Body createBody() {
     final shape = CircleShape()..radius = 1.0;
 
-    final fixtureDef = FixtureDef(
-      shape,
-      isSensor: true,
-      userData: this,
-    );
+    final fixtureDef = FixtureDef(shape, isSensor: true, userData: this);
 
     return world.createBody(bodyDef as BodyDef)..createFixture(fixtureDef);
   }

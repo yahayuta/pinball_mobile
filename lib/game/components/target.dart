@@ -25,7 +25,8 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
 
   @override
   Body createBody() {
-    final shape = PolygonShape()..setAsBox(width / 2, height / 2, Vector2.zero(), 0);
+    final shape = PolygonShape()
+      ..setAsBox(width / 2, height / 2, Vector2.zero(), 0);
 
     final fixtureDef = FixtureDef(
       shape,

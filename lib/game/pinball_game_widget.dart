@@ -8,9 +8,6 @@ class PinballGameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      autofocus: true,
-      child: GameWidget(game: game),
-    );
+    return Focus(autofocus: true, child: GameWidget(game: game));
   }
 }

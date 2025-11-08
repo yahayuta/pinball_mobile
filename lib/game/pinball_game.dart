@@ -1,17 +1,11 @@
-import 'package:pinball_mobile/game/forge2d/custom_world.dart';
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui' as ui;
-import 'package:flame/effects.dart';
 import 'package:flame/input.dart';
 import 'package:flame/components.dart' hide Timer;
-import 'package:flame/camera.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
-import 'package:sensors_plus/sensors_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'components/launcher.dart';
 import 'components/visual_effects.dart';
 import 'components/power_up.dart';
@@ -22,12 +16,15 @@ class WallBody extends BodyComponent {
   @override
   final Vector2 position;
   final Vector2 size;
+  @override
   final double angle;
+  final Color color;
 
   WallBody({
     required this.position,
     required this.size,
     this.angle = 0.0,
+    this.color = Colors.grey,
   });
 
   @override
@@ -57,7 +54,7 @@ class WallBody extends BodyComponent {
   @override
   void render(Canvas canvas) {
     final paint = Paint()
-      ..color = Colors.grey.withAlpha((255 * 0.8).toInt())
+      ..color = color.withAlpha((255 * 0.8).toInt())
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
     
@@ -72,12 +69,12 @@ class WallBody extends BodyComponent {
     canvas.drawRect(
       rect.inflate(2),
       paint
-        ..color = Colors.blue.withAlpha((255 * 0.2).toInt())
+        ..color = color.withAlpha((255 * 0.2).toInt())
         ..maskFilter = const MaskFilter.blur(BlurStyle.outer, 3),
     );
 
     // Draw main body
-    canvas.drawRect(rect, paint..color = Colors.grey.withAlpha((255 * 0.8).toInt()));
+    canvas.drawRect(rect, paint..color = color.withAlpha((255 * 0.8).toInt()));
     
     // Draw border
     paint
@@ -88,7 +85,6 @@ class WallBody extends BodyComponent {
 }
 
 class PinballGame extends Forge2DGame with KeyboardEvents {
-  
   final List<PinballBall> balls = [];
   late final PinballFlipper leftFlipper;
   late final PinballFlipper rightFlipper;
@@ -97,7 +93,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   late HighScoreManager _highScoreManager;
   final int _highScore = 0;
   int get highScore => _highScore;
-  
+
   // Scoring
   int score = 0;
   int combo = 0;
@@ -110,7 +106,6 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
 
   int _tiltWarnings = 0;
   bool _tilted = false;
-  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
   Timer? _powerUpTimer;
 
@@ -122,10 +117,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     final remaining = _ballSaveEndTime!.difference(DateTime.now());
     return remaining.isNegative ? 0 : remaining.inSeconds.toDouble();
   }
+
   int get tiltWarnings => _tiltWarnings;
   bool get isTilted => _tilted;
-
-
 
   PinballGame() : super(gravity: Vector2(0, 10.0)) {
     debugMode = true;
@@ -133,19 +127,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
 
   void addScore(int points, Vector2 position) {
     score += points * (combo + 1);
-    add(ScorePopup(
-      position: position,
-      score: points,
-      combo: combo,
-    ));
+    add(ScorePopup(position: position, score: points, combo: combo));
     if (combo > 0) {
-      add(ComboEffect(
-        position: Vector2(size.x / 2, size.y / 4),  // Top center of the screen
-        combo: combo,
-      ));
+      add(
+        ComboEffect(
+          position: Vector2(size.x / 2, size.y / 4), // Top center of the screen
+          combo: combo,
+        ),
+      );
     }
   }
-  
+
   void onBallLost(PinballBall ball) {
     balls.remove(ball);
     remove(ball);
@@ -193,12 +185,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   @override
   void onRemove() {
     _ballSaveTimer?.cancel();
-    _accelerometerSubscription?.cancel();
     _powerUpTimer?.cancel();
     super.onRemove();
   }
-
-
 
   @override
   void onGameResize(Vector2 size) {
@@ -208,8 +197,6 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     camera.viewfinder.zoom = 10.0;
     initGameElements();
   }
-
-
 
   @override
   Future<void> onLoad() async {
@@ -221,8 +208,16 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   Future<void> initGameElements() async {
     // Initialize flippers
     final flipperLength = size.x / 8;
-    leftFlipper = PinballFlipper(position: Vector2(size.x * 0.3, size.y * 0.9), isLeft: true, length: flipperLength);
-    rightFlipper = PinballFlipper(position: Vector2(size.x * 0.7, size.y * 0.9), isLeft: false, length: flipperLength);
+    leftFlipper = PinballFlipper(
+      position: Vector2(size.x * 0.3, size.y * 0.9),
+      isLeft: true,
+      length: flipperLength,
+    );
+    rightFlipper = PinballFlipper(
+      position: Vector2(size.x * 0.7, size.y * 0.9),
+      isLeft: false,
+      length: flipperLength,
+    );
     add(leftFlipper);
     add(rightFlipper);
 
@@ -231,45 +226,29 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     add(launcher);
 
     // Add walls
-    add(WallBody(position: Vector2(size.x / 2, 0), size: Vector2(size.x, 1))); // Top wall
-    add(WallBody(position: Vector2(size.x / 2, size.y), size: Vector2(size.x, 1))); // Bottom wall
-    add(WallBody(position: Vector2(0, size.y / 2), size: Vector2(1, size.y))); // Left wall
-    add(WallBody(position: Vector2(size.x, size.y / 2), size: Vector2(1, size.y))); // Right wall
+    add(
+      WallBody(position: Vector2(size.x / 2, 0), size: Vector2(size.x, 1)),
+    ); // Top wall
+    add(
+      WallBody(position: Vector2(size.x / 2, size.y), size: Vector2(size.x, 1)),
+    ); // Bottom wall
+    add(
+      WallBody(position: Vector2(0, size.y / 2), size: Vector2(1, size.y)),
+    ); // Left wall
+    add(
+      WallBody(position: Vector2(size.x, size.y / 2), size: Vector2(1, size.y)),
+    ); // Right wall
 
     // Spawn initial ball
     spawnBall();
 
     // Add a test text component
-    add(TextComponent(text: 'Hello Pinball!', position: Vector2(size.x / 2, size.y / 2), anchor: Anchor.center));
-  }
-
-  // void _initAccelerometer() {
-  //   _accelerometerSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {
-  //     if (_tilted) {
-  //       return;
-  //     }
-  //     final acceleration = Vector2(event.x, event.y);
-  //     if (acceleration.length > 20) {
-  //       _tiltWarnings++;
-  //       _shakeCamera(2);
-  //       if (_tiltWarnings > 2) {
-  //         _tilted = true;
-  //         // Disable flippers
-  //         leftFlipper.body.setAwake(false);
-  //         rightFlipper.body.setAwake(false);
-  //       }
-  //     } else if (acceleration.length > 15) {
-  //       _shakeCamera(0.5);
-  //     }
-  //   });
-  // }
-
-  void _shakeCamera(double intensity) {
-    camera.viewfinder.add(
-      SequenceEffect([
-        MoveByEffect(Vector2(intensity, intensity), EffectController(duration: 0.05)),
-        MoveByEffect(Vector2(-intensity, -intensity), EffectController(duration: 0.05)),
-      ])
+    add(
+      TextComponent(
+        text: 'Hello Pinball!',
+        position: Vector2(size.x / 2, size.y / 2),
+        anchor: Anchor.center,
+      ),
     );
   }
 
@@ -289,7 +268,10 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   }
 
   @override
-  KeyEventResult onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(
+    KeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
     if (_tilted) {
       return KeyEventResult.ignored;
     }

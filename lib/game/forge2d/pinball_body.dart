@@ -1,15 +1,12 @@
-import 'package:forge2d/forge2d.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../components/visual_effects.dart';
-export '../components/target.dart' show PinballTarget;class PinballBall extends BodyComponent {
-  @override
-  void update(double dt) {
-    super.update(dt);
-  }
+export '../components/target.dart' show PinballTarget;
+
+class PinballBall extends BodyComponent {
   final Vector2 initialPosition;
   final double radius;
-  
+
   PinballBall({
     required this.initialPosition,
     this.radius = 0.5, // 10 pixels in game scale = 0.5 meters in physics scale
@@ -19,7 +16,7 @@ export '../components/target.dart' show PinballTarget;class PinballBall extends 
   Body createBody() {
     // Create a circular fixture
     final shape = CircleShape()..radius = radius;
-    
+
     // Define the body characteristics
     final fixtureDef = FixtureDef(
       shape,
@@ -45,7 +42,7 @@ export '../components/target.dart' show PinballTarget;class PinballBall extends 
       ..color = Colors.red
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
-    
+
     // Draw filled circle with border
     canvas.drawCircle(Offset.zero, radius, paint);
     paint.style = PaintingStyle.stroke;
@@ -59,6 +56,7 @@ class PinballBumper extends BodyComponent {
   final Vector2 position;
   final double radius;
   final Function(PinballBall)? onHit;
+  final Color color;
   bool _isActivated = false;
   double _activationTime = 0.0;
   static const _activationDuration = 0.15; // seconds
@@ -67,12 +65,13 @@ class PinballBumper extends BodyComponent {
     required this.position,
     this.radius = 1.0,
     this.onHit,
+    this.color = Colors.blue,
   });
 
   @override
   Body createBody() {
     final shape = CircleShape()..radius = radius;
-    
+
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
@@ -93,10 +92,7 @@ class PinballBumper extends BodyComponent {
   void activate() {
     _isActivated = true;
     _activationTime = 0.0;
-    parent?.add(BumperHitEffect(
-      position: position,
-      color: Colors.blue,
-    ));
+    parent?.add(BumperHitEffect(position: position, color: color));
   }
 
   @override
@@ -112,26 +108,26 @@ class PinballBumper extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    final color = _isActivated ? Colors.yellow : Colors.blue;
+    final renderColor = _isActivated ? Colors.yellow : color;
     final glowRadius = _isActivated ? radius * 1.2 : radius;
-    
+
     // Draw glow effect when activated
     if (_isActivated) {
       canvas.drawCircle(
         Offset.zero,
         glowRadius,
         Paint()
-          ..color = color.withAlpha((255 * 0.3).toInt())
+          ..color = renderColor.withAlpha((255 * 0.3).toInt())
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
       );
     }
 
     // Draw main bumper body
     final paint = Paint()
-      ..color = color
+      ..color = renderColor
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
-    
+
     // Draw filled circle with border
     canvas.drawCircle(Offset.zero, radius, paint);
     paint.style = PaintingStyle.stroke;
@@ -145,17 +141,19 @@ class PinballFlipper extends BodyComponent {
   final Vector2 position;
   final bool isLeft;
   final double length;
+  final Color color;
 
   static const double flipperUpAngle = -0.6; // In radians, ~35 degrees up
   static const double flipperDownAngle = 0.2; // In radians, ~12 degrees down
   bool _isPressed = false;
-  
+
   late final RevoluteJoint _joint;
 
   PinballFlipper({
     required this.position,
     required this.isLeft,
     this.length = 2.0,
+    this.color = Colors.purple,
   });
 
   @override
@@ -182,7 +180,6 @@ class PinballFlipper extends BodyComponent {
     );
 
     final flipperBody = world.createBody(bodyDef)..createFixture(fixtureDef);
-    print('Flipper body created at: ${flipperBody.position}, mass: ${flipperBody.mass}');
 
     final anchorBody = world.createBody(BodyDef(position: position));
 
@@ -222,10 +219,10 @@ class PinballFlipper extends BodyComponent {
   @override
   void render(Canvas canvas) {
     final paint = Paint()
-      ..color = Colors.purple
+      ..color = color
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
-    
+
     // Draw filled rectangle with border
     final rect = Rect.fromCenter(
       center: Offset(isLeft ? -length / 2 : length / 2, 0),

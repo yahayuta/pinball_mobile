@@ -77,8 +77,8 @@ The following is a proposed order for implementing the enhancements:
 1.  **Phase 1 (Core Gameplay):**
     -   [x] Refine existing components (flippers, launcher).
     -   [x] Implement pop bumpers and drop targets.
-    -   [ ] Expand the combo and multiplier system.
-    -   [ ] Improve the HUD.
+    -   [x] Expand the combo and multiplier system.
+    -   [x] Improve the HUD.
 
 2.  **Phase 2 (Visuals & Audio):**
     -   Create a new themed table ("Space Adventure").

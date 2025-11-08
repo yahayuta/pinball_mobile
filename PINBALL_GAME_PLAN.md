@@ -26,11 +26,11 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Flippers (left and right): **Implemented**
 - Bumpers: **Implemented**
 - Targets: **Implemented**
-- Ramps: Implemented
-- Holes: Implemented
-- Spinners: Implemented
-- Multi-ball system: Refining
-- Ball save mechanism: Refining
+- Ramps: **Implemented**
+- Holes: **Implemented**
+- Spinners: **Implemented**
+- Multi-ball system: **Implemented**
+- Ball save mechanism: **Implemented**
 
 ### 3.3 Game Features
 - High score system: **Implemented**
@@ -38,7 +38,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Sound effects and background music: **Implemented**
 - Visual effects and animations: **Implemented (score popups, combo effects, bumper hit effects)**
 - Tilt mechanism: Refining
-- Power-ups and special events: Implemented
+- Power-ups and special events: **Implemented**
 
 ### 3.4 UI/UX Elements
 - Main menu: **Implemented**
@@ -57,13 +57,15 @@ The project aims to create a realistic pinball machine emulation game using Flut
 ### Phase 2: Core Mechanics (Completed)
 - Implemented basic ball physics, flipper mechanics, spring launcher, basic collision detection, and score tracking system using `flame_forge2d` with a combo system.
 
-### Phase 3: Pinball Elements (Partially Completed)
-- Implemented bumpers and targets. Ramps, holes, and spinners are partially implemented. Multi-ball and ball save are being refined.
+### Phase 3: Pinball Elements (Completed)
+- Implemented bumpers, targets, ramps, holes, and spinners.
+- Implemented multi-ball and ball save mechanisms.
 
-### Phase 4: Game Features (Partially Completed)
+### Phase 4: Game Features (Completed)
 - Basic visual effects and animations implemented, including score popups and combo effects.
 - High score system implemented.
 - Sound effects and background music implemented.
+- Power-ups and special events implemented.
 
 ### Phase 5: UI/UX Development (Completed)
 - Game HUD, Main menu, Settings menu, High score board, Sound controls and Tutorial/Help screen implemented.
@@ -162,11 +164,9 @@ dependencies:
 
 ## 11. Next Steps
 - **Refine Implemented Features:**
-    - Refine Multi-ball system.
-    - Refine Ball save mechanism.
     - Refine Tilt mechanism.
 - **Implement Missing Game Features:**
-    - Power-ups and special events.
+    - Multiple game modes.
 - **Polish and Testing:**
     - Code cleanup and refactoring.
     - Comprehensive testing.

@@ -6,18 +6,13 @@ class PinballRamp extends BodyComponent with ContactCallbacks {
   final List<Vector2> vertices;
   final List<Body> _ballsInside = [];
 
-  PinballRamp({
-    required this.vertices,
-  });
+  PinballRamp({required this.vertices});
 
   @override
   Body createBody() {
     final shape = ChainShape()..createChain(vertices);
 
-    final fixtureDef = FixtureDef(
-      shape,
-      isSensor: true,
-    );
+    final fixtureDef = FixtureDef(shape, isSensor: true);
 
     final bodyDef = BodyDef(
       position: Vector2.zero(),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -15,32 +14,27 @@ class Launcher extends BodyComponent with ContactCallbacks {
   final List<Body> _ballsToLaunch = [];
   final Map<Body, Timer> _removalTimers = {};
 
-  Launcher({
-    required this.position,
-    this.maxCharge = 1.5,
-  });
+  Launcher({required this.position, this.maxCharge = 1.5});
 
   @override
   Body createBody() {
-    final shape = PolygonShape()..setAsBox(
-      1.0,  // 2m wide = 40px
-      3.0,  // 6m tall = 120px
-      Vector2.zero(),
-      0,
-    );
-    
+    final shape = PolygonShape()
+      ..setAsBox(
+        1.0, // 2m wide = 40px
+        3.0, // 6m tall = 120px
+        Vector2.zero(),
+        0,
+      );
+
     final fixtureDef = FixtureDef(
       shape,
       friction: 0.3,
       restitution: 0.0,
-      isSensor: true,  // Don't collide with other objects
+      isSensor: true, // Don't collide with other objects
       userData: this,
     );
 
-    final bodyDef = BodyDef(
-      position: position,
-      type: BodyType.static,
-    );
+    final bodyDef = BodyDef(position: position, type: BodyType.static);
 
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }
@@ -87,8 +81,8 @@ class Launcher extends BodyComponent with ContactCallbacks {
     // Draw launcher background with border
     final rect = Rect.fromCenter(
       center: Offset.zero,
-      width: 2.0,   // 2m wide
-      height: 6.0,  // 6m tall
+      width: 2.0, // 2m wide
+      height: 6.0, // 6m tall
     );
     canvas.drawRect(rect, paint);
     paint.style = PaintingStyle.stroke;
@@ -99,16 +93,19 @@ class Launcher extends BodyComponent with ContactCallbacks {
     if (charge > 0) {
       final barHeight = (charge / maxCharge).clamp(0.0, 1.0) * 5.8;
       final barRect = Rect.fromLTRB(
-        -0.9,               // Left (m)
-        2.9 - barHeight,    // Top (m)
-        0.9,                // Right (m)
-        2.9,                // Bottom (m)
+        -0.9, // Left (m)
+        2.9 - barHeight, // Top (m)
+        0.9, // Right (m)
+        2.9, // Bottom (m)
       );
       canvas.drawRect(barRect, _paint..style = PaintingStyle.fill);
-      canvas.drawRect(barRect, Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0);
+      canvas.drawRect(
+        barRect,
+        Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0,
+      );
     }
   }
 
@@ -134,4 +131,3 @@ class Launcher extends BodyComponent with ContactCallbacks {
     }
   }
 }
-

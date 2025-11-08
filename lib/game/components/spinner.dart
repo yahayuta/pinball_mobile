@@ -13,21 +13,13 @@ class PinballSpinner extends BodyComponent with ContactCallbacks {
     this.height = 5.0,
     required this.onSpin,
   }) : super(
-          bodyDef: BodyDef(
-            position: position,
-            type: BodyType.dynamic,
-          ),
-        );
+         bodyDef: BodyDef(position: position, type: BodyType.dynamic),
+       );
 
   @override
   Body createBody() {
     final shape = PolygonShape()
-      ..setAsBox(
-        width / 2,
-        height / 2,
-        Vector2.zero(),
-        0,
-      );
+      ..setAsBox(width / 2, height / 2, Vector2.zero(), 0);
 
     final fixtureDef = FixtureDef(
       shape,
@@ -37,15 +29,12 @@ class PinballSpinner extends BodyComponent with ContactCallbacks {
       userData: this,
     );
 
-    final body = world.createBody(bodyDef as BodyDef)..createFixture(fixtureDef);
+    final body = world.createBody(bodyDef as BodyDef)
+      ..createFixture(fixtureDef);
 
     final staticBody = world.createBody(BodyDef());
     final RevoluteJointDef<Body, Body> revoluteJointDef = RevoluteJointDef()
-      ..initialize(
-        staticBody,
-        body,
-        body.position,
-      );
+      ..initialize(staticBody, body, body.position);
     world.createJoint(RevoluteJoint(revoluteJointDef));
 
     return body;

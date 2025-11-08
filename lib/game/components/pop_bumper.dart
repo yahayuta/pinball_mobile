@@ -4,9 +4,11 @@ import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/components/visual_effects.dart';
 
 class PopBumper extends BodyComponent with ContactCallbacks {
+  @override
   final Vector2 position;
   final double radius;
   final Function(PinballBall)? onHit;
+  final Color color;
 
   bool _isActivated = false;
   double _activationTime = 0.0;
@@ -16,6 +18,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
     required this.position,
     this.radius = 1.0,
     this.onHit,
+    this.color = Colors.orange,
   });
 
   @override
@@ -44,7 +47,8 @@ class PopBumper extends BodyComponent with ContactCallbacks {
     if (other is PinballBall) {
       activate();
       // Apply impulse to the ball
-      final impulseDirection = (other.body.position - body.position)..normalize();
+      final impulseDirection = (other.body.position - body.position)
+        ..normalize();
       other.body.applyLinearImpulse(impulseDirection * 5000);
       onHit?.call(other);
     }
@@ -53,10 +57,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   void activate() {
     _isActivated = true;
     _activationTime = 0.0;
-    parent?.add(BumperHitEffect(
-      position: position,
-      color: Colors.orange,
-    ));
+    parent?.add(BumperHitEffect(position: position, color: color));
   }
 
   @override
@@ -72,7 +73,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
 
   @override
   void render(Canvas canvas) {
-    final color = _isActivated ? Colors.yellow : Colors.orange;
+    final renderColor = _isActivated ? Colors.yellow : color;
     final glowRadius = _isActivated ? radius * 1.2 : radius;
 
     // Draw glow effect when activated
@@ -81,14 +82,14 @@ class PopBumper extends BodyComponent with ContactCallbacks {
         Offset.zero,
         glowRadius,
         Paint()
-          ..color = color.withAlpha((255 * 0.3).toInt())
+          ..color = renderColor.withAlpha((255 * 0.3).toInt())
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
       );
     }
 
     // Draw main bumper body
     final paint = Paint()
-      ..color = color
+      ..color = renderColor
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
 

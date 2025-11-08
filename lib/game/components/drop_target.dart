@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 
 class DropTarget extends BodyComponent with ContactCallbacks {
+  @override
   final Vector2 position;
   final Vector2 size;
   final Function(PinballBall)? onHit;
+  final Color color;
 
   bool _isDown = false;
   late final PrismaticJoint _joint;
@@ -14,7 +16,8 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     required this.position,
     Vector2? size,
     this.onHit,
-  }) : this.size = size ?? Vector2(1.0, 2.0);
+    this.color = Colors.green,
+  }) : size = size ?? Vector2(1.0, 2.0);
 
   @override
   Body createBody() {
@@ -75,10 +78,10 @@ class DropTarget extends BodyComponent with ContactCallbacks {
 
   @override
   void render(Canvas canvas) {
-    final color = _isDown ? Colors.grey : Colors.green;
+    final renderColor = _isDown ? Colors.grey : color;
 
     final paint = Paint()
-      ..color = color
+      ..color = renderColor
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
 

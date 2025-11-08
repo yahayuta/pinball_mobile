@@ -16,92 +16,113 @@ class DefaultPinballTable extends PinballGame {
   }
 
   @override
-  void onGameResize(Vector2 gameSize) {
-    super.onGameResize(gameSize);
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
     if (!_isInitialized) {
-      _initializeGameElements(gameSize);
+      _initializeGameElements(size);
       _isInitialized = true;
     }
   }
 
-  Future<void> _initializeGameElements(Vector2 gameSize) async {
+  Future<void> _initializeGameElements(Vector2 size) async {
     // Add a platform for the launcher
-    await add(WallBody(
-      position: Vector2(gameSize.x * 0.9, gameSize.y * 0.8 + 3.0),
-      size: Vector2(2.0, 0.5),
-    ));
+    await add(
+      WallBody(
+        position: Vector2(size.x * 0.9, size.y * 0.8 + 3.0),
+        size: Vector2(2.0, 0.5),
+      ),
+    );
 
     // Add initial ball, positioned just above the launcher platform
-    spawnBall(position: Vector2(gameSize.x * 0.9, gameSize.y * 0.8));
+    spawnBall(position: Vector2(size.x * 0.9, size.y * 0.8));
 
     // Add flippers
-    final flipperLength = gameSize.x / 15;
+    final flipperLength = size.x / 15;
     leftFlipper = PinballFlipper(
-      position: Vector2(gameSize.x * 0.3, gameSize.y * 0.8),
+      position: Vector2(size.x * 0.3, size.y * 0.8),
       isLeft: false,
       length: flipperLength,
     );
     await add(leftFlipper);
 
     rightFlipper = PinballFlipper(
-      position: Vector2(gameSize.x * 0.7, gameSize.y * 0.8),
+      position: Vector2(size.x * 0.7, size.y * 0.8),
       isLeft: true,
       length: flipperLength,
     );
     await add(rightFlipper);
 
     // Add launcher sensor
-    launcher = Launcher(position: Vector2(gameSize.x * 0.9, gameSize.y * 0.8));
+    launcher = Launcher(position: Vector2(size.x * 0.9, size.y * 0.8));
     await add(launcher);
 
     // Add walls
-    final wallThickness = gameSize.x * 0.025;
-    await add(WallBody(
-      position: Vector2(gameSize.x / 2, 0),
-      size: Vector2(gameSize.x, wallThickness),
-    ));
+    final wallThickness = size.x * 0.025;
+    await add(
+      WallBody(
+        position: Vector2(size.x / 2, 0),
+        size: Vector2(size.x, wallThickness),
+      ),
+    );
 
-    await add(WallBody(
-      position: Vector2(gameSize.x / 2, gameSize.y),
-      size: Vector2(gameSize.x, wallThickness),
-    ));
+    await add(
+      WallBody(
+        position: Vector2(size.x / 2, size.y),
+        size: Vector2(size.x, wallThickness),
+      ),
+    );
 
-    await add(WallBody(
-      position: Vector2(0, gameSize.y / 2),
-      size: Vector2(wallThickness, gameSize.y),
-    ));
+    await add(
+      WallBody(
+        position: Vector2(0, size.y / 2),
+        size: Vector2(wallThickness, size.y),
+      ),
+    );
 
     // Right wall - split to create launch lane opening
-    await add(WallBody(
-      position: Vector2(gameSize.x, gameSize.y * 0.25),
-      size: Vector2(wallThickness, gameSize.y * 0.5),
-    ));
-    await add(WallBody(
-      position: Vector2(gameSize.x, gameSize.y * 0.9),
-      size: Vector2(wallThickness, gameSize.y * 0.2),
-    ));
+    await add(
+      WallBody(
+        position: Vector2(size.x, size.y * 0.25),
+        size: Vector2(wallThickness, size.y * 0.5),
+      ),
+    );
+    await add(
+      WallBody(
+        position: Vector2(size.x, size.y * 0.9),
+        size: Vector2(wallThickness, size.y * 0.2),
+      ),
+    );
 
     // The ramp for the ball to exit the launch lane.
     final rampVertices = [
-      Vector2(gameSize.x * 0.85, gameSize.y * 0.3), // Start point of the ramp, lower on the right
-      Vector2(gameSize.x * 0.5, gameSize.y * 0.5),  // End point of the ramp, higher on the left
+      Vector2(
+        size.x * 0.85,
+        size.y * 0.3,
+      ), // Start point of the ramp, lower on the right
+      Vector2(
+        size.x * 0.5,
+        size.y * 0.5,
+      ), // End point of the ramp, higher on the left
     ];
     await add(GuideWall(rampVertices));
 
     // The wall on the left of the launch lane.
     final launchLaneWallVertices = [
-      Vector2(gameSize.x * 0.85, gameSize.y),      // Straight wall down to the bottom
-      Vector2(gameSize.x * 0.85, gameSize.y * 0.5), // Wall stops here to leave an opening
+      Vector2(size.x * 0.85, size.y), // Straight wall down to the bottom
+      Vector2(
+        size.x * 0.85,
+        size.y * 0.5,
+      ), // Wall stops here to leave an opening
     ];
     await add(GuideWall(launchLaneWallVertices));
 
     // Add a multi-ball target
     await add(
       PinballTarget(
-        position: Vector2(gameSize.x * 0.75, gameSize.y * 0.33),
+        position: Vector2(size.x * 0.75, size.y * 0.33),
         hitsToTrigger: 3,
         onHit: (ball) {
-          addScore(1000, Vector2(gameSize.x * 0.75, gameSize.y * 0.33));
+          addScore(1000, Vector2(size.x * 0.75, size.y * 0.33));
           spawnBall();
           spawnBall();
         },
@@ -109,31 +130,43 @@ class DefaultPinballTable extends PinballGame {
     );
 
     // Add Pop Bumpers
-    await add(PopBumper(
-      position: Vector2(gameSize.x * 0.3, gameSize.y * 0.3),
-      onHit: (ball) => addScore(50, ball.body.position),
-    ));
-    await add(PopBumper(
-      position: Vector2(gameSize.x * 0.5, gameSize.y * 0.2),
-      onHit: (ball) => addScore(50, ball.body.position),
-    ));
-    await add(PopBumper(
-      position: Vector2(gameSize.x * 0.7, gameSize.y * 0.3),
-      onHit: (ball) => addScore(50, ball.body.position),
-    ));
+    await add(
+      PopBumper(
+        position: Vector2(size.x * 0.3, size.y * 0.3),
+        onHit: (ball) => addScore(50, ball.body.position),
+      ),
+    );
+    await add(
+      PopBumper(
+        position: Vector2(size.x * 0.5, size.y * 0.2),
+        onHit: (ball) => addScore(50, ball.body.position),
+      ),
+    );
+    await add(
+      PopBumper(
+        position: Vector2(size.x * 0.7, size.y * 0.3),
+        onHit: (ball) => addScore(50, ball.body.position),
+      ),
+    );
 
     // Add Drop Targets
-    await add(DropTarget(
-      position: Vector2(gameSize.x * 0.4, gameSize.y * 0.5),
-      onHit: (ball) => addScore(100, ball.body.position),
-    ));
-    await add(DropTarget(
-      position: Vector2(gameSize.x * 0.5, gameSize.y * 0.5),
-      onHit: (ball) => addScore(100, ball.body.position),
-    ));
-    await add(DropTarget(
-      position: Vector2(gameSize.x * 0.6, gameSize.y * 0.5),
-      onHit: (ball) => addScore(100, ball.body.position),
-    ));
+    await add(
+      DropTarget(
+        position: Vector2(size.x * 0.4, size.y * 0.5),
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
+    );
+    await add(
+      DropTarget(
+        position: Vector2(size.x * 0.5, size.y * 0.5),
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
+    );
+    await add(
+      DropTarget(
+        position: Vector2(size.x * 0.6, size.y * 0.5),
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
+    );
   }
 }

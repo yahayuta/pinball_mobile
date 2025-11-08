@@ -9,7 +9,8 @@ import 'package:pinball_mobile/menu/multiplayer_screen.dart';
 import 'package:pinball_mobile/menu/table_editor_screen.dart';
 import 'package:pinball_mobile/menu/achievements_screen.dart';
 import 'package:pinball_mobile/menu/social_screen.dart';
-import 'package:pinball_mobile/game/tables/default_pinball_table.dart';
+import 'package:pinball_mobile/game/pinball_game.dart';
+import 'package:pinball_mobile/menu/table_selection_screen.dart';
 import 'package:provider/provider.dart';
 
 class MainMenu extends StatelessWidget {
@@ -41,11 +42,11 @@ class MainMenu extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const GameScreen(),
+                          builder: (context) => const TableSelectionScreen(),
                         ),
                       );
                     },
-                    child: const Text('Start Game'),
+                    child: const Text('Select Table'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -146,22 +147,18 @@ class MainMenu extends StatelessWidget {
 }
 
 class GameScreen extends StatelessWidget {
-  const GameScreen({super.key});
+  final PinballGame game;
+  const GameScreen({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
-    final game = DefaultPinballTable();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GameProvider>(context, listen: false).setGame(game);
     });
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          PinballGameWidget(game: game),
-        ],
-      ),
+      body: Stack(children: [PinballGameWidget(game: game)]),
     );
   }
 }

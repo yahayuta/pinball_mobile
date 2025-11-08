@@ -1,4 +1,3 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -7,25 +6,16 @@ import 'package:pinball_mobile/game/pinball_game.dart';
 class ScorePowerUp extends BodyComponent with ContactCallbacks {
   final int score;
 
-  ScorePowerUp({
-    required Vector2 position,
-    this.score = 1000,
-  }) : super(
-          bodyDef: BodyDef(
-            position: position,
-            type: BodyType.static,
-          ),
-        );
+  ScorePowerUp({required Vector2 position, this.score = 1000})
+    : super(
+        bodyDef: BodyDef(position: position, type: BodyType.static),
+      );
 
   @override
   Body createBody() {
     final shape = CircleShape()..radius = 1.0;
 
-    final fixtureDef = FixtureDef(
-      shape,
-      isSensor: true,
-      userData: this,
-    );
+    final fixtureDef = FixtureDef(shape, isSensor: true, userData: this);
 
     return world.createBody(bodyDef as BodyDef)..createFixture(fixtureDef);
   }
@@ -49,24 +39,16 @@ class ScorePowerUp extends BodyComponent with ContactCallbacks {
 }
 
 class MultiBallPowerUp extends BodyComponent with ContactCallbacks {
-  MultiBallPowerUp({
-    required Vector2 position,
-  }) : super(
-          bodyDef: BodyDef(
-            position: position,
-            type: BodyType.static,
-          ),
-        );
+  MultiBallPowerUp({required Vector2 position})
+    : super(
+        bodyDef: BodyDef(position: position, type: BodyType.static),
+      );
 
   @override
   Body createBody() {
     final shape = CircleShape()..radius = 1.0;
 
-    final fixtureDef = FixtureDef(
-      shape,
-      isSensor: true,
-      userData: this,
-    );
+    final fixtureDef = FixtureDef(shape, isSensor: true, userData: this);
 
     return world.createBody(bodyDef as BodyDef)..createFixture(fixtureDef);
   }
@@ -91,24 +73,16 @@ class MultiBallPowerUp extends BodyComponent with ContactCallbacks {
 }
 
 class BallSavePowerUp extends BodyComponent with ContactCallbacks {
-  BallSavePowerUp({
-    required Vector2 position,
-  }) : super(
-          bodyDef: BodyDef(
-            position: position,
-            type: BodyType.static,
-          ),
-        );
+  BallSavePowerUp({required Vector2 position})
+    : super(
+        bodyDef: BodyDef(position: position, type: BodyType.static),
+      );
 
   @override
   Body createBody() {
     final shape = CircleShape()..radius = 1.0;
 
-    final fixtureDef = FixtureDef(
-      shape,
-      isSensor: true,
-      userData: this,
-    );
+    final fixtureDef = FixtureDef(shape, isSensor: true, userData: this);
 
     return world.createBody(bodyDef as BodyDef)..createFixture(fixtureDef);
   }
