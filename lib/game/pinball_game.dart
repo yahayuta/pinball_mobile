@@ -297,6 +297,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     }
     if (event is KeyDownEvent) {
       return _handleKeyDown(event.logicalKey);
+    } else if (event is KeyUpEvent) {
+      return _handleKeyUp(event.logicalKey);
     }
     return KeyEventResult.ignored;
   }
