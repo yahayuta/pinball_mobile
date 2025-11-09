@@ -6,6 +6,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/foundation.dart'; // For @visibleForTesting
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui'; // Added
 import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
 import 'package:pinball_mobile/game/components/target.dart';
@@ -385,6 +386,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     if (balls.isNotEmpty) {
       final targetPosition = balls.first.position;
       camera.viewfinder.position = targetPosition;
+
+      // Dynamic zoom based on ball speed
+      const double minZoom = 8.0;
+      const double maxZoom = 12.0;
+      const double minSpeed = 10.0;
+      const double maxSpeed = 100.0;
+
+      final ballSpeed = balls.first.body.linearVelocity.length;
+      final zoomFactor = (ballSpeed - minSpeed) / (maxSpeed - minSpeed);
+      final newZoom = lerpDouble(maxZoom, minZoom, zoomFactor.clamp(0.0, 1.0))!;
+      camera.viewfinder.zoom = newZoom;
     }
 
     // Workaround for spacebar KeyUp not being registered on web
