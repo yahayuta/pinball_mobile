@@ -119,6 +119,5 @@ This section outlines a plan for making the game feel more like a real pinball m
 - **Storytelling:** Use the modes and the DMD to tell a simple story that unfolds as the player progresses through the game.
 
 ### 8.4. Realistic Physics and Audio
-- **Ball Spin and Friction (In Progress):** The ball's bounciness (restitution) has been increased to 1.0 for a more lively feel. The launcher's impulse force has also been significantly increased to provide a harder and stronger launch. Further improvements to ball spin and friction modeling are planned.
-- **Mechanical Sounds:** Add more realistic and varied sound effects for the mechanical components of the pinball machine, such as the sound of the flippers activating, the bumpers firing, and the ball rolling on the playfield.
-- **Immersive Voice Callouts:** Expand the voice callouts to provide more feedback to the player, guide them through the game's modes, and announce important events with more excitement.
+- **Ball Spin and Friction (Implemented):** The ball's bounciness (restitution) and friction have been fine-tuned for more realistic interactions. Ball spin visualization has also been implemented to provide a visual cue for the ball's angular velocity.
+- **Mechanical Sounds (Implemented):** Dynamic volume and pitch adjustments have been implemented for sound effects based on impact force. Sound variations for repetitive events (e.g., bumper hits) have been added, and basic spatialization (left/right panning) has been implemented to enhance immersion.
