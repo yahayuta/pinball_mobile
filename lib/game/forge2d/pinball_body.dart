@@ -22,8 +22,8 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 1.0, // Max bounciness for real-world feel
-      friction: 0.0,    // No friction for real-world feel
+      restitution: 0.4, // Less bouncy
+      friction: 0.1,    // A little friction
     );
 
     // Create the body definition
@@ -171,9 +171,9 @@ class PinballFlipper extends BodyComponent {
 
     final fixtureDef = FixtureDef(
       shape,
-      density: 1.0,
+      density: 10.0,
       restitution: 0.2,
-      friction: 0.3,
+      friction: 0.6,
     );
 
     final bodyDef = BodyDef(
