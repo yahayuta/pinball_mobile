@@ -20,7 +20,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     this.onHit,
     this.color = Colors.green,
     required this.audioManager,
-  }) : size = size ?? Vector2(1.0, 2.0);
+  }) : size = size ?? Vector2(2.0, 4.0);
 
   @override
   Body createBody() {

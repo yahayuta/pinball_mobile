@@ -1,9 +1,3 @@
-import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/material.dart';
-import '../components/visual_effects.dart';
-import 'package:pinball_mobile/game/audio_manager.dart';
-export '../components/target.dart' show PinballTarget;
-
 class PinballBall extends BodyComponent {
   final Vector2 initialPosition;
   final double radius;
@@ -22,8 +16,8 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 0.8,
-      friction: 0.4,
+      restitution: 1.0, // Max bounciness for real-world feel
+      friction: 0.0,    // No friction for real-world feel
     );
 
     // Create the body definition

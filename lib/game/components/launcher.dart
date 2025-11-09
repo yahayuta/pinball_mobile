@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
+import 'package:pinball_mobile/game/pinball_game.dart'; // Added for PinballGame type
 
 class Launcher extends BodyComponent with ContactCallbacks {
   @override
@@ -42,6 +43,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
   void startCharging() {
     charging = true;
     charge = 0.0;
+    (game as PinballGame).audioManager.playSoundEffect('audio/launcher_charge.mp3'); // New sound effect
   }
 
   void increaseCharge(double dt) {
@@ -59,6 +61,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
       final impulse = Vector2(-c * 32000, -c * 240000);
       ball.applyLinearImpulse(impulse);
     }
+    (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3'); // New sound effect
     _ballsToLaunch.clear();
     return c;
   }

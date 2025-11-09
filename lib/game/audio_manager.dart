@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 
 class AudioManager {
   static final AudioManager _instance = AudioManager._internal();
@@ -16,11 +17,13 @@ class AudioManager {
   }
 
   Future<void> playBackgroundMusic(String assetPath) async {
+    if (kIsWeb) return;
     await _backgroundPlayer.setVolume(_musicVolume);
     await _backgroundPlayer.play(AssetSource(assetPath));
   }
 
   Future<void> playSoundEffect(String assetPath) async {
+    if (kIsWeb) return;
     if (!_effectPlayers.containsKey(assetPath)) {
       _effectPlayers[assetPath] = AudioPlayer();
       _effectPlayers[assetPath]!.setReleaseMode(ReleaseMode.release);

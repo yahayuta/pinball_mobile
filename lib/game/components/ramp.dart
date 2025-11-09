@@ -1,6 +1,7 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
+import 'package:pinball_mobile/game/pinball_game.dart'; // Added for PinballGame type
 
 class PinballRamp extends BodyComponent with ContactCallbacks {
   final List<Vector2> vertices;
@@ -45,6 +46,7 @@ class PinballRamp extends BodyComponent with ContactCallbacks {
       if (!_ballsInside.contains(other.body)) {
         _ballsInside.add(other.body);
         other.body.gravityScale = Vector2.zero();
+        (game as PinballGame).audioManager.playSoundEffect('audio/ramp_enter.mp3'); // New sound effect
       }
     }
   }
@@ -55,6 +57,7 @@ class PinballRamp extends BodyComponent with ContactCallbacks {
       if (_ballsInside.contains(other.body)) {
         _ballsInside.remove(other.body);
         other.body.gravityScale = Vector2(0, 1);
+        (game as PinballGame).audioManager.playSoundEffect('audio/ramp_exit.mp3'); // New sound effect
       }
     }
   }

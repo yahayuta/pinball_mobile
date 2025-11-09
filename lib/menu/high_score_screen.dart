@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
+import 'package:provider/provider.dart'; // Added
+import 'package:pinball_mobile/game/game_provider.dart'; // Added
 
 class HighScoreScreen extends StatefulWidget {
   const HighScoreScreen({super.key});
@@ -9,19 +11,21 @@ class HighScoreScreen extends StatefulWidget {
 }
 
 class _HighScoreScreenState extends State<HighScoreScreen> {
-  final HighScoreManager _highScoreManager = HighScoreManager();
+  late HighScoreManager _highScoreManager; // Changed to late
+
   int _highScore = 0;
 
   @override
   void initState() {
     super.initState();
+    _highScoreManager = Provider.of<GameProvider>(context, listen: false).highScoreManager; // Initialized from Provider
     _loadHighScore();
   }
 
   Future<void> _loadHighScore() async {
-    final highScore = await _highScoreManager.getHighScore();
+    final highScores = _highScoreManager.getHighScores(); // Changed to getHighScores
     setState(() {
-      _highScore = highScore;
+      _highScore = highScores.isNotEmpty ? highScores.first.score : 0; // Get the top score
     });
   }
 

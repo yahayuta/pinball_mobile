@@ -45,6 +45,10 @@ dependencies:
 
   # Storage
   shared_preferences: ^2.2.2
+  share_plus: ^12.0.1 # Added for social sharing
+
+  # Sensors for tilt mechanism
+  sensors_plus: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -60,6 +64,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  mocktail: ^1.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

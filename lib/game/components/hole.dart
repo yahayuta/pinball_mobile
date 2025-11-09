@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
+import 'package:pinball_mobile/game/pinball_game.dart'; // Added for PinballGame type
 
 class PinballHole extends BodyComponent with ContactCallbacks {
   final Vector2 exitPosition;
@@ -39,10 +40,14 @@ class PinballHole extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     if (other is PinballBall) {
       other.body.setAwake(false);
+      // Play sound when ball enters hole
+      (game as PinballGame).audioManager.playSoundEffect('audio/hole_enter.mp3');
       Timer(const Duration(seconds: 1), () {
         other.body.setTransform(exitPosition, 0);
         other.body.linearVelocity = exitVelocity;
         other.body.setAwake(true);
+        // Play sound when ball exits hole
+        (game as PinballGame).audioManager.playSoundEffect('audio/hole_exit.mp3');
       });
     }
   }

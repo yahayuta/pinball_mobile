@@ -3,13 +3,24 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
+import 'package:pinball_mobile/game/components/wall_body.dart'; // Added for WallBody
 
 import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pinball_mobile/game/high_score_manager.dart';
+import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
+
 class SpaceAdventureTable extends PinballGame {
+  SpaceAdventureTable({
+    required SharedPreferences prefs,
+    required HighScoreManager highScoreManager,
+    required GameModeManager gameModeManager, // Added
+  }) : super(prefs: prefs, highScoreManager: highScoreManager, gameModeManager: gameModeManager);
+
   bool _isInitialized = false;
 
   @override
@@ -40,7 +51,7 @@ class SpaceAdventureTable extends PinballGame {
     spawnBall(position: Vector2(size.x * 0.9, size.y * 0.8));
 
     // Add flippers
-    final flipperLength = size.x / 15;
+    final flipperLength = size.x / 8;
     leftFlipper = PinballFlipper(
       position: Vector2(size.x * 0.3, size.y * 0.8),
       isLeft: false,
@@ -64,7 +75,7 @@ class SpaceAdventureTable extends PinballGame {
     await add(launcher);
 
     // Add walls
-    final wallThickness = size.x * 0.025;
+    final wallThickness = size.x * 0.075;
     await add(
       WallBody(
         position: Vector2(size.x / 2, 0),

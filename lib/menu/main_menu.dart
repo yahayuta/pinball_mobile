@@ -10,8 +10,21 @@ import 'package:pinball_mobile/menu/table_editor_screen.dart';
 import 'package:pinball_mobile/menu/achievements_screen.dart';
 import 'package:pinball_mobile/menu/social_screen.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
+import 'package:flutter/material.dart';
+import 'package:pinball_mobile/game/game_provider.dart';
+import 'package:pinball_mobile/game/pinball_game_widget.dart';
+import 'package:pinball_mobile/menu/high_score_screen.dart';
+import 'package:pinball_mobile/menu/settings_screen.dart';
+import 'package:pinball_mobile/menu/tutorial_screen.dart';
+import 'package:pinball_mobile/menu/leaderboard_screen.dart';
+import 'package:pinball_mobile/menu/multiplayer_screen.dart';
+import 'package:pinball_mobile/menu/table_editor_screen.dart';
+import 'package:pinball_mobile/menu/achievements_screen.dart';
+import 'package:pinball_mobile/menu/social_screen.dart';
+import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/menu/table_selection_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flame/game.dart'; // Added
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -53,7 +66,7 @@ class MainMenu extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HighScoreScreen(),
+                          builder: (context) => HighScoreScreen(), // Removed const
                         ),
                       );
                     },
@@ -153,12 +166,12 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<GameProvider>(context, listen: false).setGame(game);
+      Provider.of<GameProvider>(context, listen: false).loadTable(game); // Changed setGame to loadTable
     });
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(children: [PinballGameWidget(game: game)]),
+      body: Stack(children: [GameWidget(game: game)]), // Wrapped PinballGameWidget with GameWidget
     );
   }
 }

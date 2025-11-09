@@ -16,6 +16,7 @@ This document outlines a plan for enhancing the pinball game. The proposed enhan
 - **Drop Targets:** Implement banks of targets that drop down when hit. Completing a bank can trigger special modes or rewards.
 - **Spinners:** Add a spinning target that awards points for each rotation.
 - **Ramps and Loops:** Design more complex ramps and loops that can be chained together for high scores.
+- **Dedicated Launcher Ramp:** Implement a specialized ramp structure to ensure consistent and reliable ball launches into the main playfield.
 
 ### 2.3. Ball Dynamics & Control
 - **Ball Save:** Implement a more robust ball save mechanic that can be earned or triggered by certain events.

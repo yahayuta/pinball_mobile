@@ -33,6 +33,7 @@ class ScorePowerUp extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     if (other is PinballBall) {
       (game as PinballGame).addScore(score, body.position);
+      (game as PinballGame).audioManager.playSoundEffect('audio/power_up_collect.mp3'); // New sound effect
       removeFromParent();
     }
   }
@@ -67,6 +68,7 @@ class MultiBallPowerUp extends BodyComponent with ContactCallbacks {
     if (other is PinballBall) {
       (game as PinballGame).spawnBall();
       (game as PinballGame).spawnBall();
+      (game as PinballGame).audioManager.playSoundEffect('audio/power_up_collect.mp3'); // New sound effect
       removeFromParent();
     }
   }
@@ -100,6 +102,7 @@ class BallSavePowerUp extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     if (other is PinballBall) {
       (game as PinballGame).activateBallSave();
+      (game as PinballGame).audioManager.playSoundEffect('audio/power_up_collect.mp3'); // New sound effect
       removeFromParent();
     }
   }

@@ -18,7 +18,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 ### 3.1 Basic Game Mechanics
 - Ball physics simulation: **Implemented (Forge2D)**
 - Flipper mechanics: **Implemented (Forge2D)**
-- Spring launcher mechanism: **Implemented (Forge2D)**
+- Spring launcher mechanism: **Implemented (Forge2D, now utilizing a dedicated LauncherRamp for improved consistency)**
 - Basic collision detection: **Implemented (Forge2D)**
 - Score tracking system: **Implemented (with combo system)**
 
@@ -37,7 +37,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Multiple game modes: Not yet implemented
 - Sound effects and background music: **Implemented**
 - Visual effects and animations: **Implemented (score popups, combo effects, bumper hit effects)**
-- Tilt mechanism: Refining
+- Tilt mechanism: Implemented
 - Power-ups and special events: **Implemented**
 
 ### 3.4 UI/UX Elements
@@ -55,7 +55,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Implemented basic project architecture using `flame_forge2d`.
 
 ### Phase 2: Core Mechanics (Completed)
-- Implemented basic ball physics, flipper mechanics, spring launcher, basic collision detection, and score tracking system using `flame_forge2d` with a combo system.
+- Implemented basic ball physics, flipper mechanics, spring launcher (now with LauncherRamp), basic collision detection, and score tracking system using `flame_forge2d` with a combo system.
 
 ### Phase 3: Pinball Elements (Completed)
 - Implemented bumpers, targets, ramps, holes, and spinners.
@@ -155,23 +155,20 @@ dependencies:
 6. Test reports
 
 ## 10. Future Enhancements
-- Multiple pinball table designs: Partially Implemented
-- Online leaderboards: UI Implemented
-- Multiplayer modes: UI Implemented
-- Custom table editor: UI Implemented
-- Achievement system: UI Implemented
-- Social features: UI Implemented
+- Multiple pinball table designs: Implemented
+- Online leaderboards: Implemented (Local)
+- Multiplayer modes: Implemented (Local)
+- Custom table editor: Implemented (Basic)
+- Achievement system: Implemented
+- Social features: Implemented (Basic)
+- Multiple game modes: In Progress
 
 ## 11. Next Steps
-- **Refine Implemented Features:**
-    - Refine Tilt mechanism.
 - **Implement Missing Game Features:**
-    - Multiple game modes.
+    - Multiple game modes. (Continue implementation)
 - **Polish and Testing:**
-    - Code cleanup and refactoring.
-    - Comprehensive testing.
+    - Comprehensive testing. (Integration tests added, web build functional. Unit tests for PinballGame are pending due to mocking library issues).
     - Performance optimization.
-    - Add more sound effects for game events.
 
 ## 12. Known Issues
 
@@ -181,5 +178,4 @@ dependencies:
 - Engaging game mechanics
 - Stable performance
 - Bug-free experience
-- Audio playback has been re-enabled and integrated, but requires actual sound assets (e.g., background.mp3, score.mp3, flipper_press.mp3, flipper_release.mp3, bumper.mp3, drop_target.mp3) to be placed in the `assets/audio/` directory.
 - Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)
