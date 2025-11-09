@@ -49,6 +49,18 @@ class PinballBall extends BodyComponent {
     paint.style = PaintingStyle.stroke;
     paint.color = Colors.white;
     canvas.drawCircle(Offset.zero, radius, paint);
+
+    // Draw a line to indicate spin
+    canvas.save();
+    canvas.rotate(body.angularVelocity * 0.05); // Rotate based on angular velocity
+    canvas.drawLine(
+      Offset(0, -radius * 0.8),
+      Offset(0, radius * 0.8),
+      Paint()
+        ..color = Colors.white
+        ..strokeWidth = 0.1,
+    );
+    canvas.restore();
   }
 }
 
