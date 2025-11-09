@@ -22,7 +22,7 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 0.4, // Less bouncy
+      restitution: 1.0, // Max bounciness for real-world feel
       friction: 0.1,    // A little friction
     );
 
@@ -246,5 +246,46 @@ class PinballFlipper extends BodyComponent {
   void release() {
     _isPressed = false;
     audioManager.playSoundEffect('audio/flipper_release.mp3');
+  }
+}
+
+class PinballPost extends BodyComponent {
+  @override
+  final Vector2 position;
+  final double radius;
+  final Color color;
+
+  PinballPost({
+    required this.position,
+    this.radius = 0.2,
+    this.color = Colors.white,
+  });
+
+  @override
+  Body createBody() {
+    final shape = CircleShape()..radius = radius;
+
+    final fixtureDef = FixtureDef(
+      shape,
+      density: 1000.0, // Very heavy - effectively immovable
+      restitution: 0.4, // A bit bouncy
+      friction: 0.1,
+    );
+
+    final bodyDef = BodyDef(
+      type: BodyType.static,
+      position: position,
+    );
+
+    return world.createBody(bodyDef)..createFixture(fixtureDef);
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(Offset.zero, radius, paint);
   }
 }

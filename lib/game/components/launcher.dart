@@ -15,7 +15,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
   final List<Body> _ballsToLaunch = [];
   final Map<Body, Timer> _removalTimers = {};
 
-  Launcher({required this.position, this.maxCharge = 1.5});
+  Launcher({required this.position, this.maxCharge = 3.0});
 
   @override
   Body createBody() {
@@ -58,7 +58,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
     charge = 0.0;
     for (final ball in _ballsToLaunch) {
       // Apply a strong, angled impulse DIRECTLY to the ball
-      final impulse = Vector2(-c * 100000, -c * 750000);
+      final impulse = Vector2(-c * 1600000, -c * 12000000);
       ball.applyLinearImpulse(impulse);
     }
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3'); // New sound effect

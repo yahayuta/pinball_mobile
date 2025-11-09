@@ -24,6 +24,10 @@ class BumperHitEffect extends ParticleSystemComponent {
 }
 
 class ScorePopup extends TextComponent {
+  double _opacity = 1.0;
+  final double _fadeDuration = 0.5;
+  double _elapsedTime = 0.0;
+
   ScorePopup({
     required Vector2 position,
     required int score,
@@ -39,18 +43,34 @@ class ScorePopup extends TextComponent {
            ),
          ),
        ) {
-    add(MoveEffect.by(Vector2(0, -50), EffectController(duration: 0.5)));
+    // Initial position and scale effects
+    add(MoveEffect.by(Vector2(0, -50), EffectController(duration: _fadeDuration)));
     add(ScaleEffect.by(Vector2.all(1.5), EffectController(duration: 0.2)));
-    add(
-      ColorEffect(
-        Colors.yellow.withOpacity(0),
-        EffectController(duration: 0.5),
-      )..onComplete = () => removeFromParent(),
-    );
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _elapsedTime += dt;
+    if (_elapsedTime < _fadeDuration) {
+      _opacity = 1.0 - (_elapsedTime / _fadeDuration);
+      textRenderer = TextPaint(
+        style: (textRenderer as TextPaint).style.copyWith(
+          color: (textRenderer as TextPaint).style.color!.withOpacity(_opacity),
+        ),
+      );
+    } else {
+      removeFromParent();
+    }
   }
 }
 
 class ComboEffect extends TextComponent {
+  double _opacity = 1.0;
+  final double _fadeDuration = 0.5;
+  double _elapsedTime = 0.0;
+  final double _startDelay = 0.5;
+
   ComboEffect({required Vector2 position, required int combo})
     : super(
         text: '${combo}x COMBO!',
@@ -69,11 +89,24 @@ class ComboEffect extends TextComponent {
         EffectController(duration: 0.2, reverseDuration: 0.2),
       ),
     );
-    add(
-      ColorEffect(
-        Colors.orange.withOpacity(0),
-        EffectController(startDelay: 0.5, duration: 0.5),
-      )..onComplete = () => removeFromParent(),
-    );
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _elapsedTime += dt;
+    if (_elapsedTime > _startDelay) {
+      final currentFadeTime = _elapsedTime - _startDelay;
+      if (currentFadeTime < _fadeDuration) {
+        _opacity = 1.0 - (currentFadeTime / _fadeDuration);
+        textRenderer = TextPaint(
+          style: (textRenderer as TextPaint).style.copyWith(
+            color: (textRenderer as TextPaint).style.color!.withOpacity(_opacity),
+          ),
+        );
+      } else {
+        removeFromParent();
+      }
+    }
   }
 }

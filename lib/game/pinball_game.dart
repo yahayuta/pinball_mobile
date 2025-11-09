@@ -194,6 +194,13 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     add(leftFlipper);
     add(rightFlipper);
 
+    // Add a post between the flippers
+    add(
+      PinballPost(
+        position: Vector2(size.x * 0.5, size.y * 0.95),
+      ),
+    );
+
     // Initialize launcher
     launcher = Launcher(position: Vector2(size.x * 0.95, size.y * 0.8));
     add(launcher);
