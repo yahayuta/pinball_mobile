@@ -2,16 +2,18 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../components/visual_effects.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
-import 'package:pinball_mobile/game/pinball_game.dart'; // Added
+// import 'package:pinball_mobile/game/pinball_game.dart'; // Added
 export '../components/target.dart' show PinballTarget;
 
 class PinballBall extends BodyComponent {
   final Vector2 initialPosition;
   final double radius;
+  // final Sprite? sprite;
 
   PinballBall({
     required this.initialPosition,
     this.radius = 0.5, // 10 pixels in game scale = 0.5 meters in physics scale
+    // this.sprite,
   });
 
   @override
@@ -24,7 +26,7 @@ class PinballBall extends BodyComponent {
       shape,
       density: 1.0,
       restitution: 0.7, // Reduced bounciness for realism
-      friction: 0.3,    // Increased friction
+      friction: 0.3, // Increased friction
     );
 
     // Create the body definition
@@ -40,28 +42,32 @@ class PinballBall extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
+    // if (sprite != null) {
+    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+    // } else {
+      final paint = Paint()
+        ..color = Colors.red
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 2.0;
 
-    // Draw filled circle with border
-    canvas.drawCircle(Offset.zero, radius, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawCircle(Offset.zero, radius, paint);
+      // Draw filled circle with border
+      canvas.drawCircle(Offset.zero, radius, paint);
+      paint.style = PaintingStyle.stroke;
+      paint.color = Colors.white;
+      canvas.drawCircle(Offset.zero, radius, paint);
 
-    // Draw a line to indicate spin
-    canvas.save();
-    canvas.rotate(body.angularVelocity * 0.05); // Rotate based on angular velocity
-    canvas.drawLine(
-      Offset(0, -radius * 0.8),
-      Offset(0, radius * 0.8),
-      Paint()
-        ..color = Colors.white
-        ..strokeWidth = 0.1,
-    );
-    canvas.restore();
+      // Draw a line to indicate spin
+      canvas.save();
+      canvas.rotate(body.angularVelocity * 0.05); // Rotate based on angular velocity
+      canvas.drawLine(
+        Offset(0, -radius * 0.8),
+        Offset(0, radius * 0.8),
+        Paint()
+          ..color = Colors.white
+          ..strokeWidth = 0.1,
+      );
+      canvas.restore();
+    // }
   }
 }
 
@@ -71,6 +77,7 @@ class PinballBumper extends BodyComponent {
   final double radius;
   final Function(PinballBall)? onHit;
   final Color color;
+  // final Sprite? sprite; // Added sprite property
   bool _isActivated = false;
   double _activationTime = 0.0;
   static const _activationDuration = 0.15; // seconds
@@ -80,6 +87,7 @@ class PinballBumper extends BodyComponent {
     this.radius = 1.0,
     this.onHit,
     this.color = Colors.blue,
+    // this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -122,31 +130,35 @@ class PinballBumper extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    final renderColor = _isActivated ? Colors.yellow : color;
-    final glowRadius = _isActivated ? radius * 1.2 : radius;
+    // if (sprite != null) {
+    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+    // } else {
+      final renderColor = _isActivated ? Colors.yellow : color;
+      final glowRadius = _isActivated ? radius * 1.2 : radius;
 
-    // Draw glow effect when activated
-    if (_isActivated) {
-      canvas.drawCircle(
-        Offset.zero,
-        glowRadius,
-        Paint()
-          ..color = renderColor.withAlpha((255 * 0.3).toInt())
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-      );
-    }
+      // Draw glow effect when activated
+      if (_isActivated) {
+        canvas.drawCircle(
+          Offset.zero,
+          glowRadius,
+          Paint()
+            ..color = renderColor.withAlpha((255 * 0.3).toInt())
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+        );
+      }
 
-    // Draw main bumper body
-    final paint = Paint()
-      ..color = renderColor
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
+      // Draw main bumper body
+      final paint = Paint()
+        ..color = renderColor
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 2.0;
 
-    // Draw filled circle with border
-    canvas.drawCircle(Offset.zero, radius, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawCircle(Offset.zero, radius, paint);
+      // Draw filled circle with border
+      canvas.drawCircle(Offset.zero, radius, paint);
+      paint.style = PaintingStyle.stroke;
+      paint.color = Colors.white;
+      canvas.drawCircle(Offset.zero, radius, paint);
+    // }
   }
 }
 
@@ -157,6 +169,7 @@ class PinballFlipper extends BodyComponent {
   final double length;
   final Color color;
   final AudioManager audioManager;
+  // final Sprite? sprite; // Added sprite property
 
   static const double flipperUpAngle = -0.6; // In radians, ~35 degrees up
   static const double flipperDownAngle = 0.2; // In radians, ~12 degrees down
@@ -170,6 +183,7 @@ class PinballFlipper extends BodyComponent {
     this.length = 2.0,
     this.color = Colors.purple,
     required this.audioManager,
+    // this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -234,41 +248,43 @@ class PinballFlipper extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
+    // if (sprite != null) {
+    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2(length, length / 2.5));
+    // } else {
+      final paint = Paint()
+        ..color = color
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 2.0;
 
-    // Draw filled rectangle with border
-    final rect = Rect.fromCenter(
-      center: Offset(isLeft ? -length / 2 : length / 2, 0),
-      width: length,
-      height: length / 2.5,
-    );
-    canvas.drawRect(rect, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawRect(rect, paint);
+      // Draw filled rectangle with border
+      final rect = Rect.fromCenter(
+        center: Offset(isLeft ? -length / 2 : length / 2, 0),
+        width: length,
+        height: length / 2.5,
+      );
+      canvas.drawRect(rect, paint);
+      paint.style = PaintingStyle.stroke;
+      paint.color = Colors.white;
+      canvas.drawRect(rect, paint);
+    // }
   }
 
   void press() {
     _isPressed = true;
     // Access the game instance to use _calculatePan
-    final gameRef = findGame() as PinballGame;
+    // final gameRef = findGame() as PinballGame;
     audioManager.playSoundEffect(
       'audio/flipper_press.mp3',
       impactForce: 1.0,
-      pan: gameRef.calculatePan(position.x),
     );
   }
 
   void release() {
     _isPressed = false;
-    final gameRef = findGame() as PinballGame;
+    // final gameRef = findGame() as PinballGame;
     audioManager.playSoundEffect(
       'audio/flipper_release.mp3',
       impactForce: 1.0,
-      pan: gameRef.calculatePan(position.x),
     );
   }
 }
@@ -278,11 +294,13 @@ class PinballPost extends BodyComponent {
   final Vector2 position;
   final double radius;
   final Color color;
+  // final Sprite? sprite; // Added sprite property
 
   PinballPost({
     required this.position,
     this.radius = 0.2,
     this.color = Colors.white,
+    // this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -306,10 +324,14 @@ class PinballPost extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
+    // if (sprite != null) {
+    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+    // } else {
+      final paint = Paint()
+        ..color = color
+        ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(Offset.zero, radius, paint);
+      canvas.drawCircle(Offset.zero, radius, paint);
+    // }
   }
 }

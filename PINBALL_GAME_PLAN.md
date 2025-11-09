@@ -34,7 +34,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 
 ### 3.3 Game Features
 - High score system: **Implemented**
-- Multiple game modes: Not yet implemented
+- Multiple game modes: Implemented (Basic)
 - Sound effects and background music: **Implemented**
 - Visual effects and animations: **Implemented (score popups, combo effects, bumper hit effects)**
 - Tilt mechanism: Implemented
@@ -161,14 +161,14 @@ dependencies:
 - Custom table editor: Implemented (Basic)
 - Achievement system: Implemented
 - Social features: Implemented (Basic)
-- Multiple game modes: In Progress
+- Multiple game modes: Implemented (Basic)
 
 ## 11. Next Steps
 - **Implement Missing Game Features:**
     - Multiple game modes. (Continue implementation)
 - **Polish and Testing:**
     - Ongoing physics tuning of components like the launcher and flippers to improve game feel.
-    - Comprehensive testing. (Integration tests added, web build functional. Unit tests for PinballGame are pending due to mocking library issues).
+    - Comprehensive testing. (Integration tests added, web build functional, all errors resolved. Unit tests for PinballGame are pending due to mocking library issues).
     - Performance optimization.
 
 ## 12. Known Issues

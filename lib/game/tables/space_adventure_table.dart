@@ -9,17 +9,16 @@ import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pinball_mobile/game/high_score_manager.dart';
-import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:pinball_mobile/game/high_score_manager.dart';
+// import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
 
 class SpaceAdventureTable extends PinballGame {
   SpaceAdventureTable({
-    required SharedPreferences prefs,
-    required HighScoreManager highScoreManager,
-    required GameModeManager gameModeManager, // Added
-  }) : super(prefs: prefs, highScoreManager: highScoreManager, gameModeManager: gameModeManager);
+    required super.prefs,
+    required super.highScoreManager,
+    required super.gameModeManager,
+  });
 
   bool _isInitialized = false;
 

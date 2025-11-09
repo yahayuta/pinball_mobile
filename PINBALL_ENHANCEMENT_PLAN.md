@@ -80,12 +80,14 @@ The following is a proposed order for implementing the enhancements:
     -   [x] Implement pop bumpers and drop targets.
     -   [x] Expand the combo and multiplier system.
     -   [x] Improve the HUD.
+    -   [x] Implemented all core gameplay components.
 
 2.  **Phase 2 (Visuals & Audio):**
     -   Create a new themed table ("Space Adventure").
     -   Add dynamic camera effects.
     -   Implement the dynamic music system.
     -   Add more sound effects and voice callouts.
+    -   Note: Visual assets (sprites) were temporarily removed to resolve critical errors. Re-introduction with proper image files is a next step.
 
 3.  **Phase 3 (Features):**
     -   Implement online leaderboards and achievements.

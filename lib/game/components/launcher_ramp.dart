@@ -2,6 +2,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 
 class LauncherRamp extends BodyComponent {
+  @override
   final Vector2 position;
   final Vector2 size; // Represents the overall bounding box for the ramp
   final Color color;

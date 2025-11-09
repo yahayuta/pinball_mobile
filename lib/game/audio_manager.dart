@@ -22,7 +22,7 @@ class AudioManager {
     await _backgroundPlayer.play(AssetSource(assetPath));
   }
 
-  Future<void> playSoundEffect(dynamic assetPath, {double impactForce = 1.0, double pan = 0.0}) async {
+  Future<void> playSoundEffect(dynamic assetPath, {double impactForce = 1.0}) async {
     if (kIsWeb) return;
 
     String selectedAssetPath;
@@ -40,7 +40,6 @@ class AudioManager {
     }
     final double scaledVolume = _effectVolume * impactForce.clamp(0.2, 1.0);
     await _effectPlayers[selectedAssetPath]!.setVolume(scaledVolume);
-    await _effectPlayers[selectedAssetPath]!.setPan(pan.clamp(-1.0, 1.0)); // Set pan
     await _effectPlayers[selectedAssetPath]!.play(AssetSource(selectedAssetPath));
   }
 

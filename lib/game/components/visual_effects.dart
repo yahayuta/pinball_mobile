@@ -7,8 +7,8 @@ class FadingCircleParticle extends Particle {
   FadingCircleParticle({
     required this.color,
     required this.radius,
-    double? lifespan,
-  }) : super(lifespan: lifespan);
+    super.lifespan,
+  });
 
   final Color color;
   final double radius;
@@ -16,7 +16,7 @@ class FadingCircleParticle extends Particle {
   @override
   void render(Canvas canvas) {
     final paint = Paint()
-      ..color = color.withOpacity(1.0 - progress)
+      ..color = color.withAlpha(((1.0 - progress) * 255).toInt())
       ..style = PaintingStyle.fill;
     canvas.drawCircle(Offset.zero, radius, paint);
   }
@@ -76,7 +76,7 @@ class ScorePopup extends TextComponent {
       _opacity = 1.0 - (_elapsedTime / _fadeDuration);
       textRenderer = TextPaint(
         style: (textRenderer as TextPaint).style.copyWith(
-          color: (textRenderer as TextPaint).style.color!.withOpacity(_opacity),
+          color: (textRenderer as TextPaint).style.color!.withAlpha((_opacity * 255).toInt()),
         ),
       );
     } else {
@@ -121,7 +121,7 @@ class ComboEffect extends TextComponent {
         _opacity = 1.0 - (currentFadeTime / _fadeDuration);
         textRenderer = TextPaint(
           style: (textRenderer as TextPaint).style.copyWith(
-            color: (textRenderer as TextPaint).style.color!.withOpacity(_opacity),
+            color: (textRenderer as TextPaint).style.color!.withAlpha((_opacity * 255).toInt()),
           ),
         );
       } else {

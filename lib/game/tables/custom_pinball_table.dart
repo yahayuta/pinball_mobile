@@ -1,5 +1,4 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
 import 'package:pinball_mobile/game/components/guide_wall.dart';
@@ -8,13 +7,13 @@ import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/ramp.dart';
 import 'package:pinball_mobile/game/components/spinner.dart';
-import 'package:pinball_mobile/game/components/target.dart';
+// import 'package:pinball_mobile/game/components/target.dart';
 import 'package:pinball_mobile/game/components/wall_body.dart';
-import 'package:pinball_mobile/game/high_score_manager.dart';
+// import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/game/table_config_manager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart'; // Added
 
 class CustomPinballTable extends PinballGame {
@@ -23,16 +22,11 @@ class CustomPinballTable extends PinballGame {
 
   CustomPinballTable({
     required this.tableConfig,
-    required SharedPreferences prefs,
-    required HighScoreManager highScoreManager,
-    required GameModeManager gameModeManager, // Added
-    String currentPlayerName = 'Player 1',
-  }) : super(
-          prefs: prefs,
-          highScoreManager: highScoreManager,
-          gameModeManager: gameModeManager, // Added
-          currentPlayerName: currentPlayerName,
-        );
+    required super.prefs,
+    required super.highScoreManager,
+    required super.gameModeManager,
+    super.currentPlayerName = 'Player 1',
+  });
 
   @override
   Future<void> initGameElements() async {

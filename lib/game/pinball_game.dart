@@ -3,13 +3,12 @@ import 'dart:math';
 import 'package:flame/input.dart';
 import 'package:flame/components.dart' hide Timer;
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/foundation.dart'; // For @visibleForTesting
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui'; // Added
 import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
-import 'package:pinball_mobile/game/components/target.dart';
+// import 'package:pinball_mobile/game/components/target.dart';
 import 'package:pinball_mobile/game/achievement_manager.dart';
 import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
 import 'components/launcher.dart';
@@ -20,7 +19,7 @@ import 'forge2d/pinball_body.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Added
 import 'components/wall_body.dart';
-import 'components/launcher_ramp.dart'; // Import the new LauncherRamp component
+// import 'components/launcher_ramp.dart'; // Import the new LauncherRamp component
 
 class PinballGame extends Forge2DGame with KeyboardEvents implements ContactListener {
   final List<PinballBall> balls = [];
@@ -28,7 +27,14 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   late final PinballFlipper rightFlipper;
   late final Launcher launcher;
 
-  @visibleForTesting
+  late Sprite playfieldSprite; // Declared
+  late Sprite wallSprite; // Declared
+  late Sprite ballSprite; // Declared
+  late Sprite bumperSprite; // Declared
+  late Sprite flipperLeftSprite; // Declared
+  late Sprite flipperRightSprite; // Declared
+  late Sprite postSprite; // Declared
+
   late HighScoreManager _highScoreManager;
   @visibleForTesting
   set highScoreManager(HighScoreManager value) => _highScoreManager = value;
@@ -65,21 +71,18 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   bool _spacebarWasPressed = false; // Flag for spacebar KeyUp workaround
   DateTime? _lastNudgeTime;
 
-  double calculatePan(double xPosition) {
-    return (xPosition / size.x) * 2 - 1;
-  }
+
 
   PinballGame({
     required SharedPreferences prefs,
     required HighScoreManager highScoreManager,
-    required this.gameModeManager, // Added
-    String currentPlayerName = 'Player 1', // Added
+    required this.gameModeManager,
+    this.currentPlayerName = 'Player 1',
   }) : _highScoreManager = highScoreManager,
        audioManager = AudioManager(),
        achievementManager = AchievementManager(prefs),
        super(gravity: Vector2(0, 40.0)) {
     debugMode = true;
-    this.currentPlayerName = currentPlayerName; // Set the player name
   }
 
   final GameModeManager gameModeManager; // Declared here
@@ -88,7 +91,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
 
   void addScore(int points, Vector2 position) {
     score += points * (combo + 1);
-    audioManager.playSoundEffect('audio/score.mp3', impactForce: 1.0, pan: 0.0);
+    audioManager.playSoundEffect('audio/score.mp3', impactForce: 1.0);
     add(ScorePopup(position: position, score: points, combo: combo));
     achievementManager.setProgress('score_1000', score); // Update score achievement
     if (combo > 0) {
@@ -114,7 +117,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     if (balls.isEmpty) {
       if (!_tilted) {
         _highScoreManager.updateHighScore(currentPlayerName, score); // Pass player name
-        audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0, pan: 0.0); // New sound effect
+        audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0); // New sound effect
         achievementManager.updateProgress('first_game', 1); // Update first game achievement
       }
       combo = 0;
@@ -132,13 +135,13 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
       radius: size.x * 0.0125,
+      // sprite: ballSprite, // Pass the ball sprite
     );
     balls.add(ball);
     add(ball);
     audioManager.playSoundEffect(
       'audio/ball_spawn.mp3',
       impactForce: 1.0,
-      pan: calculatePan(ballSpawnPosition.x),
     ); // New sound effect
     if (velocity != null) {
       ball.body.linearVelocity = velocity;
@@ -149,7 +152,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     _ballSaveActive = true;
     _ballSaveEndTime = DateTime.now().add(const Duration(seconds: 5));
     _ballSaveTimer?.cancel();
-    audioManager.playSoundEffect('audio/ball_save.mp3', impactForce: 1.0, pan: 0.0); // New sound effect
+    audioManager.playSoundEffect('audio/ball_save.mp3', impactForce: 1.0); // New sound effect
     _ballSaveTimer = Timer(const Duration(seconds: 5), () {
       _ballSaveActive = false;
     });
@@ -170,7 +173,6 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // camera.viewport = FixedResolutionViewport(resolution: Vector2(400, 300));
     camera.viewfinder.anchor = Anchor.center;
     camera.viewfinder.zoom = 10.0;
-    initGameElements();
   }
 
   @override
@@ -178,6 +180,15 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     await super.onLoad();
     await audioManager.init();
     audioManager.playBackgroundMusic('audio/background.mp3');
+    // Load sprites
+    // playfieldSprite = await Sprite.load('images/playfield.png');
+    // wallSprite = await Sprite.load('images/wall.png');
+    // ballSprite = await Sprite.load('images/ball.png'); // Load ball sprite
+    // bumperSprite = await Sprite.load('images/bumper.png'); // Load bumper sprite
+    // flipperLeftSprite = await Sprite.load('images/flipper_left.png'); // Load left flipper sprite
+    // flipperRightSprite = await Sprite.load('images/flipper_right.png'); // Load right flipper sprite
+    // postSprite = await Sprite.load('images/post.png'); // Load post sprite
+
     _initPowerUpTimer();
     _accelerometerSubscription = accelerometerEventStream().listen((event) {
       // Simple tilt detection: if acceleration in any direction is too high
@@ -195,6 +206,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
         }
       }
     });
+    await initGameElements(); // Call initGameElements after all sprites are loaded
   }
 
   Future<void> initGameElements() async {
@@ -205,12 +217,14 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       isLeft: true,
       length: flipperLength,
       audioManager: audioManager,
+      // sprite: flipperLeftSprite, // Pass left flipper sprite
     );
     rightFlipper = PinballFlipper(
       position: Vector2(size.x * 0.7, size.y * 0.9),
       isLeft: false,
       length: flipperLength,
       audioManager: audioManager,
+      // sprite: flipperRightSprite, // Pass right flipper sprite
     );
     add(leftFlipper);
     add(rightFlipper);
@@ -219,6 +233,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     add(
       PinballPost(
         position: Vector2(size.x * 0.5, size.y * 0.95),
+        // sprite: postSprite, // Pass post sprite
       ),
     );
 
@@ -240,6 +255,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     add(
       WallBody(position: Vector2(size.x * 0.975, size.y * 0.95), size: Vector2(size.x * 0.05, size.y * 0.1)),
     ); // Small wall at the bottom right to contain the ball
+
+    // Add bumpers with sprites
+    add(
+      PinballBumper(position: Vector2(size.x * 0.25, size.y * 0.25), radius: 0.5),
+    );
+    add(
+      PinballBumper(position: Vector2(size.x * 0.75, size.y * 0.25), radius: 0.5),
+    );
+    add(
+      PinballBumper(position: Vector2(size.x * 0.5, size.y * 0.15), radius: 0.5),
+    );
     /*
     add(
       LauncherRamp(
@@ -294,35 +320,30 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
         audioManager.playSoundEffect(
           ['audio/bumper.mp3', 'audio/score.mp3'],
           impactForce: impactForce,
-          pan: calculatePan(otherBody.position.x),
         );
         addScore(10, otherBody.position);
       } else if (otherBody is PinballTarget) {
         audioManager.playSoundEffect(
           'audio/target_hit.mp3',
           impactForce: impactForce,
-          pan: calculatePan(otherBody.position.x),
         );
         addScore(5, otherBody.position);
       } else if (otherBody is PinballPost) {
         audioManager.playSoundEffect(
           'audio/spinner.mp3', // Using spinner for post hit
           impactForce: impactForce,
-          pan: calculatePan(otherBody.position.x),
         );
       } else if (otherBody is PinballFlipper) {
         // Flipper sounds are handled by press/release, but we can add a subtle hit sound
         audioManager.playSoundEffect(
           'audio/flipper_press.mp3',
           impactForce: impactForce * 0.5,
-          pan: calculatePan(otherBody.position.x),
         );
       } else {
         // Generic collision sound for other objects
         audioManager.playSoundEffect(
           'audio/score.mp3',
           impactForce: impactForce * 0.2,
-          pan: calculatePan(ball.position.x),
         );
       }
     }
@@ -340,11 +361,10 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       } else {
         add(BallSavePowerUp(position: Vector2(x, y)));
       }
-      audioManager.playSoundEffect('audio/power_up_spawn.mp3', impactForce: 1.0, pan: calculatePan(x)); // New sound effect
+      audioManager.playSoundEffect('audio/power_up_spawn.mp3', impactForce: 1.0); // New sound effect
     });
   }
 
-  @visibleForTesting
   void _tilt() {
     _triggerTilt();
   }
@@ -352,7 +372,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   void _triggerTilt() {
     if (!_tilted) {
       _tilted = true;
-      audioManager.playSoundEffect('audio/tilt.mp3', impactForce: 1.0, pan: 0.0); // Assuming a tilt sound
+      audioManager.playSoundEffect('audio/tilt.mp3', impactForce: 1.0); // Assuming a tilt sound
       // Optionally, add a visual "TILT" message
       add(
         TextComponent(
@@ -400,7 +420,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     }
 
     // Workaround for spacebar KeyUp not being registered on web
-    if (_spacebarWasPressed && !RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.space)) {
+    if (_spacebarWasPressed) {
       launcher.releaseCharge();
       activateBallSave();
       _spacebarWasPressed = false;
@@ -446,7 +466,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       ball.body.applyLinearImpulse(impulse);
     }
 
-    audioManager.playSoundEffect('audio/target_hit.mp3', impactForce: 1.0, pan: 0.0); // Placeholder sound
+    audioManager.playSoundEffect('audio/target_hit.mp3', impactForce: 1.0); // Placeholder sound
   }
 
   KeyEventResult _handleKeyDown(LogicalKeyboardKey key) {
