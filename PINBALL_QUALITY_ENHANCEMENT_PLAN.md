@@ -20,9 +20,10 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - Improve flipper power and responsiveness.
     - Refine launcher force and consistency, now utilizing a dedicated `LauncherRamp` for improved guidance.
 - **Current Status:**
-    - **Core Physics Bodies:** `PinballBall`, `PinballBumper`, and `PinballFlipper` have explicitly defined `density`, `restitution`, and `friction` values. `PinballBall` uses `bullet: true` for continuous collision detection, mitigating "sticky ball" issues. Flippers utilize `RevoluteJoint` with motor control for responsiveness.
-    - **Interactive Components:** `DropTarget` uses a `PrismaticJoint` for controlled linear movement. `PinballHole` employs an `isSensor` fixture and logic to temporarily disable and re-launch the ball. `Launcher` applies a calculated `linearImpulse` based on player charge, addressing launcher force and consistency. The introduction of `LauncherRamp` further refines the ball's trajectory from the launcher to the main playfield.
-    - **Static Structures:** `GuideWall` uses `ChainShape` with specific `friction` and `restitution` to define table boundaries.
+    - **Core Physics Bodies:** `PinballBall`, `PinballBumper`, and `PinballFlipper` have explicitly defined `density`, `restitution`, and `friction` values. `PinballBall` uses `bullet: true` for continuous collision detection. Flippers utilize a `RevoluteJoint` with significantly increased motor torque for more powerful and responsive action. The world gravity has also been increased to make the game feel faster.
+    - **Interactive Components:** `DropTarget` uses a `PrismaticJoint`. `PinballHole` uses an `isSensor` fixture. The `Launcher`'s impulse force has been tuned for better ball launch speed.
+    - **Static Structures:** `GuideWall` uses `ChainShape` to define table boundaries.
+    - **Experimental Changes:** A `LauncherRamp` was introduced to guide the ball but has been temporarily disabled for further tuning.
 
 ### 3.2. Graphics and Visual Effects
 - **Goal:** Enhance the visual fidelity and dynamic feedback of the game.
@@ -77,6 +78,7 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - Conduct thorough testing to identify new bugs.
     - Implement robust error handling and logging.
 - **Current Status:**
+    - A workaround has been implemented to address an issue where the spacebar `KeyUp` event is not reliably detected on web builds, ensuring the launcher functions correctly.
     - While specific bug fixes were not explicitly identified in the initial code review, the general good practices of using a robust physics engine like Forge2D contribute to overall stability.
     - Ongoing efforts in this area would involve dedicated testing, issue tracking, and implementation of error handling and logging mechanisms.
 

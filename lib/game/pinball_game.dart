@@ -49,6 +49,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   Timer? _powerUpTimer;
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
+  bool _spacebarWasPressed = false; // Flag for spacebar KeyUp workaround
+
   PinballGame({
     required SharedPreferences prefs,
     required HighScoreManager highScoreManager,
@@ -57,7 +59,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   }) : _highScoreManager = highScoreManager,
        audioManager = AudioManager(),
        achievementManager = AchievementManager(prefs),
-       super(gravity: Vector2(0, 30.0)) {
+       super(gravity: Vector2(0, 40.0)) {
     debugMode = true;
     this.currentPlayerName = currentPlayerName; // Set the player name
   }
@@ -108,8 +110,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
+    final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.85);
     final ball = PinballBall(
-      initialPosition: position ?? Vector2(size.x * 0.95, size.y * 0.75),
+      initialPosition: ballSpawnPosition,
       radius: size.x * 0.0125,
     );
     balls.add(ball);
@@ -208,15 +211,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     add(
       WallBody(position: Vector2(size.x * 0.975, size.y * 0.95), size: Vector2(size.x * 0.05, size.y * 0.1)),
     ); // Small wall at the bottom right to contain the ball
+    /*
     add(
       LauncherRamp(
         position: Vector2(size.x, size.y * 0.8), // Bottom-right corner of the ramp
         size: Vector2(size.x * 0.15, size.y * 0.6), // Width and height of the ramp
       ),
     );
+    */
 
     // Spawn initial ball
-    spawnBall();
+    spawnBall(velocity: Vector2(0, -50));
 
   }
 
@@ -272,6 +277,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    // Workaround for spacebar KeyUp not being registered on web
+    if (_spacebarWasPressed && !RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.space)) {
+      launcher.releaseCharge();
+      activateBallSave();
+      _spacebarWasPressed = false;
+    }
+  }
+
+  @override
   KeyEventResult onKeyEvent(
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
@@ -298,6 +314,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
       return KeyEventResult.handled;
     } else if (key == LogicalKeyboardKey.space) {
       launcher.startCharging();
+      _spacebarWasPressed = true; // Set flag for workaround
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
@@ -313,6 +330,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     } else if (key == LogicalKeyboardKey.space) {
       launcher.releaseCharge();
       activateBallSave();
+      _spacebarWasPressed = false; // Reset flag
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;

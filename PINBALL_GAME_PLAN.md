@@ -167,6 +167,7 @@ dependencies:
 - **Implement Missing Game Features:**
     - Multiple game modes. (Continue implementation)
 - **Polish and Testing:**
+    - Ongoing physics tuning of components like the launcher and flippers to improve game feel.
     - Comprehensive testing. (Integration tests added, web build functional. Unit tests for PinballGame are pending due to mocking library issues).
     - Performance optimization.
 

@@ -1,3 +1,9 @@
+import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
+import '../components/visual_effects.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
+export '../components/target.dart' show PinballTarget;
+
 class PinballBall extends BodyComponent {
   final Vector2 initialPosition;
   final double radius;
@@ -183,8 +189,8 @@ class PinballFlipper extends BodyComponent {
     final jointDef = RevoluteJointDef()
       ..initialize(anchorBody, flipperBody, position)
       ..enableMotor = true
-      ..motorSpeed = 0
-      ..maxMotorTorque = 200000000.0
+      ..motorSpeed = 200.0 // Increased motor speed
+      ..maxMotorTorque = 1000000000.0 // Increased max motor torque
       ..enableLimit = true;
 
     if (isLeft) {
@@ -207,38 +213,23 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
-      _joint.motorSpeed = isLeft ? -40.0 : 40.0;
-    } else {
-      _joint.motorSpeed = isLeft ? 40.0 : -40.0;
+      _joint.motorSpeed = isLeft ? -200.0 : 200.0; // High speed towards "up" limit
     }
-  }
-
-  @override
-  void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
-
-    // Draw filled rectangle with border
-    final rect = Rect.fromCenter(
-      center: Offset(isLeft ? -length / 2 : length / 2, 0),
-      width: length,
-      height: length / 2.5,
-    );
-    canvas.drawRect(rect, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawRect(rect, paint);
+    else {
+      _joint.motorSpeed = 0.0; // Stop motor when released
+    }
+    print('Flipper ${isLeft ? "Left" : "Right"}: Angle: ${body.angle.toStringAsFixed(2)}, Motor Speed: ${_joint.motorSpeed}, Lower Limit: ${_joint.lowerLimit.toStringAsFixed(2)}, Upper Limit: ${_joint.upperLimit.toStringAsFixed(2)}');
   }
 
   void press() {
     _isPressed = true;
     audioManager.playSoundEffect('audio/flipper_press.mp3');
+    print('Flipper ${isLeft ? "Left" : "Right"}: Pressed');
   }
 
   void release() {
     _isPressed = false;
     audioManager.playSoundEffect('audio/flipper_release.mp3');
+    print('Flipper ${isLeft ? "Left" : "Right"}: Released');
   }
 }
