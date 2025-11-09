@@ -381,6 +381,12 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   @override
   void update(double dt) {
     super.update(dt);
+
+    if (balls.isNotEmpty) {
+      final targetPosition = balls.first.position;
+      camera.viewfinder.position = targetPosition;
+    }
+
     // Workaround for spacebar KeyUp not being registered on web
     if (_spacebarWasPressed && !RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.space)) {
       launcher.releaseCharge();
