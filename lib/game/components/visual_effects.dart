@@ -42,8 +42,10 @@ class ScorePopup extends TextComponent {
     add(MoveEffect.by(Vector2(0, -50), EffectController(duration: 0.5)));
     add(ScaleEffect.by(Vector2.all(1.5), EffectController(duration: 0.2)));
     add(
-      OpacityEffect.fadeOut(EffectController(duration: 0.5))
-        ..onComplete = () => removeFromParent(),
+      ColorEffect(
+        Colors.yellow.withOpacity(0),
+        EffectController(duration: 0.5),
+      )..onComplete = () => removeFromParent(),
     );
   }
 }
@@ -68,8 +70,10 @@ class ComboEffect extends TextComponent {
       ),
     );
     add(
-      OpacityEffect.fadeOut(EffectController(startDelay: 0.5, duration: 0.5))
-        ..onComplete = () => removeFromParent(),
+      ColorEffect(
+        Colors.orange.withOpacity(0),
+        EffectController(startDelay: 0.5, duration: 0.5),
+      )..onComplete = () => removeFromParent(),
     );
   }
 }

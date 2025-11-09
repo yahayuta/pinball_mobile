@@ -34,6 +34,10 @@ This project is in active development. The core gameplay mechanics are complete,
 *   **Flippers:**
     *   Use the `Left Arrow` key for the left flipper.
     *   Use the `Right Arrow` key for the right flipper.
+*   **Nudge:**
+    *   Use the `Left Shift` key to nudge the table to the left.
+    *   Use the `Right Shift` key to nudge the table to the right.
+    *   Be careful not to nudge too much, or you will tilt the game!
 *   **Tilt:** If you are playing on a mobile device, you can tilt the device to influence the ball's movement. Be careful not to tilt too much!
 
 ## Getting Started (for Developers)

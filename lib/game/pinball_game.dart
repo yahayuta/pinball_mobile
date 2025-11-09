@@ -50,6 +50,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
   bool _spacebarWasPressed = false; // Flag for spacebar KeyUp workaround
+  DateTime? _lastNudgeTime;
 
   PinballGame({
     required SharedPreferences prefs,
@@ -303,6 +304,32 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     return KeyEventResult.ignored;
   }
 
+  void _nudge(bool isLeft) {
+    if (_tilted) return;
+
+    _tiltWarnings++;
+    if (_tiltWarnings >= 3) {
+      _tilt();
+      return;
+    }
+
+    final now = DateTime.now();
+    if (_lastNudgeTime != null && now.difference(_lastNudgeTime!).inSeconds > 2) {
+      _tiltWarnings = 1;
+    }
+    _lastNudgeTime = now;
+
+
+    final strength = 20000.0;
+    final x = isLeft ? strength : -strength;
+    final impulse = Vector2(x, 0);
+    for (final ball in balls) {
+      ball.body.applyLinearImpulse(impulse);
+    }
+
+    audioManager.playSoundEffect('audio/target_hit.mp3'); // Placeholder sound
+  }
+
   KeyEventResult _handleKeyDown(LogicalKeyboardKey key) {
     if (key == LogicalKeyboardKey.keyB) {
       spawnBall();
@@ -317,6 +344,12 @@ class PinballGame extends Forge2DGame with KeyboardEvents {
     } else if (key == LogicalKeyboardKey.space) {
       launcher.startCharging();
       _spacebarWasPressed = true; // Set flag for workaround
+      return KeyEventResult.handled;
+    } else if (key == LogicalKeyboardKey.shiftLeft) {
+      _nudge(true);
+      return KeyEventResult.handled;
+    } else if (key == LogicalKeyboardKey.shiftRight) {
+      _nudge(false);
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
