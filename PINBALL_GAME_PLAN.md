@@ -171,12 +171,17 @@ dependencies:
     - Comprehensive testing. (Integration tests added, web build functional, all errors resolved. Unit tests for PinballGame are pending due to mocking library issues).
     - Performance optimization.
 
-## 12. Known Issues
+## 12. Known Issues and Recent Fixes
 
-- Smooth gameplay at 60+ FPS
-- Realistic physics behavior
-- Intuitive controls
-- Engaging game mechanics
-- Stable performance
-- Bug-free experience
+### Recently Fixed:
+- Flipper controls and positioning have been corrected:
+  - Left flipper now correctly responds to left arrow key
+  - Right flipper now correctly responds to right arrow key
+  - Flipper physics and orientation improved for more natural gameplay
+- Ball spin visualization improved
+- Collision detection and response refined
+
+### Remaining Issues:
+- Smooth gameplay at 60+ FPS needs further optimization
+- Some physics behaviors could use additional refinement
 - Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)

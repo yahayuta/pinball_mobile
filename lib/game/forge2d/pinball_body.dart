@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../components/visual_effects.dart';
@@ -8,12 +9,12 @@ export '../components/target.dart' show PinballTarget;
 class PinballBall extends BodyComponent {
   final Vector2 initialPosition;
   final double radius;
-  // final Sprite? sprite;
+  final Sprite? sprite;
 
   PinballBall({
     required this.initialPosition,
     this.radius = 0.5, // 10 pixels in game scale = 0.5 meters in physics scale
-    // this.sprite,
+    this.sprite,
   });
 
   @override
@@ -25,7 +26,7 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 0.7, // Reduced bounciness for realism
+      restitution: 0.9, // Increased bounciness
       friction: 0.3, // Increased friction
     );
 
@@ -42,9 +43,9 @@ class PinballBall extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    // if (sprite != null) {
-    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
-    // } else {
+    if (sprite != null) {
+      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+    } else {
       final paint = Paint()
         ..color = Colors.red
         ..style = PaintingStyle.fill
@@ -67,7 +68,7 @@ class PinballBall extends BodyComponent {
           ..strokeWidth = 0.1,
       );
       canvas.restore();
-    // }
+    }
   }
 }
 
@@ -77,7 +78,7 @@ class PinballBumper extends BodyComponent {
   final double radius;
   final Function(PinballBall)? onHit;
   final Color color;
-  // final Sprite? sprite; // Added sprite property
+  final Sprite? sprite; // Added sprite property
   bool _isActivated = false;
   double _activationTime = 0.0;
   static const _activationDuration = 0.15; // seconds
@@ -87,7 +88,7 @@ class PinballBumper extends BodyComponent {
     this.radius = 1.0,
     this.onHit,
     this.color = Colors.blue,
-    // this.sprite, // Added sprite to constructor
+    this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -130,9 +131,9 @@ class PinballBumper extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    // if (sprite != null) {
-    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
-    // } else {
+    if (sprite != null) {
+      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+    } else {
       final renderColor = _isActivated ? Colors.yellow : color;
       final glowRadius = _isActivated ? radius * 1.2 : radius;
 
@@ -158,7 +159,7 @@ class PinballBumper extends BodyComponent {
       paint.style = PaintingStyle.stroke;
       paint.color = Colors.white;
       canvas.drawCircle(Offset.zero, radius, paint);
-    // }
+    }
   }
 }
 
@@ -169,7 +170,7 @@ class PinballFlipper extends BodyComponent {
   final double length;
   final Color color;
   final AudioManager audioManager;
-  // final Sprite? sprite; // Added sprite property
+  final Sprite? sprite; // Added sprite property
 
   static const double flipperUpAngle = -0.6; // In radians, ~35 degrees up
   static const double flipperDownAngle = 0.2; // In radians, ~12 degrees down
@@ -183,7 +184,7 @@ class PinballFlipper extends BodyComponent {
     this.length = 2.0,
     this.color = Colors.purple,
     required this.audioManager,
-    // this.sprite, // Added sprite to constructor
+    this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -192,7 +193,7 @@ class PinballFlipper extends BodyComponent {
       ..setAsBox(
         length / 2,
         length / 5, // thickness
-        Vector2(isLeft ? -length / 2 : length / 2, 0),
+        Vector2(isLeft ? length / 2 : -length / 2, 0),
         0.0,
       );
 
@@ -221,11 +222,11 @@ class PinballFlipper extends BodyComponent {
       ..enableLimit = true;
 
     if (isLeft) {
-      jointDef.lowerAngle = flipperUpAngle;
-      jointDef.upperAngle = flipperDownAngle;
-    } else {
       jointDef.lowerAngle = -flipperDownAngle;
       jointDef.upperAngle = -flipperUpAngle;
+    } else {
+      jointDef.lowerAngle = flipperUpAngle;
+      jointDef.upperAngle = flipperDownAngle;
     }
 
     final RevoluteJoint newJoint = RevoluteJoint(jointDef);
@@ -240,17 +241,17 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
-      _joint.motorSpeed = isLeft ? -40.0 : 40.0;
-    } else {
       _joint.motorSpeed = isLeft ? 40.0 : -40.0;
+    } else {
+      _joint.motorSpeed = isLeft ? -40.0 : 40.0;
     }
   }
 
   @override
   void render(Canvas canvas) {
-    // if (sprite != null) {
-    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2(length, length / 2.5));
-    // } else {
+    if (sprite != null) {
+      sprite!.render(canvas, position: Vector2.zero(), size: Vector2(length, length / 2.5));
+    } else {
       final paint = Paint()
         ..color = color
         ..style = PaintingStyle.fill
@@ -266,7 +267,7 @@ class PinballFlipper extends BodyComponent {
       paint.style = PaintingStyle.stroke;
       paint.color = Colors.white;
       canvas.drawRect(rect, paint);
-    // }
+    }
   }
 
   void press() {
@@ -294,13 +295,13 @@ class PinballPost extends BodyComponent {
   final Vector2 position;
   final double radius;
   final Color color;
-  // final Sprite? sprite; // Added sprite property
+  final Sprite? sprite; // Added sprite property
 
   PinballPost({
     required this.position,
     this.radius = 0.2,
     this.color = Colors.white,
-    // this.sprite, // Added sprite to constructor
+    this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -324,14 +325,14 @@ class PinballPost extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    // if (sprite != null) {
-    //   sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
-    // } else {
+    if (sprite != null) {
+      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+    } else {
       final paint = Paint()
         ..color = color
         ..style = PaintingStyle.fill;
 
       canvas.drawCircle(Offset.zero, radius, paint);
-    // }
+    }
   }
 }

@@ -18,8 +18,6 @@ import 'package:pinball_mobile/game/forge2d/pinball_body.dart'; // Added
 
 class CustomPinballTable extends PinballGame {
   final TableConfig tableConfig;
-  bool _isInitialized = false;
-
   CustomPinballTable({
     required this.tableConfig,
     required super.prefs,
@@ -29,20 +27,7 @@ class CustomPinballTable extends PinballGame {
   });
 
   @override
-  Future<void> initGameElements() async {
-    // This method is now empty, as the initialization is moved to onGameResize.
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    if (!_isInitialized) {
-      _initializeGameElements(size, audioManager);
-      _isInitialized = true;
-    }
-  }
-
-  Future<void> _initializeGameElements(Vector2 size, AudioManager audioManager) async {
+  Future<void> loadTableElements() async {
     // Add flippers and launcher (common to all tables)
     final flipperLength = size.x / 8;
     leftFlipper = PinballFlipper(
@@ -50,6 +35,7 @@ class CustomPinballTable extends PinballGame {
       isLeft: true,
       length: flipperLength,
       audioManager: audioManager,
+      sprite: flipperLeftSprite,
     );
     await add(leftFlipper);
 
@@ -58,6 +44,7 @@ class CustomPinballTable extends PinballGame {
       isLeft: false,
       length: flipperLength,
       audioManager: audioManager,
+      sprite: flipperRightSprite,
     );
     await add(rightFlipper);
 
@@ -67,16 +54,16 @@ class CustomPinballTable extends PinballGame {
     // Add walls (common to all tables)
     final wallThickness = size.x * 0.075;
     await add(
-      WallBody(position: Vector2(size.x / 2, 0), size: Vector2(size.x, wallThickness)),
+      WallBody(position: Vector2(size.x / 2, 0), size: Vector2(size.x, wallThickness), sprite: wallSprite),
     ); // Top wall
     await add(
-      WallBody(position: Vector2(size.x / 2, size.y), size: Vector2(size.x, wallThickness)),
+      WallBody(position: Vector2(size.x / 2, size.y), size: Vector2(size.x, wallThickness), sprite: wallSprite),
     ); // Bottom wall
     await add(
-      WallBody(position: Vector2(0, size.y / 2), size: Vector2(wallThickness, size.y)),
+      WallBody(position: Vector2(0, size.y / 2), size: Vector2(wallThickness, size.y), sprite: wallSprite),
     ); // Left wall
     await add(
-      WallBody(position: Vector2(size.x, size.y / 2), size: Vector2(wallThickness, size.y)),
+      WallBody(position: Vector2(size.x, size.y / 2), size: Vector2(wallThickness, size.y), sprite: wallSprite),
     ); // Right wall
 
     // Spawn initial ball
@@ -96,6 +83,7 @@ class CustomPinballTable extends PinballGame {
               radius: (componentData['radius'] as double?) ?? 2.0,
               onHit: (ball) => addScore(50, ball.body.position),
               audioManager: audioManager,
+              sprite: bumperSprite,
             ),
           );
           break;
@@ -109,6 +97,7 @@ class CustomPinballTable extends PinballGame {
               ),
               onHit: (ball) => addScore(100, ball.body.position),
               audioManager: audioManager,
+              sprite: dropTargetSprite,
             ),
           );
           break;
@@ -119,6 +108,7 @@ class CustomPinballTable extends PinballGame {
               width: (componentData['width'] as double?) ?? 2.0,
               height: (componentData['height'] as double?) ?? 1.0,
               onHit: (ball) => addScore(100, ball.body.position),
+              sprite: targetSprite,
             ),
           );
           break;
