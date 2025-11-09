@@ -96,3 +96,29 @@ The following is a proposed order for implementing the enhancements:
     -   Optimize performance.
     -   Refactor the code.
     -   Add more visual and audio polish.
+
+## 8. Realism Enhancements
+
+This section outlines a plan for making the game feel more like a real pinball machine.
+
+### 8.1. Advanced Player Techniques
+- **Nudging:** Implement a nudge mechanic that allows the player to gently shake the table to influence the ball's trajectory. This should be a high-risk, high-reward feature, where excessive nudging leads to a "tilt".
+- **Advanced Flipper Skills:** Refine the flipper physics to allow for advanced techniques like:
+    - **Flipper Trapping:** Holding the ball on a raised flipper.
+    - **Post Passing:** Transferring the ball from one flipper to the other by bouncing it off the post between the flippers.
+    - **Dead Flipper Pass:** Passing the ball from one flipper to the other by letting it roll over the lowered flipper.
+
+### 8.2. Complex Table Elements
+- **Captive Balls:** Add captive balls that are trapped in a small area and can be hit by the main ball for special rewards.
+- **Targets with Memory:** Implement target banks that need to be hit in a specific sequence to be completed.
+- **Vertical Up-Kickers (VUKs):** Add VUKs that kick the ball vertically to a higher playfield or a ramp.
+- **Subways:** Create underground passages that the ball can travel through, adding an element of surprise.
+
+### 8.3. Deeper Scoring Rules
+- **Modes:** Introduce different "modes" that can be started by completing certain objectives. Each mode would have its own set of rules, objectives, and scoring, often tied to the table's theme.
+- **Storytelling:** Use the modes and the DMD to tell a simple story that unfolds as the player progresses through the game.
+
+### 8.4. Realistic Physics and Audio
+- **Ball Spin and Friction:** Improve the physics simulation to more accurately model ball spin and friction, especially the interaction between the ball and the flippers.
+- **Mechanical Sounds:** Add more realistic and varied sound effects for the mechanical components of the pinball machine, such as the sound of the flippers activating, the bumpers firing, and the ball rolling on the playfield.
+- **Immersive Voice Callouts:** Expand the voice callouts to provide more feedback to the player, guide them through the game's modes, and announce important events with more excitement.
