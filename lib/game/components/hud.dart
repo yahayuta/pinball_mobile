@@ -39,7 +39,7 @@ class Hud extends Component with HasGameReference<PinballGame> {
       'Max Height: ${maxHeight.toStringAsFixed(0)}',
       'Balls: ${balls.length}',
       if (ballSaveActive)
-        'Ball Save: ${game.ballSaveTimeRemaining.toStringAsFixed(1)}s',
+        'Ball Save: ${(game.ballSaveTimeRemaining.inMilliseconds / 1000.0).toStringAsFixed(1)}s',
       if (isTilted) 'TILT!',
       if (!isTilted && tiltWarnings > 0) 'Tilt Warnings: $tiltWarnings',
       '', // spacer

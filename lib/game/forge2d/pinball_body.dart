@@ -22,8 +22,8 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 1.0, // Max bounciness for real-world feel
-      friction: 0.1,    // A little friction
+      restitution: 0.7, // Reduced bounciness for realism
+      friction: 0.3,    // Increased friction
     );
 
     // Create the body definition
@@ -76,8 +76,8 @@ class PinballBumper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 1.5, // Extra bouncy
-      friction: 0.1,
+      restitution: 1.0, // Perfectly elastic collision
+      friction: 0.2,
       userData: this,
     );
 
@@ -172,7 +172,7 @@ class PinballFlipper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 0.2,
+      restitution: 0.3,
       friction: 0.6,
     );
 
@@ -240,12 +240,12 @@ class PinballFlipper extends BodyComponent {
 
   void press() {
     _isPressed = true;
-    audioManager.playSoundEffect('audio/flipper_press.mp3');
+    audioManager.playSoundEffect('audio/flipper_press.mp3', impactForce: 1.0);
   }
 
   void release() {
     _isPressed = false;
-    audioManager.playSoundEffect('audio/flipper_release.mp3');
+    audioManager.playSoundEffect('audio/flipper_release.mp3', impactForce: 1.0);
   }
 }
 
@@ -268,8 +268,8 @@ class PinballPost extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 0.4, // A bit bouncy
-      friction: 0.1,
+      restitution: 0.6, // Increased bounciness
+      friction: 0.2,
     );
 
     final bodyDef = BodyDef(

@@ -3,20 +3,40 @@ import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/effects.dart';
 
+class FadingCircleParticle extends Particle {
+  FadingCircleParticle({
+    required this.color,
+    required this.radius,
+    double? lifespan,
+  }) : super(lifespan: lifespan);
+
+  final Color color;
+  final double radius;
+
+  @override
+  void render(Canvas canvas) {
+    final paint = Paint()
+      ..color = color.withOpacity(1.0 - progress)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset.zero, radius, paint);
+  }
+}
+
 class BumperHitEffect extends ParticleSystemComponent {
   BumperHitEffect({required Vector2 position, required Color color})
     : super(
         position: position,
         particle: Particle.generate(
-          count: 10,
+          count: 20, // Increased particle count
           lifespan: 0.5,
           generator: (i) => AcceleratedParticle(
-            acceleration: Vector2(0, 100),
-            speed: Vector2.random() * 100,
+            acceleration: Vector2(0, 0), // No constant acceleration
+            speed: (Vector2.random() - Vector2.all(0.5)) * 200, // Radial burst
             position: Vector2.zero(),
-            child: CircleParticle(
+            child: FadingCircleParticle(
               radius: 2,
-              paint: Paint()..color = color.withAlpha((255 * 0.5).toInt()),
+              color: color,
+              lifespan: 0.5,
             ),
           ),
         ),
