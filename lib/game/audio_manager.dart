@@ -22,15 +22,25 @@ class AudioManager {
     await _backgroundPlayer.play(AssetSource(assetPath));
   }
 
-  Future<void> playSoundEffect(String assetPath, {double impactForce = 1.0}) async {
+  Future<void> playSoundEffect(dynamic assetPath, {double impactForce = 1.0}) async {
     if (kIsWeb) return;
-    if (!_effectPlayers.containsKey(assetPath)) {
-      _effectPlayers[assetPath] = AudioPlayer();
-      _effectPlayers[assetPath]!.setReleaseMode(ReleaseMode.release);
+
+    String selectedAssetPath;
+    if (assetPath is List<String>) {
+      selectedAssetPath = assetPath[DateTime.now().microsecondsSinceEpoch % assetPath.length];
+    } else if (assetPath is String) {
+      selectedAssetPath = assetPath;
+    } else {
+      throw ArgumentError('assetPath must be a String or a List<String>');
+    }
+
+    if (!_effectPlayers.containsKey(selectedAssetPath)) {
+      _effectPlayers[selectedAssetPath] = AudioPlayer();
+      _effectPlayers[selectedAssetPath]!.setReleaseMode(ReleaseMode.release);
     }
     final double scaledVolume = _effectVolume * impactForce.clamp(0.2, 1.0);
-    await _effectPlayers[assetPath]!.setVolume(scaledVolume);
-    await _effectPlayers[assetPath]!.play(AssetSource(assetPath));
+    await _effectPlayers[selectedAssetPath]!.setVolume(scaledVolume);
+    await _effectPlayers[selectedAssetPath]!.play(AssetSource(selectedAssetPath));
   }
 
   void setMusicVolume(double volume) {

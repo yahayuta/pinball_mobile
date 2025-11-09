@@ -282,7 +282,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
 
       if (otherBody is PinballBumper) {
         otherBody.activate();
-        audioManager.playSoundEffect('audio/bumper.mp3', impactForce: impactForce);
+        audioManager.playSoundEffect(['audio/bumper.mp3', 'audio/score.mp3'], impactForce: impactForce);
         addScore(10, otherBody.position);
       } else if (otherBody is PinballTarget) {
         audioManager.playSoundEffect('audio/target_hit.mp3', impactForce: impactForce);
