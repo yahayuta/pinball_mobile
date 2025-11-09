@@ -2,6 +2,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../components/visual_effects.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/pinball_game.dart'; // Added
 export '../components/target.dart' show PinballTarget;
 
 class PinballBall extends BodyComponent {
@@ -252,12 +253,23 @@ class PinballFlipper extends BodyComponent {
 
   void press() {
     _isPressed = true;
-    audioManager.playSoundEffect('audio/flipper_press.mp3', impactForce: 1.0);
+    // Access the game instance to use _calculatePan
+    final gameRef = findGame() as PinballGame;
+    audioManager.playSoundEffect(
+      'audio/flipper_press.mp3',
+      impactForce: 1.0,
+      pan: gameRef.calculatePan(position.x),
+    );
   }
 
   void release() {
     _isPressed = false;
-    audioManager.playSoundEffect('audio/flipper_release.mp3', impactForce: 1.0);
+    final gameRef = findGame() as PinballGame;
+    audioManager.playSoundEffect(
+      'audio/flipper_release.mp3',
+      impactForce: 1.0,
+      pan: gameRef.calculatePan(position.x),
+    );
   }
 }
 
