@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -11,6 +12,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   final Function(PinballBall)? onHit;
   final Color color;
   final AudioManager audioManager;
+  Sprite? sprite;
 
   bool _isActivated = false;
   double _activationTime = 0.0;
@@ -22,6 +24,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
     this.onHit,
     this.color = Colors.orange,
     required this.audioManager,
+    this.sprite,
   });
 
   @override
@@ -77,30 +80,34 @@ class PopBumper extends BodyComponent with ContactCallbacks {
 
   @override
   void render(Canvas canvas) {
-    final renderColor = _isActivated ? Colors.yellow : color;
-    final glowRadius = _isActivated ? radius * 1.2 : radius;
+    if (sprite != null) {
+      sprite!.renderRect(canvas, Rect.fromCircle(center: Offset.zero, radius: radius * 20));
+    } else {
+      final renderColor = _isActivated ? Colors.yellow : color;
+      final glowRadius = _isActivated ? radius * 1.2 : radius;
 
-    // Draw glow effect when activated
-    if (_isActivated) {
-      canvas.drawCircle(
-        Offset.zero,
-        glowRadius,
-        Paint()
-          ..color = renderColor.withAlpha((255 * 0.3).toInt())
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-      );
+      // Draw glow effect when activated
+      if (_isActivated) {
+        canvas.drawCircle(
+          Offset.zero,
+          glowRadius,
+          Paint()
+            ..color = renderColor.withAlpha((255 * 0.3).toInt())
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+        );
+      }
+
+      // Draw main bumper body
+      final paint = Paint()
+        ..color = renderColor
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 2.0;
+
+      // Draw filled circle with border
+      canvas.drawCircle(Offset.zero, radius, paint);
+      paint.style = PaintingStyle.stroke;
+      paint.color = Colors.white;
+      canvas.drawCircle(Offset.zero, radius, paint);
     }
-
-    // Draw main bumper body
-    final paint = Paint()
-      ..color = renderColor
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
-
-    // Draw filled circle with border
-    canvas.drawCircle(Offset.zero, radius, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawCircle(Offset.zero, radius, paint);
   }
 }

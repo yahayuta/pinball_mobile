@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 
@@ -8,14 +9,14 @@ class WallBody extends BodyComponent {
   @override
   final double angle;
   final Color color;
-  // final Sprite? sprite; // Added sprite property
+  final Sprite? sprite; // Added sprite property
 
   WallBody({
     required this.position,
     required this.size,
     this.angle = 0.0,
     this.color = Colors.grey,
-    // this.sprite, // Added sprite to constructor
+    this.sprite, // Added sprite to constructor
   });
 
   @override
@@ -44,9 +45,9 @@ class WallBody extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
-    // if (sprite != null) {
-    //   sprite!.render(canvas, position: Vector2.zero(), size: size);
-    // } else {
+    if (sprite != null) {
+      sprite!.render(canvas, position: Vector2.zero(), size: size);
+    } else {
       final paint = Paint()
         ..color = color.withAlpha((255 * 0.8).toInt())
         ..style = PaintingStyle.fill
@@ -75,6 +76,6 @@ class WallBody extends BodyComponent {
         ..style = PaintingStyle.stroke
         ..color = Colors.white;
       canvas.drawRect(rect, paint);
-    // }
+    }
   }
 }

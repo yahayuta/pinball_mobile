@@ -1,3 +1,4 @@
+import 'package:pinball_mobile/game/tables/default_pinball_table.dart'; // Added
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,7 @@ class GameProvider extends ChangeNotifier {
   }) {
     tableConfigManager = TableConfigManager(prefs); // Initialized
     gameModeManager = GameModeManager(); // Initialized
-    _game = PinballGame(
+    _game = DefaultPinballTable(
       prefs: prefs,
       highScoreManager: highScoreManager,
       gameModeManager: gameModeManager, // Added

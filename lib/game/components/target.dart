@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../forge2d/pinball_body.dart';
@@ -11,6 +12,7 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
   final void Function(PinballBall)? onHit;
   final int hitsToTrigger;
   int _hitCount = 0;
+  Sprite? sprite;
 
   bool _isHit = false;
   double _hitTime = 0;
@@ -22,6 +24,7 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
     this.height = 1.0,
     this.onHit,
     this.hitsToTrigger = 1,
+    this.sprite,
   });
 
   @override
@@ -48,23 +51,27 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = _isHit ? Colors.red : Colors.blueGrey
-      ..style = PaintingStyle.fill;
+    if (sprite != null) {
+      sprite!.renderRect(canvas, Rect.fromCenter(center: Offset.zero, width: width * 20, height: height * 20));
+    } else {
+      final paint = Paint()
+        ..color = _isHit ? Colors.red : Colors.blueGrey
+        ..style = PaintingStyle.fill;
 
-    final rect = Rect.fromCenter(
-      center: Offset.zero,
-      width: width * 20, // Convert to screen coordinates
-      height: height * 20, // Convert to screen coordinates
-    );
-    canvas.drawRect(rect, paint);
+      final rect = Rect.fromCenter(
+        center: Offset.zero,
+        width: width * 20, // Convert to screen coordinates
+        height: height * 20, // Convert to screen coordinates
+      );
+      canvas.drawRect(rect, paint);
 
-    // Draw border
-    paint
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-    canvas.drawRect(rect, paint);
+      // Draw border
+      paint
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0;
+      canvas.drawRect(rect, paint);
+    }
   }
 
   @override

@@ -19,28 +19,18 @@ class DefaultPinballTable extends PinballGame {
     required super.gameModeManager,
   });
 
-  bool _isInitialized = false;
+
+
+
 
   @override
-  Future<void> initGameElements() async {
-    // This method is now empty, as the initialization is moved to onGameResize.
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    if (!_isInitialized) {
-      _initializeGameElements(size, audioManager);
-      _isInitialized = true;
-    }
-  }
-
-  Future<void> _initializeGameElements(Vector2 size, AudioManager audioManager) async {
+  Future<void> loadTableElements() async {
     // Add a platform for the launcher
     await add(
       WallBody(
         position: Vector2(size.x * 0.9, size.y * 0.8 + 3.0),
         size: Vector2(2.0, 0.5),
+        sprite: wallSprite,
       ),
     );
 
@@ -51,17 +41,19 @@ class DefaultPinballTable extends PinballGame {
     final flipperLength = size.x / 8;
     leftFlipper = PinballFlipper(
       position: Vector2(size.x * 0.3, size.y * 0.8),
-      isLeft: false,
+      isLeft: true,
       length: flipperLength,
       audioManager: audioManager,
+      sprite: flipperLeftSprite,
     );
     await add(leftFlipper);
 
     rightFlipper = PinballFlipper(
       position: Vector2(size.x * 0.7, size.y * 0.8),
-      isLeft: true,
+      isLeft: false,
       length: flipperLength,
       audioManager: audioManager,
+      sprite: flipperRightSprite,
     );
     await add(rightFlipper);
 
@@ -75,6 +67,7 @@ class DefaultPinballTable extends PinballGame {
       WallBody(
         position: Vector2(size.x / 2, 0),
         size: Vector2(size.x, wallThickness),
+        sprite: wallSprite,
       ),
     );
 
@@ -82,6 +75,7 @@ class DefaultPinballTable extends PinballGame {
       WallBody(
         position: Vector2(size.x / 2, size.y),
         size: Vector2(size.x, wallThickness),
+        sprite: wallSprite,
       ),
     );
 
@@ -89,6 +83,7 @@ class DefaultPinballTable extends PinballGame {
       WallBody(
         position: Vector2(0, size.y / 2),
         size: Vector2(wallThickness, size.y),
+        sprite: wallSprite,
       ),
     );
 
@@ -97,27 +92,29 @@ class DefaultPinballTable extends PinballGame {
       WallBody(
         position: Vector2(size.x, size.y * 0.25),
         size: Vector2(wallThickness, size.y * 0.5),
+        sprite: wallSprite,
       ),
     );
     await add(
       WallBody(
         position: Vector2(size.x, size.y * 0.9),
         size: Vector2(wallThickness, size.y * 0.2),
+        sprite: wallSprite,
       ),
     );
 
-    // The ramp for the ball to exit the launch lane.
-    final rampVertices = [
-      Vector2(
-        size.x * 0.85,
-        size.y * 0.3,
-      ), // Start point of the ramp, lower on the right
-      Vector2(
-        size.x * 0.5,
-        size.y * 0.5,
-      ), // End point of the ramp, higher on the left
-    ];
-    await add(GuideWall(rampVertices));
+    // // The ramp for the ball to exit the launch lane.
+    // final rampVertices = [
+    //   Vector2(
+    //     size.x * 0.85,
+    //     size.y * 0.3,
+    //   ), // Start point of the ramp, lower on the right
+    //   Vector2(
+    //     size.x * 0.5,
+    //     size.y * 0.5,
+    //   ), // End point of the ramp, higher on the left
+    // ];
+    // await add(GuideWall(rampVertices));
 
     // The wall on the left of the launch lane.
     final launchLaneWallVertices = [
@@ -139,6 +136,7 @@ class DefaultPinballTable extends PinballGame {
           spawnBall();
           spawnBall();
         },
+        sprite: targetSprite,
       ),
     );
 
@@ -148,6 +146,7 @@ class DefaultPinballTable extends PinballGame {
         position: Vector2(size.x * 0.3, size.y * 0.3),
         onHit: (ball) => addScore(50, ball.body.position),
         audioManager: audioManager,
+        sprite: bumperSprite,
       ),
     );
     await add(
@@ -155,6 +154,7 @@ class DefaultPinballTable extends PinballGame {
         position: Vector2(size.x * 0.5, size.y * 0.2),
         onHit: (ball) => addScore(50, ball.body.position),
         audioManager: audioManager,
+        sprite: bumperSprite,
       ),
     );
     await add(
@@ -162,6 +162,7 @@ class DefaultPinballTable extends PinballGame {
         position: Vector2(size.x * 0.7, size.y * 0.3),
         onHit: (ball) => addScore(50, ball.body.position),
         audioManager: audioManager,
+        sprite: bumperSprite,
       ),
     );
 
@@ -171,6 +172,7 @@ class DefaultPinballTable extends PinballGame {
         position: Vector2(size.x * 0.4, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
         audioManager: audioManager,
+        sprite: dropTargetSprite,
       ),
     );
     await add(
@@ -178,6 +180,7 @@ class DefaultPinballTable extends PinballGame {
         position: Vector2(size.x * 0.5, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
         audioManager: audioManager,
+        sprite: dropTargetSprite,
       ),
     );
     await add(
@@ -185,6 +188,7 @@ class DefaultPinballTable extends PinballGame {
         position: Vector2(size.x * 0.6, size.y * 0.5),
         onHit: (ball) => addScore(100, ball.body.position),
         audioManager: audioManager,
+        sprite: dropTargetSprite,
       ),
     );
   }

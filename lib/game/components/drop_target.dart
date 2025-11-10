@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -10,6 +11,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
   final Function(PinballBall)? onHit;
   final Color color;
   final AudioManager audioManager;
+  Sprite? sprite;
 
   bool _isDown = false;
   late final PrismaticJoint _joint;
@@ -20,6 +22,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     this.onHit,
     this.color = Colors.green,
     required this.audioManager,
+    this.sprite,
   }) : size = size ?? Vector2(2.0, 4.0);
 
   @override
@@ -82,22 +85,26 @@ class DropTarget extends BodyComponent with ContactCallbacks {
 
   @override
   void render(Canvas canvas) {
-    final renderColor = _isDown ? Colors.grey : color;
+    if (sprite != null) {
+      sprite!.renderRect(canvas, Rect.fromCenter(center: Offset.zero, width: size.x * 20, height: size.y * 20));
+    } else {
+      final renderColor = _isDown ? Colors.grey : color;
 
-    final paint = Paint()
-      ..color = renderColor
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
+      final paint = Paint()
+        ..color = renderColor
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 2.0;
 
-    final rect = Rect.fromCenter(
-      center: Offset.zero,
-      width: size.x,
-      height: size.y,
-    );
+      final rect = Rect.fromCenter(
+        center: Offset.zero,
+        width: size.x,
+        height: size.y,
+      );
 
-    canvas.drawRect(rect, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawRect(rect, paint);
+      canvas.drawRect(rect, paint);
+      paint.style = PaintingStyle.stroke;
+      paint.color = Colors.white;
+      canvas.drawRect(rect, paint);
+    }
   }
 }

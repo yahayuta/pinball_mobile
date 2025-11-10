@@ -10,7 +10,6 @@ class Launcher extends BodyComponent with ContactCallbacks {
   double charge = 0.0; // 0.0 .. maxCharge
   final double maxCharge;
   bool charging = false;
-  final Paint _paint = Paint()..color = Colors.green;
 
   final List<Body> _ballsToLaunch = [];
   final Map<Body, Timer> _removalTimers = {};
@@ -58,7 +57,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
     charge = 0.0;
     for (final ball in _ballsToLaunch) {
       // Apply a strong, angled impulse DIRECTLY to the ball
-      final impulse = Vector2(-c * 1600000, -c * 12000000);
+      final impulse = Vector2(-c * 80000, -c * 600000);
       ball.applyLinearImpulse(impulse);
     }
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3'); // New sound effect
@@ -101,7 +100,15 @@ class Launcher extends BodyComponent with ContactCallbacks {
         0.9, // Right (m)
         2.9, // Bottom (m)
       );
-      canvas.drawRect(barRect, _paint..style = PaintingStyle.fill);
+      Color barColor;
+      if (charge / maxCharge < 0.33) {
+        barColor = Colors.green;
+      } else if (charge / maxCharge < 0.66) {
+        barColor = Colors.yellow;
+      } else {
+        barColor = Colors.red;
+      }
+      canvas.drawRect(barRect, Paint()..color = barColor..style = PaintingStyle.fill);
       canvas.drawRect(
         barRect,
         Paint()
