@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // For creating Pin
 import 'package:pinball_mobile/game/high_score_manager.dart'; // For creating PinballGame
 import 'package:pinball_mobile/game/table_config_manager.dart'; // Added
 import 'package:pinball_mobile/game/tables/custom_pinball_table.dart'; // Added
+import 'package:pinball_mobile/menu/widgets/menu_button.dart'; // Import MenuButton
 
 class TableSelectionScreen extends StatefulWidget { // Changed to StatefulWidget
   const TableSelectionScreen({super.key});
@@ -48,7 +49,8 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
+              MenuButton(
+                text: 'Default Table',
                 onPressed: () {
                   final game = DefaultPinballTable(
                     prefs: prefs,
@@ -63,10 +65,10 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
                     ),
                   );
                 },
-                child: const Text('Default Table'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              MenuButton(
+                text: 'Space Adventure',
                 onPressed: () {
                   final game = SpaceAdventureTable(
                     prefs: prefs,
@@ -81,7 +83,6 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
                     ),
                   );
                 },
-                child: const Text('Space Adventure'),
               ),
               const SizedBox(height: 40),
               const Text(
@@ -102,26 +103,26 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
                       itemCount: _customTables.length,
                       itemBuilder: (context, index) {
                         final table = _customTables[index];
-                        return ListTile(
-                          title: Text(
-                            table.name,
-                            style: const TextStyle(color: Colors.white),
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: MenuButton(
+                            text: table.name,
+                            onPressed: () {
+                              final game = CustomPinballTable(
+                                tableConfig: table,
+                                prefs: prefs,
+                                highScoreManager: highScoreManager,
+                                gameModeManager: gameProvider.gameModeManager, // Added
+                              );
+                              gameProvider.loadTable(game);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GameScreen(game: game),
+                                ),
+                              );
+                            },
                           ),
-                          onTap: () {
-                            final game = CustomPinballTable(
-                              tableConfig: table,
-                              prefs: prefs,
-                              highScoreManager: highScoreManager,
-                              gameModeManager: gameProvider.gameModeManager, // Added
-                            );
-                            gameProvider.loadTable(game);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => GameScreen(game: game),
-                              ),
-                            );
-                          },
                         );
                       },
                     ),
