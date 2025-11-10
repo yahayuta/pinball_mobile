@@ -168,9 +168,8 @@ dependencies:
     - Multiple game modes. (Continue implementation)
 - **Polish and Testing:**
     - Ongoing physics tuning of components like the launcher and flippers to improve game feel.
-    - Comprehensive testing. (Integration tests added, web build functional, all errors resolved. Unit tests for PinballGame are pending due to mocking library issues).
+    - Comprehensive testing. (Integration tests added, web build functional, all errors resolved. Unit tests for PinballGame are now functional after resolving Flutter binding initialization issues).
     - Performance optimization.
-
 ## 12. Known Issues and Recent Fixes
 
 ### Recently Fixed:
