@@ -15,6 +15,7 @@ class GameProvider extends ChangeNotifier {
     required SharedPreferences prefs,
     required HighScoreManager highScoreManager,
     required AudioManager audioManager, // Added
+    required AchievementManager achievementManager, // Added
   }) {
     tableConfigManager = TableConfigManager(prefs); // Initialized
     gameModeManager = GameModeManager(); // Initialized
@@ -23,6 +24,7 @@ class GameProvider extends ChangeNotifier {
       highScoreManager: highScoreManager,
       gameModeManager: gameModeManager, // Added
       audioManager: audioManager, // Added
+      achievementManager: achievementManager, // Added
     );
     _highScoreManager = highScoreManager; // Initialize _highScoreManager
   }

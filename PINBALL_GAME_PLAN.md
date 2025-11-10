@@ -159,7 +159,7 @@ dependencies:
 - Online leaderboards: Implemented (Local). The high score screen now displays a list of top scores.
 - Multiplayer modes: Implemented (Local)
 - Custom table editor: Implemented (Basic)
-- Achievement system: Implemented
+- Achievement system: Implemented. The achievement screen now displays a list of achievements, their progress, and unlocked status.
 - Social features: Implemented (Basic)
 - Multiple game modes: Implemented (Basic)
 

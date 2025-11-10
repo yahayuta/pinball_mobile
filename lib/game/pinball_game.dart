@@ -60,6 +60,8 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
   late HighScoreManager _highScoreManager;
   @visibleForTesting
   set highScoreManager(HighScoreManager value) => _highScoreManager = value;
+  // Removed internal instantiation of AudioManager and AchievementManager
+  late final AudioManager audioManager;
   late final AchievementManager achievementManager;
 
   int score = 0;
@@ -102,15 +104,17 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
     required HighScoreManager highScoreManager,
     required this.gameModeManager,
     required this.audioManager, // Added
+    required this.achievementManager, // Added
     this.currentPlayerName = 'Player 1',
   }) : _highScoreManager = highScoreManager,
-       achievementManager = AchievementManager(prefs),
        super(gravity: Vector2(0, 40.0)) {
     debugMode = true;
   }
 
   final GameModeManager gameModeManager; // Declared here
-  final AudioManager audioManager; // Declared here
+  // Removed duplicate declaration of AudioManager and AchievementManager
+  // final AudioManager audioManager; // Declared here
+  // final AchievementManager achievementManager; // Declared here
 
   late String currentPlayerName; // Removed default initialization
 
