@@ -185,5 +185,5 @@ dependencies:
 - Smooth gameplay at 60+ FPS needs further optimization
 - Some physics behaviors could use additional refinement
 - Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)
-- Launcher consistency: The current launcher applies a direct impulse to the ball, which can lead to inconsistent launch angles. The `LauncherRamp` component has been developed to address this but is temporarily disabled for further tuning.
+- Launcher consistency: In Progress. The `LauncherRamp` component has been re-enabled in both tables to guide the ball and improve launch consistency. Further tuning of the ramp's position, size, and shape is required.
 - Web `KeyUp` event: A workaround is in place for an issue where the spacebar `KeyUp` event is not reliably detected on web builds.
