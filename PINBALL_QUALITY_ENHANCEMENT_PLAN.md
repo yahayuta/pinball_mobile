@@ -70,7 +70,7 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - Add subtle animations or transitions to UI elements.
 - **Current Status:**
     - The `Launcher` component includes a visual charge bar that dynamically updates, providing clear and immediate feedback to the player, which directly addresses refining HUD layout and adding subtle animations/transitions to UI elements.
-    - Further UI/UX polish in menus and overall visual style would require a more extensive review of the `lib/menu/` and `main.dart` files.
+    - Further UI/UX polish in menus and overall visual style would require a more extensive review of the `lib/menu/` and `main.dart` files. The main menu has been updated to use a custom `MenuButton` widget for improved visual consistency and appeal.
 
 ### 3.6. Bug Fixing and Stability
 - **Goal:** Eliminate known bugs and improve overall game stability.

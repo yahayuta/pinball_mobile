@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:pinball_mobile/game/game_provider.dart';
 import 'package:pinball_mobile/menu/high_score_screen.dart';
 import 'package:pinball_mobile/menu/settings_screen.dart';
 import 'package:pinball_mobile/menu/tutorial_screen.dart';
@@ -9,7 +8,7 @@ import 'package:pinball_mobile/menu/table_editor_screen.dart';
 import 'package:pinball_mobile/menu/achievements_screen.dart';
 import 'package:pinball_mobile/menu/social_screen.dart';
 import 'package:pinball_mobile/menu/table_selection_screen.dart';
-// import 'package:provider/provider.dart';
+import 'package:pinball_mobile/menu/widgets/menu_button.dart'; // Import the new MenuButton
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -35,7 +34,8 @@ class MainMenu extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Select Table',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -44,20 +44,20 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Select Table'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'High Scores',
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HighScoreScreen(), // Removed const
+                          builder: (context) => HighScoreScreen(),
                         ),
                       );
                     },
-                    child: const Text('High Scores'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Settings',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -66,9 +66,9 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Settings'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'How to Play',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -77,9 +77,9 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('How to Play'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Leaderboard',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -88,9 +88,9 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Leaderboard'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Multiplayer',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -99,9 +99,9 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Multiplayer'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Table Editor',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -110,9 +110,9 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Table Editor'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Achievements',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -121,9 +121,9 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Achievements'),
                   ),
-                  ElevatedButton(
+                  MenuButton(
+                    text: 'Social',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -132,7 +132,6 @@ class MainMenu extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Social'),
                   ),
                 ],
               ),
