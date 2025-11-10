@@ -1,7 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart'; // Import for ChangeNotifier
 
-class AudioManager {
+class AudioManager extends ChangeNotifier {
   static final AudioManager _instance = AudioManager._internal();
   factory AudioManager() => _instance;
 
@@ -10,7 +11,10 @@ class AudioManager {
   final AudioPlayer _backgroundPlayer = AudioPlayer();
   final Map<String, AudioPlayer> _effectPlayers = {};
   double _musicVolume = 0.5;
-  double _effectVolume = 0.7;
+  double _sfxVolume = 0.7; // Renamed _effectVolume to _sfxVolume for consistency
+
+  double get musicVolume => _musicVolume;
+  double get sfxVolume => _sfxVolume;
 
   Future<void> init() async {
     _backgroundPlayer.setReleaseMode(ReleaseMode.loop);
@@ -38,7 +42,7 @@ class AudioManager {
       _effectPlayers[selectedAssetPath] = AudioPlayer();
       _effectPlayers[selectedAssetPath]!.setReleaseMode(ReleaseMode.release);
     }
-    final double scaledVolume = _effectVolume * impactForce.clamp(0.2, 1.0);
+    final double scaledVolume = _sfxVolume * impactForce.clamp(0.2, 1.0); // Use _sfxVolume
     await _effectPlayers[selectedAssetPath]!.setVolume(scaledVolume);
     await _effectPlayers[selectedAssetPath]!.play(AssetSource(selectedAssetPath));
   }
@@ -46,13 +50,15 @@ class AudioManager {
   void setMusicVolume(double volume) {
     _musicVolume = volume;
     _backgroundPlayer.setVolume(_musicVolume);
+    notifyListeners();
   }
 
-  void setEffectVolume(double volume) {
-    _effectVolume = volume;
+  void setSfxVolume(double volume) { // Renamed setEffectVolume to setSfxVolume
+    _sfxVolume = volume;
     for (var player in _effectPlayers.values) {
-      player.setVolume(_effectVolume);
+      player.setVolume(_sfxVolume);
     }
+    notifyListeners();
   }
 
   void dispose() {
@@ -61,5 +67,6 @@ class AudioManager {
       player.dispose();
     }
     _effectPlayers.clear();
+    super.dispose(); // Call super.dispose() for ChangeNotifier
   }
 }

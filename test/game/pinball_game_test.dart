@@ -17,6 +17,7 @@ class TestPinballGame extends PinballGame {
     required super.prefs,
     required super.highScoreManager,
     required super.gameModeManager,
+    required super.audioManager,
   });
 
   @override
@@ -53,6 +54,7 @@ void main() {
         prefs: mockPrefs,
         highScoreManager: mockHighScoreManager,
         gameModeManager: mockGameModeManager,
+        audioManager: mockAudioManager,
       );
 
       expect(game.score, 0);
