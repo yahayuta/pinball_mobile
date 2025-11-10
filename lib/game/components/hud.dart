@@ -31,6 +31,7 @@ class Hud extends Component with HasGameReference<PinballGame> {
     final ballSaveActive = game.isBallSaveActive;
     final tiltWarnings = game.tiltWarnings;
     final isTilted = game.isTilted;
+    final gameMode = game.gameModeManager.currentGameMode;
 
     // Build display lines
     final lines = <String>[
@@ -45,6 +46,12 @@ class Hud extends Component with HasGameReference<PinballGame> {
       '', // spacer
       'Charge: ${charge.toStringAsFixed(2)} / ${maxCharge.toStringAsFixed(2)}',
     ];
+
+    if (gameMode.type == GameModeType.timed) {
+      lines.insert(0, 'Time: ${game.remainingTime}');
+    } else if (gameMode.type == GameModeType.challenge) {
+      lines.insert(0, 'Target: ${gameMode.scoreTarget}');
+    }
 
     var y = 4.0;
     for (final l in lines) {

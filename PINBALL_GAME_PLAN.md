@@ -155,7 +155,7 @@ dependencies:
 6. Test reports
 
 ## 10. Future Enhancements
-- Multiple pinball table designs: Implemented
+- Multiple game modes: In Progress. Basic structure for Classic, Timed, and Challenge modes is in place. Game logic for timed and challenge modes has been implemented. HUD has been updated to display game mode information.
 - Online leaderboards: Implemented (Local)
 - Multiplayer modes: Implemented (Local)
 - Custom table editor: Implemented (Basic)

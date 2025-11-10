@@ -74,6 +74,9 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
   bool _tilted = false;
   int _tiltWarnings = 0;
 
+  Timer? _gameModeTimer;
+  int remainingTime = 0;
+
   bool get isBallSaveActive => _ballSaveActive;
   int get tiltWarnings => _tiltWarnings;
   bool get isTilted => _tilted;
@@ -137,19 +140,27 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
     }
 
     if (balls.isEmpty) {
-      if (!_tilted) {
-        _highScoreManager.updateHighScore(currentPlayerName, score); // Pass player name
-        audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0); // New sound effect
-        achievementManager.updateProgress('first_game', 1); // Update first game achievement
+      if (gameModeManager.currentGameMode.type == GameModeType.classic) {
+        gameOver();
+      } else {
+        spawnBall();
       }
-      combo = 0;
-      maxHeightReached = 0;
-      _tilted = false;
-      _tiltWarnings = 0;
-      leftFlipper.body.setAwake(true);
-      rightFlipper.body.setAwake(true);
-      spawnBall();
     }
+  }
+
+  void gameOver() {
+    if (!_tilted) {
+      _highScoreManager.updateHighScore(currentPlayerName, score); // Pass player name
+      audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0); // New sound effect
+      achievementManager.updateProgress('first_game', 1); // Update first game achievement
+    }
+    combo = 0;
+    maxHeightReached = 0;
+    _tilted = false;
+    _tiltWarnings = 0;
+    leftFlipper.body.setAwake(true);
+    rightFlipper.body.setAwake(true);
+    spawnBall();
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
@@ -185,6 +196,7 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
     _ballSaveTimer?.cancel();
     _powerUpTimer?.cancel();
     _accelerometerSubscription?.cancel();
+    _gameModeTimer?.cancel();
     audioManager.dispose();
     super.onRemove();
   }
@@ -215,6 +227,16 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
   postSprite = await _loadSpriteOrPlaceholder('post.png', color: Colors.black, sizePx: 64); // Load post sprite
   targetSprite = await _loadSpriteOrPlaceholder('target.png', color: Colors.purple, sizePx: 64); // Load target sprite
   dropTargetSprite = await _loadSpriteOrPlaceholder('drop_target.png', color: Colors.orange, sizePx: 64); // Load drop target sprite
+
+    if (gameModeManager.currentGameMode.type == GameModeType.timed) {
+      remainingTime = gameModeManager.currentGameMode.timeLimitSeconds;
+      _gameModeTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        remainingTime--;
+        if (remainingTime <= 0) {
+          gameOver();
+        }
+      });
+    }
 
     _initPowerUpTimer();
     _accelerometerSubscription = accelerometerEventStream().listen((event) {
@@ -359,6 +381,12 @@ abstract class PinballGame extends Forge2DGame with KeyboardEvents implements Co
   @override
   void update(double dt) {
     super.update(dt);
+
+    if (gameModeManager.currentGameMode.type == GameModeType.challenge) {
+      if (score >= gameModeManager.currentGameMode.scoreTarget) {
+        gameOver();
+      }
+    }
 
     if (balls.isNotEmpty) {
       final targetPosition = balls.first.position;
