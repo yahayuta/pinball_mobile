@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
+import 'package:pinball_mobile/menu/widgets/leaderboard_entry_widget.dart'; // Import the new widget
 
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({super.key});
@@ -27,19 +28,9 @@ class LeaderboardScreen extends StatelessWidget {
               itemCount: highScores.length,
               itemBuilder: (context, index) {
                 final scoreEntry = highScores[index];
-                return ListTile(
-                  leading: Text(
-                    '${index + 1}.',
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  title: Text(
-                    scoreEntry.playerName,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  trailing: Text(
-                    '${scoreEntry.score}',
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                return LeaderboardEntryWidget(
+                  rank: index + 1,
+                  scoreEntry: scoreEntry,
                 );
               },
             ),

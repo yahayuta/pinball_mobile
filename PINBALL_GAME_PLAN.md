@@ -156,7 +156,7 @@ dependencies:
 
 ## 10. Future Enhancements
 - Multiple game modes: In Progress. Basic structure for Classic, Timed, and Challenge modes is in place. Game logic for timed and challenge modes has been implemented. HUD has been updated to display game mode information.
-- Online leaderboards: Implemented (Local). The high score screen now displays a list of top scores.
+- Online leaderboards: Implemented (Local). The high score screen and leaderboard screen now display a list of top scores with improved visual styling.
 - Multiplayer modes: Implemented (Local)
 - Custom table editor: Implemented (Basic)
 - Achievement system: Implemented. The achievement screen now displays a list of achievements, their progress, and unlocked status.
