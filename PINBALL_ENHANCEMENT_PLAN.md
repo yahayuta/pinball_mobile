@@ -105,7 +105,7 @@ This section outlines a plan for making the game feel more like a real pinball m
 
 ### 8.1. Advanced Player Techniques
 - **Nudging (Partially Implemented):** A basic nudge mechanic has been implemented. Players can press the `Shift` keys to apply a force to the ball. This is integrated with the tilt mechanism. Future work includes refining the nudge force and adding more visual/audio feedback.
-- **Advanced Flipper Skills:** Refine the flipper physics to allow for advanced techniques like:
+- **Advanced Flipper Skills (In Progress):** Refine the flipper physics to allow for advanced techniques like:
     - **Flipper Trapping:** Holding the ball on a raised flipper.
     - **Post Passing:** Transferring the ball from one flipper to the other by bouncing it off the post between the flippers.
     - **Dead Flipper Pass:** Passing the ball from one flipper to the other by letting it roll over the lowered flipper.

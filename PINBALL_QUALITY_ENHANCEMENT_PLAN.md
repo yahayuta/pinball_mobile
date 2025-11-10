@@ -24,7 +24,7 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - **Core Physics Bodies:** `PinballBall`, `PinballBumper`, and `PinballFlipper` have explicitly defined `density`, `restitution`, and `friction` values. `PinballBall` uses `bullet: true` for continuous collision detection. Flippers utilize a `RevoluteJoint` with significantly increased motor torque for more powerful and responsive action. The world gravity has also been increased to make the game feel faster.
     - **Interactive Components:** `DropTarget` uses a `PrismaticJoint`. `PinballHole` uses an `isSensor` fixture. The `Launcher`'s impulse force has been tuned for better ball launch speed.
     - **Static Structures:** `GuideWall` uses `ChainShape` to define table boundaries.
-    - **Experimental Changes:** A `LauncherRamp` was introduced to guide the ball but has been temporarily disabled for further tuning.
+    - **Experimental Changes:** A `LauncherRamp` was introduced to guide the ball but has been temporarily disabled in `pinball_game.dart` for further tuning.
 
 ### 3.2. Graphics and Visual Effects
 - **Goal:** Enhance the visual fidelity and dynamic feedback of the game.

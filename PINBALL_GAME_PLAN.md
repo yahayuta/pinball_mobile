@@ -37,7 +37,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Multiple game modes: Implemented (Basic)
 - Sound effects and background music: **Implemented**
 - Visual effects and animations: **Implemented (score popups, combo effects, bumper hit effects)**
-- Tilt mechanism: Implemented
+- Tilt mechanism: Implemented (Basic)
 - Power-ups and special events: **Implemented**
 
 ### 3.4 UI/UX Elements
@@ -61,7 +61,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Implemented bumpers, targets, ramps, holes, and spinners.
 - Implemented multi-ball and ball save mechanisms.
 
-### Phase 4: Game Features (Completed)
+### Phase 4: Game Features (In Progress)
 - Basic visual effects and animations implemented, including score popups and combo effects.
 - High score system implemented.
 - Sound effects and background music implemented.
@@ -70,7 +70,7 @@ The project aims to create a realistic pinball machine emulation game using Flut
 ### Phase 5: UI/UX Development (Completed)
 - Game HUD, Main menu, Settings menu, High score board, Sound controls and Tutorial/Help screen implemented.
 
-### Phase 6: Polish and Testing (Partially Completed)
+### Phase 6: Polish and Testing (In Progress)
 - Code cleanup and refactoring.
 - Comprehensive testing.
 - Performance optimization.
@@ -185,3 +185,5 @@ dependencies:
 - Smooth gameplay at 60+ FPS needs further optimization
 - Some physics behaviors could use additional refinement
 - Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)
+- Launcher consistency: The current launcher applies a direct impulse to the ball, which can lead to inconsistent launch angles. The `LauncherRamp` component has been developed to address this but is temporarily disabled for further tuning.
+- Web `KeyUp` event: A workaround is in place for an issue where the spacebar `KeyUp` event is not reliably detected on web builds.
