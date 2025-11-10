@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pinball_mobile/game/game_provider.dart';
 import 'package:pinball_mobile/menu/table_selection_screen.dart';
+import 'package:pinball_mobile/menu/widgets/menu_button.dart'; // Import MenuButton
+import 'package:pinball_mobile/menu/widgets/styled_text_field.dart'; // Import StyledTextField
 
 class MultiplayerScreen extends StatefulWidget {
   const MultiplayerScreen({super.key});
@@ -37,37 +39,18 @@ class _MultiplayerScreenState extends State<MultiplayerScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
+              StyledTextField(
                 controller: _player1Controller,
-                decoration: const InputDecoration(
-                  labelText: 'Player 1 Name',
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                labelText: 'Player 1 Name',
               ),
               const SizedBox(height: 20),
-              TextField(
+              StyledTextField(
                 controller: _player2Controller,
-                decoration: const InputDecoration(
-                  labelText: 'Player 2 Name',
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                labelText: 'Player 2 Name',
               ),
               const SizedBox(height: 40),
-              ElevatedButton(
+              MenuButton(
+                text: 'Start Game (Player 1)',
                 onPressed: () {
                   // For simplicity, we'll just use Player 1's name for now
                   // and navigate to table selection.
@@ -79,7 +62,6 @@ class _MultiplayerScreenState extends State<MultiplayerScreen> {
                     ),
                   );
                 },
-                child: const Text('Start Game (Player 1)'),
               ),
               // TODO: Implement actual turn-based multiplayer or score comparison
             ],
