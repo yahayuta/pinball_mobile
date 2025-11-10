@@ -1,3 +1,4 @@
+import 'package:pinball_mobile/game/components/launcher_ramp.dart';
 import 'package:flame/components.dart';
 import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -103,18 +104,13 @@ class DefaultPinballTable extends PinballGame {
       ),
     );
 
-    // // The ramp for the ball to exit the launch lane.
-    // final rampVertices = [
-    //   Vector2(
-    //     size.x * 0.85,
-    //     size.y * 0.3,
-    //   ), // Start point of the ramp, lower on the right
-    //   Vector2(
-    //     size.x * 0.5,
-    //     size.y * 0.5,
-    //   ), // End point of the ramp, higher on the left
-    // ];
-    // await add(GuideWall(rampVertices));
+    // The ramp for the ball to exit the launch lane.
+    await add(
+      LauncherRamp(
+        position: Vector2(size.x * 0.85, size.y * 0.3),
+        size: Vector2(size.x * 0.35, size.y * 0.2),
+      ),
+    );
 
     // The wall on the left of the launch lane.
     final launchLaneWallVertices = [
