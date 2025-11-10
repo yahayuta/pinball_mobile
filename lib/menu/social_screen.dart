@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
+import 'package:pinball_mobile/menu/widgets/menu_button.dart'; // Import MenuButton
 
 class SocialScreen extends StatelessWidget {
   const SocialScreen({super.key});
@@ -38,14 +39,14 @@ class SocialScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
+            MenuButton(
+              text: 'Share Score',
               onPressed: () => _shareScore(context),
-              child: const Text('Share Score'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+            MenuButton(
+              text: 'Invite Friends',
               onPressed: () => _inviteFriends(context),
-              child: const Text('Invite Friends'),
             ),
           ],
         ),

@@ -160,7 +160,7 @@ dependencies:
 - Multiplayer modes: Implemented (Local). The multiplayer screen UI has been improved with custom styled buttons and text fields.
 - Custom table editor: Implemented (Basic)
 - Achievement system: Implemented. The achievement screen now displays a list of achievements, their progress, and unlocked status.
-- Social features: Implemented (Basic)
+- Social features: Implemented (Basic). The social screen UI has been improved with custom styled buttons.
 - Multiple game modes: Implemented (Basic)
 
 ## 11. Next Steps
