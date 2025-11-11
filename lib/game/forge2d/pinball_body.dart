@@ -26,7 +26,7 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 0.9, // Increased bounciness
+      restitution: 0.8, // Slightly reduced bounciness
       friction: 0.3, // Increased friction
     );
 
