@@ -44,9 +44,8 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - Implement distinct sounds for each unique table component (ramps, holes, spinners).
     - Refine background music transitions and dynamic changes based on game state.
     - Ensure consistent audio levels and prevent clipping.
-    - Address any audio playback issues on different platforms (e.g., Flutter web, Android).
-    - Audio controls (music and SFX volume sliders) have been added to the settings screen.
-    - **Current Status:**    - Several components (e.g., `PinballFlipper`, `DropTarget`) demonstrate direct integration with an `AudioManager` for event-driven sound effects.
+    - Address any audio playback issues on different platforms (e.g., Flutter web, Android). A sound effect pool has been implemented in `AudioManager` to optimize playback and reduce overhead.
+    - Audio controls (music and SFX volume sliders) have been added to the settings screen.    - **Current Status:**    - Several components (e.g., `PinballFlipper`, `DropTarget`) demonstrate direct integration with an `AudioManager` for event-driven sound effects.
     - The presence of `audio_manager.dart` and `assets/audio/` indicates a dedicated system for managing and playing game audio.
 
 ### 3.4. Performance Optimization

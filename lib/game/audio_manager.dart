@@ -9,15 +9,23 @@ class AudioManager extends ChangeNotifier {
   AudioManager._internal();
 
   final AudioPlayer _backgroundPlayer = AudioPlayer();
-  final Map<String, AudioPlayer> _effectPlayers = {};
+  final List<AudioPlayer> _effectPlayerPool = [];
+  static const int _maxEffectPlayers = 5; // Limit the number of concurrent effect players
+  int _nextPlayerIndex = 0;
+
   double _musicVolume = 0.5;
-  double _sfxVolume = 0.7; // Renamed _effectVolume to _sfxVolume for consistency
+  double _sfxVolume = 0.7;
 
   double get musicVolume => _musicVolume;
   double get sfxVolume => _sfxVolume;
 
   Future<void> init() async {
     _backgroundPlayer.setReleaseMode(ReleaseMode.loop);
+    for (int i = 0; i < _maxEffectPlayers; i++) {
+      final player = AudioPlayer();
+      player.setReleaseMode(ReleaseMode.release);
+      _effectPlayerPool.add(player);
+    }
   }
 
   Future<void> playBackgroundMusic(String assetPath) async {
@@ -38,13 +46,13 @@ class AudioManager extends ChangeNotifier {
       throw ArgumentError('assetPath must be a String or a List<String>');
     }
 
-    if (!_effectPlayers.containsKey(selectedAssetPath)) {
-      _effectPlayers[selectedAssetPath] = AudioPlayer();
-      _effectPlayers[selectedAssetPath]!.setReleaseMode(ReleaseMode.release);
-    }
-    final double scaledVolume = _sfxVolume * impactForce.clamp(0.2, 1.0); // Use _sfxVolume
-    await _effectPlayers[selectedAssetPath]!.setVolume(scaledVolume);
-    await _effectPlayers[selectedAssetPath]!.play(AssetSource(selectedAssetPath));
+    // Get next available player from the pool
+    final player = _effectPlayerPool[_nextPlayerIndex];
+    _nextPlayerIndex = (_nextPlayerIndex + 1) % _maxEffectPlayers;
+
+    final double scaledVolume = _sfxVolume * impactForce.clamp(0.2, 1.0);
+    await player.setVolume(scaledVolume);
+    await player.play(AssetSource(selectedAssetPath));
   }
 
   void setMusicVolume(double volume) {
@@ -53,9 +61,9 @@ class AudioManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSfxVolume(double volume) { // Renamed setEffectVolume to setSfxVolume
+  void setSfxVolume(double volume) {
     _sfxVolume = volume;
-    for (var player in _effectPlayers.values) {
+    for (var player in _effectPlayerPool) {
       player.setVolume(_sfxVolume);
     }
     notifyListeners();
@@ -63,10 +71,10 @@ class AudioManager extends ChangeNotifier {
 
   void dispose() {
     _backgroundPlayer.dispose();
-    for (var player in _effectPlayers.values) {
+    for (var player in _effectPlayerPool) {
       player.dispose();
     }
-    _effectPlayers.clear();
-    super.dispose(); // Call super.dispose() for ChangeNotifier
+    _effectPlayerPool.clear();
+    super.dispose();
   }
 }
