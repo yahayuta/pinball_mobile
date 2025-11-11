@@ -200,8 +200,8 @@ class PinballFlipper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 0.3,
-      friction: 0.6,
+      restitution: 0.5, // Increased bounciness
+      friction: 0.5, // Reduced friction
     );
 
     final bodyDef = BodyDef(
@@ -241,9 +241,9 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
-      _joint.motorSpeed = isLeft ? 40.0 : -40.0;
+      _joint.motorSpeed = isLeft ? 30.0 : -30.0; // Adjusted motor speed
     } else {
-      _joint.motorSpeed = isLeft ? -40.0 : 40.0;
+      _joint.motorSpeed = isLeft ? -30.0 : 30.0; // Adjusted motor speed
     }
   }
 

@@ -17,9 +17,8 @@ This document outlines a plan for enhancing the overall quality of the pinball g
 - **Enhancement Items:**
     - Further fine-tune restitution, friction, and density values for all bodies.
     - Monitor for any new physics glitches after recent improvements.
-    - Continue improving flipper power and responsiveness based on player feedback.
-    - Refine launcher force and consistency, utilizing the dedicated `LauncherRamp` for improved guidance.
-- **Current Status:**
+    - Continue improving flipper power and responsiveness based on player feedback. Flipper `motorSpeed` has been slightly reduced for smoother action, `restitution` increased for more bounciness, and `friction` slightly reduced for better ball sliding.
+    - Refine launcher force and consistency, utilizing the dedicated `LauncherRamp` for improved guidance.- **Current Status:**
     - **Recent Improvements:** Flipper physics have been significantly enhanced with corrected positioning and control mapping. Ball physics and flipper interactions are now more natural and predictable.
     - **Core Physics Bodies:** `PinballBall`, `PinballBumper`, and `PinballFlipper` have explicitly defined `density`, `restitution`, and `friction` values. `PinballBall` uses `bullet: true` for continuous collision detection. Flippers utilize a `RevoluteJoint` with significantly increased motor torque for more powerful and responsive action. The world gravity has also been increased to make the game feel faster.
     - **Interactive Components:** `DropTarget` uses a `PrismaticJoint`. `PinballHole` uses an `isSensor` fixture. The `Launcher`'s impulse force has been tuned for better ball launch speed.
