@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:pinball_mobile/game/table_config_manager.dart';
 import 'package:pinball_mobile/game/game_provider.dart';
 import 'dart:convert'; // For json.decode and json.encode
+import 'package:pinball_mobile/menu/widgets/menu_button.dart'; // Import MenuButton
+import 'package:pinball_mobile/menu/widgets/styled_text_field.dart'; // Import StyledTextField
 
 class TableEditorScreen extends StatefulWidget {
   const TableEditorScreen({super.key});
@@ -77,37 +79,15 @@ class _TableEditorScreenState extends State<TableEditorScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            StyledTextField(
               controller: _tableNameController,
-              decoration: const InputDecoration(
-                labelText: 'Table Name',
-                labelStyle: TextStyle(color: Colors.white),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
+              labelText: 'Table Name',
             ),
             const SizedBox(height: 10),
             Expanded(
-              child: TextField(
+              child: StyledTextField(
                 controller: _jsonController,
-                maxLines: null,
-                expands: true,
-                decoration: const InputDecoration(
-                  labelText: 'Table JSON Configuration',
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                labelText: 'Table JSON Configuration',
               ),
             ),
             if (_errorMessage != null)
@@ -119,9 +99,9 @@ class _TableEditorScreenState extends State<TableEditorScreen> {
                 ),
               ),
             const SizedBox(height: 10),
-            ElevatedButton(
+            MenuButton(
+              text: 'Save Custom Table',
               onPressed: _saveTable,
-              child: const Text('Save Custom Table'),
             ),
             const SizedBox(height: 20),
             const Text(
@@ -133,21 +113,26 @@ class _TableEditorScreenState extends State<TableEditorScreen> {
                 itemCount: _customTables.length,
                 itemBuilder: (context, index) {
                   final table = _customTables[index];
-                  return ListTile(
-                    title: Text(
-                      table.name,
-                      style: const TextStyle(color: Colors.white),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: MenuButton(
+                            text: table.name,
+                            onPressed: () {
+                              // For now, just populate the editor with its JSON
+                              _tableNameController.text = table.name;
+                              _jsonController.text = json.encode(table.toJson());
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _deleteTable(table.name),
+                        ),
+                      ],
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteTable(table.name),
-                    ),
-                    onTap: () {
-                      // TODO: Implement loading this table into the game
-                      // For now, just populate the editor with its JSON
-                      _tableNameController.text = table.name;
-                      _jsonController.text = json.encode(table.toJson());
-                    },
                   );
                 },
               ),

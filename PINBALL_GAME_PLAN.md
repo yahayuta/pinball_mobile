@@ -158,7 +158,7 @@ dependencies:
 - Multiple game modes: In Progress. Basic structure for Classic, Timed, and Challenge modes is in place. Game logic for timed and challenge modes has been implemented. HUD has been updated to display game mode information.
 - Online leaderboards: Implemented (Local). The high score screen and leaderboard screen now display a list of top scores with improved visual styling.
 - Multiplayer modes: Implemented (Local). The multiplayer screen UI has been improved with custom styled buttons and text fields.
-- Custom table editor: Implemented (Basic)
+- Custom table editor: Implemented (Basic). The table editor screen UI has been improved with custom styled buttons and text fields, and custom tables are displayed using styled buttons with delete functionality.
 - Achievement system: Implemented. The achievement screen now displays a list of achievements, their progress, and unlocked status.
 - Social features: Implemented (Basic). The social screen UI has been improved with custom styled buttons.
 - Multiple game modes: Implemented (Basic)
