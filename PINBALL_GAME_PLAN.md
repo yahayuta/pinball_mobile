@@ -45,8 +45,8 @@ The project aims to create a realistic pinball machine emulation game using Flut
 - Game HUD (score, balls remaining, etc.): **Implemented**
 - Settings menu: **Implemented**
 - High score board: **Implemented**
-- Tutorial/Help screen: **Implemented**
-- Sound controls: **Implemented**
+- Tutorial/Help screen: Implemented. The tutorial screen UI has been improved with consistent text styling.
+- Sound controls: Implemented
 
 ## 4. Development Phases
 
