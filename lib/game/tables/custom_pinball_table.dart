@@ -23,51 +23,17 @@ class CustomPinballTable extends PinballGame {
     required super.prefs,
     required super.highScoreManager,
     required super.gameModeManager,
+    required super.audioManager,
+    required super.achievementManager,
     super.currentPlayerName = 'Player 1',
   });
 
   @override
   Future<void> loadTableElements() async {
-    // Add flippers and launcher (common to all tables)
-    final flipperLength = size.x / 8;
-    leftFlipper = PinballFlipper(
-      position: Vector2(size.x * 0.3, size.y * 0.9),
-      isLeft: true,
-      length: flipperLength,
-      audioManager: audioManager,
-      sprite: flipperLeftSprite,
-    );
-    await add(leftFlipper);
-
-    rightFlipper = PinballFlipper(
-      position: Vector2(size.x * 0.7, size.y * 0.9),
-      isLeft: false,
-      length: flipperLength,
-      audioManager: audioManager,
-      sprite: flipperRightSprite,
-    );
-    await add(rightFlipper);
-
-    launcher = Launcher(position: Vector2(size.x * 0.95, size.y * 0.8));
-    await add(launcher);
-
-    // Add walls (common to all tables)
-    final wallThickness = size.x * 0.075;
-    await add(
-      WallBody(position: Vector2(size.x / 2, 0), size: Vector2(size.x, wallThickness), sprite: wallSprite),
-    ); // Top wall
-    await add(
-      WallBody(position: Vector2(size.x / 2, size.y), size: Vector2(size.x, wallThickness), sprite: wallSprite),
-    ); // Bottom wall
-    await add(
-      WallBody(position: Vector2(0, size.y / 2), size: Vector2(wallThickness, size.y), sprite: wallSprite),
-    ); // Left wall
-    await add(
-      WallBody(position: Vector2(size.x, size.y / 2), size: Vector2(wallThickness, size.y), sprite: wallSprite),
-    ); // Right wall
+    await super.loadTableElements(); // Call super to load common elements
 
     // Spawn initial ball
-    spawnBall();
+    this.spawnBall();
 
     // Dynamically add components from tableConfig
     for (final componentData in tableConfig.components) {
@@ -81,9 +47,9 @@ class CustomPinballTable extends PinballGame {
             PopBumper(
               position: position,
               radius: (componentData['radius'] as double?) ?? 2.0,
-              onHit: (ball) => addScore(50, ball.body.position),
-              audioManager: audioManager,
-              sprite: bumperSprite,
+              onHit: (ball) => this.addScore(50, ball.body.position),
+              audioManager: this.audioManager,
+              sprite: this.bumperSprite,
             ),
           );
           break;
@@ -95,9 +61,9 @@ class CustomPinballTable extends PinballGame {
                 (componentData['size']['x'] as double?) ?? 2.0,
                 (componentData['size']['y'] as double?) ?? 4.0,
               ),
-              onHit: (ball) => addScore(100, ball.body.position),
-              audioManager: audioManager,
-              sprite: dropTargetSprite,
+              onHit: (ball) => this.addScore(100, ball.body.position),
+              audioManager: this.audioManager,
+              sprite: this.dropTargetSprite,
             ),
           );
           break;
@@ -107,8 +73,8 @@ class CustomPinballTable extends PinballGame {
               position: position,
               width: (componentData['width'] as double?) ?? 2.0,
               height: (componentData['height'] as double?) ?? 1.0,
-              onHit: (ball) => addScore(100, ball.body.position),
-              sprite: targetSprite,
+              onHit: (ball) => this.addScore(100, ball.body.position),
+              sprite: this.targetSprite,
             ),
           );
           break;
@@ -133,7 +99,7 @@ class CustomPinballTable extends PinballGame {
               position: position,
               width: (componentData['width'] as double?) ?? 1.0,
               height: (componentData['height'] as double?) ?? 5.0,
-              onSpin: (score) => addScore(score, position),
+              onSpin: (score) => this.addScore(score, position),
             ),
           );
           break;

@@ -9,6 +9,8 @@ import 'package:pinball_mobile/game/high_score_manager.dart'; // For creating Pi
 import 'package:pinball_mobile/game/table_config_manager.dart'; // Added
 import 'package:pinball_mobile/game/tables/custom_pinball_table.dart'; // Added
 import 'package:pinball_mobile/menu/widgets/menu_button.dart'; // Import MenuButton
+import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/achievement_manager.dart';
 
 class TableSelectionScreen extends StatefulWidget { // Changed to StatefulWidget
   const TableSelectionScreen({super.key});
@@ -56,6 +58,8 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
                     prefs: prefs,
                     highScoreManager: highScoreManager,
                     gameModeManager: gameProvider.gameModeManager, // Added
+                    audioManager: context.read<AudioManager>(),
+                    achievementManager: context.read<AchievementManager>(),
                   );
                   gameProvider.loadTable(game);
                   Navigator.push(
@@ -74,6 +78,8 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
                     prefs: prefs,
                     highScoreManager: highScoreManager,
                     gameModeManager: gameProvider.gameModeManager, // Added
+                    audioManager: context.read<AudioManager>(),
+                    achievementManager: context.read<AchievementManager>(),
                   );
                   gameProvider.loadTable(game);
                   Navigator.push(
@@ -113,6 +119,8 @@ class _TableSelectionScreenState extends State<TableSelectionScreen> {
                                 prefs: prefs,
                                 highScoreManager: highScoreManager,
                                 gameModeManager: gameProvider.gameModeManager, // Added
+                                audioManager: context.read<AudioManager>(),
+                                achievementManager: context.read<AchievementManager>(),
                               );
                               gameProvider.loadTable(game);
                               Navigator.push(

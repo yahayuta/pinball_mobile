@@ -26,6 +26,7 @@ void main() async {
             prefs: prefs,
             highScoreManager: highScoreManager,
             audioManager: audioManager, // Pass AudioManager
+            achievementManager: achievementManager,
           ),
         ),
       ],

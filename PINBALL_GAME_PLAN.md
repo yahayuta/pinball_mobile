@@ -165,24 +165,48 @@ dependencies:
 
 ## 11. Next Steps
 - **Implement Missing Game Features:**
-    - Multiple game modes. (Continue implementation)
+    - Multiple game modes. (Continue implementation, focusing on refining game logic for Timed and Challenge modes).
 - **Polish and Testing:**
-    - Ongoing physics tuning of components like the launcher and flippers to improve game feel.
+    - Ongoing physics tuning of components like the launcher and flippers to improve game feel (e.g., flipper power/responsiveness, launcher consistency).
     - Comprehensive testing. (Integration tests added, web build functional, all errors resolved. Unit tests for PinballGame are now functional after resolving Flutter binding initialization issues).
-    - Performance optimization.
+    - Performance optimization (profiling CPU/GPU, optimizing rendering, reducing physics overhead, asset loading/memory).
+    - Re-introduction of visual assets (sprites) that were temporarily removed.
+- **Visuals & Audio Refinement:**
+    - Improve ball rendering (reflections, shadows).
+    - Add more dynamic lighting effects.
+    - Refine particle effects.
+    - Implement subtle camera shakes or zooms.
+    - Explore background and table texture improvements.
+    - Add more varied sound effects and distinct component sounds.
+    - Refine background music transitions and dynamic changes.
+    - Ensure consistent audio levels and address platform issues.
 ## 12. Known Issues and Recent Fixes
 
 ### Recently Fixed:
 - Flipper controls and positioning have been corrected:
   - Left flipper now correctly responds to left arrow key
   - Right flipper now correctly responds to right arrow key
-  - Flipper physics and orientation improved for more natural gameplay
-- Ball spin visualization improved
-- Collision detection and response refined
+  - Flipper physics and orientation improved for more natural gameplay. Flipper `motorSpeed` slightly reduced, `restitution` increased, `friction` slightly reduced.
+- Ball spin visualization improved. Ball's bounciness (restitution) and friction fine-tuned.
+- Collision detection and response refined.
+- `PinballBall` restitution slightly reduced for a heavier feel.
+- World gravity increased for faster gameplay.
+- Sound effect pool implemented in `AudioManager` for optimized playback.
+- Audio controls (music and SFX volume sliders) added to settings screen.
+- `MenuButton` now includes a subtle scaling animation on press.
+- `Launcher` component includes a visual charge bar.
+- Main menu and table selection screen updated with custom `MenuButton` widget.
+- Tutorial screen UI improved with consistent text styling.
+- High score screen and leaderboard screen display top scores with improved visual styling.
+- Multiplayer screen UI improved with custom styled buttons and text fields.
+- Table editor screen UI improved with custom styled buttons and text fields, and custom tables displayed with delete functionality.
+- Achievement screen displays achievements, progress, and unlocked status.
+- Social screen UI improved with custom styled buttons.
 
 ### Remaining Issues:
-- Smooth gameplay at 60+ FPS needs further optimization
-- Some physics behaviors could use additional refinement
+- Smooth gameplay at 60+ FPS needs further optimization (profiling CPU/GPU, rendering, physics overhead, asset loading/memory).
+- Some physics behaviors could use additional refinement (e.g., further fine-tuning restitution, friction, density values for all bodies; monitoring for new physics glitches).
 - Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)
 - Launcher consistency: In Progress. The `LauncherRamp` component has been re-enabled in both tables to guide the ball and improve launch consistency. Further tuning of the ramp's position, size, and shape is required.
 - Web `KeyUp` event: A workaround is in place for an issue where the spacebar `KeyUp` event is not reliably detected on web builds.
+- Visual assets (sprites) need to be re-introduced after temporary removal to resolve critical errors.

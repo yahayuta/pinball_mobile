@@ -18,11 +18,11 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - Further fine-tune restitution, friction, and density values for all bodies. `PinballBall` restitution has been slightly reduced to make the ball feel a bit heavier and more controllable.
     - Monitor for any new physics glitches after recent improvements.    - Continue improving flipper power and responsiveness based on player feedback. Flipper `motorSpeed` has been slightly reduced for smoother action, `restitution` increased for more bounciness, and `friction` slightly reduced for better ball sliding.
     - Refine launcher force and consistency, utilizing the dedicated `LauncherRamp` for improved guidance.- **Current Status:**
-    - **Recent Improvements:** Flipper physics have been significantly enhanced with corrected positioning and control mapping. Ball physics and flipper interactions are now more natural and predictable.
-    - **Core Physics Bodies:** `PinballBall`, `PinballBumper`, and `PinballFlipper` have explicitly defined `density`, `restitution`, and `friction` values. `PinballBall` uses `bullet: true` for continuous collision detection. Flippers utilize a `RevoluteJoint` with significantly increased motor torque for more powerful and responsive action. The world gravity has also been increased to make the game feel faster.
+    - **Recent Improvements:** Flipper physics have been significantly enhanced with corrected positioning and control mapping. Ball physics and flipper interactions are now more natural and predictable. Flipper `motorSpeed` slightly reduced, `restitution` increased, `friction` slightly reduced. `PinballBall` restitution slightly reduced for a heavier feel. World gravity increased for faster gameplay.
+    - **Core Physics Bodies:** `PinballBall`, `PinballBumper`, and `PinballFlipper` have explicitly defined `density`, `restitution`, and `friction` values. `PinballBall` uses `bullet: true` for continuous collision detection. Flippers utilize a `RevoluteJoint` with significantly increased motor torque for more powerful and responsive action.
     - **Interactive Components:** `DropTarget` uses a `PrismaticJoint`. `PinballHole` uses an `isSensor` fixture. The `Launcher`'s impulse force has been tuned for better ball launch speed.
     - **Static Structures:** `GuideWall` uses `ChainShape` to define table boundaries.
-    - **Experimental Changes:** A `LauncherRamp` was introduced to guide the ball but has been temporarily disabled in `pinball_game.dart` for further tuning.
+    - **Experimental Changes:** The `LauncherRamp` component has been re-enabled in both tables to guide the ball and improve launch consistency. Further tuning of the ramp's position, size, and shape is required.
 
 ### 3.2. Graphics and Visual Effects
 - **Goal:** Enhance the visual fidelity and dynamic feedback of the game.
@@ -44,8 +44,11 @@ This document outlines a plan for enhancing the overall quality of the pinball g
     - Refine background music transitions and dynamic changes based on game state.
     - Ensure consistent audio levels and prevent clipping.
     - Address any audio playback issues on different platforms (e.g., Flutter web, Android). A sound effect pool has been implemented in `AudioManager` to optimize playback and reduce overhead.
-    - Audio controls (music and SFX volume sliders) have been added to the settings screen.    - **Current Status:**    - Several components (e.g., `PinballFlipper`, `DropTarget`) demonstrate direct integration with an `AudioManager` for event-driven sound effects.
+    - Audio controls (music and SFX volume sliders) have been added to the settings screen.    - **Current Status:**
+    - Several components (e.g., `PinballFlipper`, `DropTarget`) demonstrate direct integration with an `AudioManager` for event-driven sound effects.
     - The presence of `audio_manager.dart` and `assets/audio/` indicates a dedicated system for managing and playing game audio.
+    - A sound effect pool has been implemented in `AudioManager` to optimize playback and reduce overhead.
+    - Audio controls (music and SFX volume sliders) have been added to the settings screen.
 
 ### 3.4. Performance Optimization
 - **Goal:** Ensure smooth gameplay at 60+ FPS on target devices and minimize resource usage.
@@ -68,6 +71,12 @@ This document outlines a plan for enhancing the overall quality of the pinball g
 - **Current Status:**
     - The `Launcher` component includes a visual charge bar that dynamically updates, providing clear and immediate feedback to the player, which directly addresses refining HUD layout and adding subtle animations/transitions to UI elements.
     - Further UI/UX polish in menus and overall visual style would require a more extensive review of the `lib/menu/` and `main.dart` files. The main menu and table selection screen have been updated to use a custom `MenuButton` widget for improved visual consistency and appeal.
+    - Tutorial screen UI improved with consistent text styling.
+    - High score screen and leaderboard screen display top scores with improved visual styling.
+    - Multiplayer screen UI improved with custom styled buttons and text fields.
+    - Table editor screen UI improved with custom styled buttons and text fields, and custom tables displayed with delete functionality.
+    - Achievement screen displays achievements, progress, and unlocked status.
+    - Social screen UI improved with custom styled buttons.
 
 ### 3.6. Bug Fixing and Stability
 - **Goal:** Eliminate known bugs and improve overall game stability.

@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/table_config_manager.dart'; // Added
 import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
+import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/achievement_manager.dart';
 
 class GameProvider extends ChangeNotifier {
   late PinballGame _game; // Changed to late, not late final

@@ -19,6 +19,8 @@ class SpaceAdventureTable extends PinballGame {
     required super.prefs,
     required super.highScoreManager,
     required super.gameModeManager,
+    required super.audioManager,
+    required super.achievementManager,
   });
 
 
@@ -27,110 +29,7 @@ class SpaceAdventureTable extends PinballGame {
 
   @override
   Future<void> loadTableElements() async {
-    // Add a platform for the launcher
-    await add(
-      WallBody(
-        position: Vector2(size.x * 0.9, size.y * 0.8 + 3.0),
-        size: Vector2(2.0, 0.5),
-        color: Colors.blue[900]!,
-        sprite: wallSprite,
-      ),
-    );
-
-    // Add initial ball, positioned just above the launcher platform
-    spawnBall(position: Vector2(size.x * 0.9, size.y * 0.8));
-
-    // Add flippers
-    final flipperLength = size.x / 8;
-    leftFlipper = PinballFlipper(
-      position: Vector2(size.x * 0.3, size.y * 0.8),
-      isLeft: false,
-      length: flipperLength,
-      color: Colors.purple,
-      audioManager: audioManager,
-      sprite: flipperLeftSprite,
-    );
-    await add(leftFlipper);
-
-    rightFlipper = PinballFlipper(
-      position: Vector2(size.x * 0.7, size.y * 0.8),
-      isLeft: true,
-      length: flipperLength,
-      color: Colors.purple,
-      audioManager: audioManager,
-      sprite: flipperRightSprite,
-    );
-    await add(rightFlipper);
-
-    // Add launcher sensor
-    launcher = Launcher(position: Vector2(size.x * 0.9, size.y * 0.8));
-    await add(launcher);
-
-    // Add walls
-    final wallThickness = size.x * 0.075;
-    await add(
-      WallBody(
-        position: Vector2(size.x / 2, 0),
-        size: Vector2(size.x, wallThickness),
-        color: Colors.blue[900]!,
-        sprite: wallSprite,
-      ),
-    );
-
-    await add(
-      WallBody(
-        position: Vector2(size.x / 2, size.y),
-        size: Vector2(size.x, wallThickness),
-        color: Colors.blue[900]!,
-        sprite: wallSprite,
-      ),
-    );
-
-    await add(
-      WallBody(
-        position: Vector2(0, size.y / 2),
-        size: Vector2(wallThickness, size.y),
-        color: Colors.blue[900]!,
-        sprite: wallSprite,
-      ),
-    );
-
-    // Right wall - split to create launch lane opening
-    await add(
-      WallBody(
-        position: Vector2(size.x, size.y * 0.25),
-        size: Vector2(wallThickness, size.y * 0.5),
-        color: Colors.blue[900]!,
-        sprite: wallSprite,
-      ),
-    );
-    await add(
-      WallBody(
-        position: Vector2(size.x, size.y * 0.9),
-        size: Vector2(wallThickness, size.y * 0.2),
-        color: Colors.blue[900]!,
-        sprite: wallSprite,
-      ),
-    );
-
-    // The ramp for the ball to exit the launch lane.
-    await add(
-      LauncherRamp(
-        position: Vector2(size.x * 0.85, size.y * 0.3),
-        size: Vector2(size.x * 0.35, size.y * 0.2),
-        color: Colors.cyan,
-      ),
-    );
-
-    // The wall on the left of the launch lane.
-    final launchLaneWallVertices = [
-      Vector2(size.x * 0.85, size.y), // Straight wall down to the bottom
-      Vector2(
-        size.x * 0.85,
-        size.y * 0.5,
-      ), // Wall stops here to leave an opening
-    ];
-    await add(GuideWall(launchLaneWallVertices, color: Colors.cyan));
+    await super.loadTableElements(); // Call super to load common elements
 
     // Add a multi-ball target
     await add(
@@ -138,11 +37,11 @@ class SpaceAdventureTable extends PinballGame {
         position: Vector2(size.x * 0.75, size.y * 0.33),
         hitsToTrigger: 3,
         onHit: (ball) {
-          addScore(1000, Vector2(size.x * 0.75, size.y * 0.33));
-          spawnBall();
-          spawnBall();
+          this.addScore(1000, Vector2(size.x * 0.75, size.y * 0.33));
+          this.spawnBall();
+          this.spawnBall();
         },
-        sprite: targetSprite,
+        sprite: this.targetSprite,
       ),
     );
 
@@ -150,29 +49,28 @@ class SpaceAdventureTable extends PinballGame {
     await add(
       PopBumper(
         position: Vector2(size.x * 0.3, size.y * 0.3),
-        onHit: (ball) => addScore(50, ball.body.position),
+        onHit: (ball) => this.addScore(50, ball.body.position),
         color: Colors.cyan,
-        audioManager: audioManager,
-        sprite: bumperSprite,
+        audioManager: this.audioManager,
+        sprite: this.bumperSprite,
       ),
     );
     await add(
       PopBumper(
         position: Vector2(size.x * 0.5, size.y * 0.2),
-        onHit: (ball) => addScore(50, ball.body.position),
+        onHit: (ball) => this.addScore(50, ball.body.position),
         color: Colors.cyan,
-        audioManager: audioManager,
-        sprite: bumperSprite,
+        audioManager: this.audioManager,
+        sprite: this.bumperSprite,
       ),
     );
     await add(
       PopBumper(
         position: Vector2(size.x * 0.7, size.y * 0.3),
-        onHit: (ball) => addScore(50, ball.body.position),
+        onHit: (ball) => this.addScore(50, ball.body.position),
         color: Colors.cyan,
-.
-        audioManager: audioManager,
-        sprite: bumperSprite,
+        audioManager: this.audioManager,
+        sprite: this.bumperSprite,
       ),
     );
 
@@ -180,28 +78,28 @@ class SpaceAdventureTable extends PinballGame {
     await add(
       DropTarget(
         position: Vector2(size.x * 0.4, size.y * 0.5),
-        onHit: (ball) => addScore(100, ball.body.position),
+        onHit: (ball) => this.addScore(100, ball.body.position),
         color: Colors.pink,
-        audioManager: audioManager,
-        sprite: dropTargetSprite,
+        audioManager: this.audioManager,
+        sprite: this.dropTargetSprite,
       ),
     );
     await add(
       DropTarget(
         position: Vector2(size.x * 0.5, size.y * 0.5),
-        onHit: (ball) => addScore(100, ball.body.position),
+        onHit: (ball) => this.addScore(100, ball.body.position),
         color: Colors.pink,
-        audioManager: audioManager,
-        sprite: dropTargetSprite,
+        audioManager: this.audioManager,
+        sprite: this.dropTargetSprite,
       ),
     );
     await add(
       DropTarget(
         position: Vector2(size.x * 0.6, size.y * 0.5),
-        onHit: (ball) => addScore(100, ball.body.position),
+        onHit: (ball) => this.addScore(100, ball.body.position),
         color: Colors.pink,
-        audioManager: audioManager,
-        sprite: dropTargetSprite,
+        audioManager: this.audioManager,
+        sprite: this.dropTargetSprite,
       ),
     );
   }

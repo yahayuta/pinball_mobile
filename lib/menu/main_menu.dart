@@ -31,109 +31,111 @@ class MainMenu extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MenuButton(
-                    text: 'Select Table',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TableSelectionScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'High Scores',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HighScoreScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'Settings',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SettingsScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'How to Play',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TutorialScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'Leaderboard',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LeaderboardScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'Multiplayer',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MultiplayerScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'Table Editor',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TableEditorScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'Achievements',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AchievementsScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuButton(
-                    text: 'Social',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SocialScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MenuButton(
+                      text: 'Select Table',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TableSelectionScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'High Scores',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HighScoreScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'Settings',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'How to Play',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TutorialScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'Leaderboard',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LeaderboardScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'Multiplayer',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MultiplayerScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'Table Editor',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TableEditorScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'Achievements',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AchievementsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    MenuButton(
+                      text: 'Social',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SocialScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

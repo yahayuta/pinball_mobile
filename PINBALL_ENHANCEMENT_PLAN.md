@@ -75,29 +75,29 @@ This document outlines a plan for enhancing the pinball game. The proposed enhan
 
 The following is a proposed order for implementing the enhancements:
 
-1.  **Phase 1 (Core Gameplay):**
+1.  **Phase 1 (Core Gameplay):** (Completed)
     -   [x] Refine existing components (flippers, launcher).
     -   [x] Implement pop bumpers and drop targets.
     -   [x] Expand the combo and multiplier system.
     -   [x] Improve the HUD.
     -   [x] Implemented all core gameplay components.
 
-2.  **Phase 2 (Visuals & Audio):**
+2.  **Phase 2 (Visuals & Audio):** (In Progress)
     -   Create a new themed table ("Space Adventure").
     -   Add dynamic camera effects.
     -   Implement the dynamic music system.
     -   Add more sound effects and voice callouts.
-    -   Note: Visual assets (sprites) were temporarily removed to resolve critical errors. Re-introduction with proper image files is a next step.
+    -   Note: Visual assets (sprites) were temporarily removed to resolve critical errors. Re-introduction with proper image files is a next step. (Ongoing)
 
-3.  **Phase 3 (Features):**
-    -   Implement online leaderboards and achievements.
+3.  **Phase 3 (Features):** (In Progress)
+    -   Implement online leaderboards and achievements. (Local leaderboards and achievements implemented, online integration pending)
     -   Add support for multiple tables.
-    -   Create a basic table editor.
+    -   Create a basic table editor. (Basic table editor implemented, further enhancements planned)
 
-4.  **Phase 4 (Polish & Optimization):**
-    -   Optimize performance.
+4.  **Phase 4 (Polish & Optimization):** (In Progress)
+    -   Optimize performance. (Ongoing profiling and optimization efforts)
     -   Refactor the code.
-    -   Add more visual and audio polish.
+    -   Add more visual and audio polish. (Ongoing refinement of visual effects, audio fidelity, and UI/UX)
 
 ## 8. Realism Enhancements
 
