@@ -1,14 +1,11 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:pinball_mobile/game/audio_manager.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
 import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/hole.dart';
-import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/ramp.dart';
 import 'package:pinball_mobile/game/components/spinner.dart';
 // import 'package:pinball_mobile/game/components/target.dart';
-import 'package:pinball_mobile/game/components/wall_body.dart';
 // import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/game/table_config_manager.dart';
@@ -33,7 +30,7 @@ class CustomPinballTable extends PinballGame {
     await super.loadTableElements(); // Call super to load common elements
 
     // Spawn initial ball
-    this.spawnBall();
+    spawnBall();
 
     // Dynamically add components from tableConfig
     for (final componentData in tableConfig.components) {
@@ -47,9 +44,9 @@ class CustomPinballTable extends PinballGame {
             PopBumper(
               position: position,
               radius: (componentData['radius'] as double?) ?? 2.0,
-              onHit: (ball) => this.addScore(50, ball.body.position),
-              audioManager: this.audioManager,
-              sprite: this.bumperSprite,
+              onHit: (ball) => addScore(50, ball.body.position),
+              audioManager: audioManager,
+              sprite: bumperSprite,
             ),
           );
           break;
@@ -61,9 +58,9 @@ class CustomPinballTable extends PinballGame {
                 (componentData['size']['x'] as double?) ?? 2.0,
                 (componentData['size']['y'] as double?) ?? 4.0,
               ),
-              onHit: (ball) => this.addScore(100, ball.body.position),
-              audioManager: this.audioManager,
-              sprite: this.dropTargetSprite,
+              onHit: (ball) => addScore(100, ball.body.position),
+              audioManager: audioManager,
+              sprite: dropTargetSprite,
             ),
           );
           break;
@@ -73,8 +70,8 @@ class CustomPinballTable extends PinballGame {
               position: position,
               width: (componentData['width'] as double?) ?? 2.0,
               height: (componentData['height'] as double?) ?? 1.0,
-              onHit: (ball) => this.addScore(100, ball.body.position),
-              sprite: this.targetSprite,
+              onHit: (ball) => addScore(100, ball.body.position),
+              sprite: targetSprite,
             ),
           );
           break;
@@ -99,7 +96,7 @@ class CustomPinballTable extends PinballGame {
               position: position,
               width: (componentData['width'] as double?) ?? 1.0,
               height: (componentData['height'] as double?) ?? 5.0,
-              onSpin: (score) => this.addScore(score, position),
+              onSpin: (score) => addScore(score, position),
             ),
           );
           break;

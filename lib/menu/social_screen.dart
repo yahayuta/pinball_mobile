@@ -18,7 +18,7 @@ class SocialScreen extends StatelessWidget {
         message += '${i + 1}. ${highScores[i].playerName}: ${highScores[i].score}\n';
       }
     }
-    await Share.share(message, subject: 'Pinball High Scores');
+    await SharePlus.instance.share(ShareParams(text: message, subject: 'Pinball High Scores'));
   }
 
   void _inviteFriends(BuildContext context) {

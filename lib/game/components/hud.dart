@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import '../pinball_game.dart';
+import '../game_mode_manager.dart'; // Added for GameModeType
 
 class Hud extends Component with HasGameReference<PinballGame> {
   late final TextPaint _tp;

@@ -1,4 +1,3 @@
-import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
@@ -23,10 +22,7 @@ class TestPinballGame extends PinballGame {
     required super.achievementManager, // Added
   });
 
-  @override
-  Future<void> loadTableElements() async {
-    // Do nothing for testing purposes
-  }
+
 }
 
 void main() {

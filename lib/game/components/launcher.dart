@@ -29,8 +29,8 @@ class Launcher extends BodyComponent with ContactCallbacks {
     final fixtureDef = FixtureDef(
       shape,
       friction: 0.3,
-      restitution: 0.0,
-      isSensor: true, // Don't collide with other objects
+      restitution: 0.8, // Make it bouncy so it launches the ball
+      isSensor: false, // Allow collision so it can push the ball
       userData: this,
     );
 
@@ -42,6 +42,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
   void startCharging() {
     charging = true;
     charge = 0.0;
+    debugPrint('Launcher: START CHARGING');
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_charge.mp3'); // New sound effect
   }
 
@@ -49,18 +50,30 @@ class Launcher extends BodyComponent with ContactCallbacks {
     if (!charging) return;
     charge += dt; // simple linear charge
     if (charge > maxCharge) charge = maxCharge;
+    debugPrint('Launcher charge: ${(charge / maxCharge * 100).toStringAsFixed(0)}%');
   }
 
   double releaseCharge() {
     charging = false;
     final c = charge;
     charge = 0.0;
+    debugPrint('Launcher: RELEASE with charge=$c, balls=${_ballsToLaunch.length}');
+    
+    // Log detailed info about balls
+    debugPrint('Launcher: All balls in game: ${(game as PinballGame).balls.length}');
+    for (int i = 0; i < _ballsToLaunch.length; i++) {
+      debugPrint('  Ball $i: body=${_ballsToLaunch[i]}, position=${_ballsToLaunch[i].position}');
+    }
+    
     for (final ball in _ballsToLaunch) {
-      // Apply a strong, angled impulse DIRECTLY to the ball
-      final impulse = Vector2(-c * 80000, -c * 600000);
+      // Apply a strong impulse UPWARD into the playfield
+      // X: negative (left), Y: large positive (upward)
+      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 2500000.0; // Scale based on charge
+      final impulse = Vector2(-magnitude * 0.1, magnitude); // Mostly upward
+      debugPrint('Applying impulse: $impulse (magnitude=$magnitude) to ball at ${ball.position}');
       ball.applyLinearImpulse(impulse);
     }
-    (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3'); // New sound effect
+    (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3');
     _ballsToLaunch.clear();
     return c;
   }
@@ -121,18 +134,26 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   @override
   void beginContact(Object other, Contact contact) {
+    debugPrint('Launcher.beginContact CALLED: other=$other, other.runtimeType=${other.runtimeType}');
+    debugPrint('  Contact fixture A userData: ${contact.fixtureA.userData}, B userData: ${contact.fixtureB.userData}');
+    
     if (other is PinballBall) {
+      debugPrint('  -> IS PinballBall! Adding to launcher!');
       _removalTimers[other.body]?.cancel();
       _removalTimers.remove(other.body);
       if (!_ballsToLaunch.contains(other.body)) {
         _ballsToLaunch.add(other.body);
+        debugPrint('  -> Ball added. Total: ${_ballsToLaunch.length}');
       }
+    } else {
+      debugPrint('  -> NOT a PinballBall, ignoring. Type is ${other.runtimeType}');
     }
   }
 
   @override
   void endContact(Object other, Contact contact) {
     if (other is PinballBall) {
+      debugPrint('Launcher.endContact: removing ball');
       final timer = Timer(const Duration(milliseconds: 100), () {
         _ballsToLaunch.remove(other.body);
         _removalTimers.remove(other.body);
