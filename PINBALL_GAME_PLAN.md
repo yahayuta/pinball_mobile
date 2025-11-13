@@ -202,11 +202,18 @@ dependencies:
 - Table editor screen UI improved with custom styled buttons and text fields, and custom tables displayed with delete functionality.
 - Achievement screen displays achievements, progress, and unlocked status.
 - Social screen UI improved with custom styled buttons.
+- Re-introduced sprite loading and fixed asset paths.
+- Fixed a number of compilation errors.
+- Set the app to portrait mode.
+- Adjusted the pinball table to fit the portrait layout.
+- Fixed the flipper positions.
+- Increased the launcher's power and adjusted its angle.
+- Increased the ball's bounciness.
 
 ### Remaining Issues:
 - Smooth gameplay at 60+ FPS needs further optimization (profiling CPU/GPU, rendering, physics overhead, asset loading/memory).
 - Some physics behaviors could use additional refinement (e.g., further fine-tuning restitution, friction, density values for all bodies; monitoring for new physics glitches).
 - Persistent issues with launching the Android emulator, preventing testing on this platform. (This is an environment setup issue, not a code bug.)
-- Launcher consistency: In Progress. The `LauncherRamp` component has been re-enabled in both tables to guide the ball and improve launch consistency. Further tuning of the ramp's position, size, and shape is required.
+- Launcher consistency: In Progress. The launcher power has been increased, but further tuning is required to ensure the ball consistently enters the playfield.
 - Web `KeyUp` event: A workaround is in place for an issue where the spacebar `KeyUp` event is not reliably detected on web builds.
-- Visual assets (sprites) need to be re-introduced after temporary removal to resolve critical errors.
+- Visual assets (sprites) are placeholders and need to be replaced with final assets.
