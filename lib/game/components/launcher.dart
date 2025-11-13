@@ -14,7 +14,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
   final List<Body> _ballsToLaunch = [];
   final Map<Body, Timer> _removalTimers = {};
 
-  Launcher({required this.position, this.maxCharge = 3.0});
+  Launcher({required this.position, this.maxCharge = 5.0});
 
   @override
   Body createBody() {
@@ -48,7 +48,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   void increaseCharge(double dt) {
     if (!charging) return;
-    charge += dt; // simple linear charge
+    charge += dt * 10.0; // simple linear charge
     if (charge > maxCharge) charge = maxCharge;
     debugPrint('Launcher charge: ${(charge / maxCharge * 100).toStringAsFixed(0)}%');
   }
@@ -68,8 +68,8 @@ class Launcher extends BodyComponent with ContactCallbacks {
     for (final ball in _ballsToLaunch) {
       // Apply a strong impulse UPWARD into the playfield
       // X: negative (left), Y: large positive (upward)
-      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 2500000.0; // Scale based on charge
-      final impulse = Vector2(-magnitude * 0.1, magnitude); // Mostly upward
+      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 20000000.0; // Scale based on charge
+      final impulse = Vector2(-magnitude * 0.3, -magnitude); // Mostly upward
       debugPrint('Applying impulse: $impulse (magnitude=$magnitude) to ball at ${ball.position}');
       ball.applyLinearImpulse(impulse);
     }

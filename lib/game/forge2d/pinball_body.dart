@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 import '../components/visual_effects.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
 // import 'package:pinball_mobile/game/pinball_game.dart'; // Added
@@ -10,11 +10,13 @@ class PinballBall extends BodyComponent {
   final Vector2 initialPosition;
   final double radius;
   final Sprite? sprite;
+  final Vector2? initialVelocity;
 
   PinballBall({
     required this.initialPosition,
     this.radius = 0.5, // 10 pixels in game scale = 0.5 meters in physics scale
     this.sprite,
+    this.initialVelocity,
   });
 
   @override
@@ -26,7 +28,7 @@ class PinballBall extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1.0,
-      restitution: 0.8, // Slightly reduced bounciness
+      restitution: 0.9, // Reduced bounciness for realism
       friction: 0.3, // Increased friction
     );
 
@@ -38,7 +40,13 @@ class PinballBall extends BodyComponent {
       userData: this, // For collision callbacks
     );
 
-    return world.createBody(bodyDef)..createFixture(fixtureDef);
+    final body = world.createBody(bodyDef)..createFixture(fixtureDef);
+
+    if (initialVelocity != null) {
+      body.linearVelocity = initialVelocity!;
+    }
+
+    return body;
   }
 
   @override
@@ -69,12 +77,6 @@ class PinballBall extends BodyComponent {
       );
       canvas.restore();
     }
-  }
-
-  @override
-  void onMount() {
-    super.onMount();
-    debugPrint('BALL SPAWNED at position: ${body.position}, radius: $radius');
   }
 }
 
@@ -199,15 +201,15 @@ class PinballFlipper extends BodyComponent {
       ..setAsBox(
         length / 2,
         length / 5, // thickness
-        Vector2(isLeft ? length / 2 : -length / 2, 0),
+        Vector2(isLeft ? -length / 2 : length / 2, 0),
         0.0,
       );
 
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 0.5, // Increased bounciness
-      friction: 0.5, // Reduced friction
+      restitution: 0.3,
+      friction: 0.6,
     );
 
     final bodyDef = BodyDef(
@@ -224,15 +226,15 @@ class PinballFlipper extends BodyComponent {
       ..initialize(anchorBody, flipperBody, position)
       ..enableMotor = true
       ..motorSpeed = 0.0
-      ..maxMotorTorque = 10000000000.0 // Very high torque to actually move the flipper
+      ..maxMotorTorque = 1000000000.0 // Increased max motor torque
       ..enableLimit = true;
 
     if (isLeft) {
-      jointDef.lowerAngle = -flipperDownAngle;
-      jointDef.upperAngle = -flipperUpAngle;
-    } else {
       jointDef.lowerAngle = flipperUpAngle;
       jointDef.upperAngle = flipperDownAngle;
+    } else {
+      jointDef.lowerAngle = -flipperDownAngle;
+      jointDef.upperAngle = -flipperUpAngle;
     }
 
     final RevoluteJoint newJoint = RevoluteJoint(jointDef);
@@ -247,14 +249,9 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
-      // When pressed, flip UP - move towards upper angle limit
-      // The motorSpeed direction pushes the joint toward that limit
-      _joint.motorSpeed = isLeft ? -1000.0 : 1000.0;
-      debugPrint('  Flipper ${isLeft ? 'LEFT' : 'RIGHT'} motor speed UP: ${_joint.motorSpeed}');
+      _joint.motorSpeed = isLeft ? -40.0 : 40.0;
     } else {
-      // When released, fall DOWN - move towards lower angle limit  
-      _joint.motorSpeed = isLeft ? 1000.0 : -1000.0;
-      debugPrint('  Flipper ${isLeft ? 'LEFT' : 'RIGHT'} motor speed DOWN: ${_joint.motorSpeed}');
+      _joint.motorSpeed = isLeft ? 40.0 : -40.0;
     }
   }
 
@@ -283,7 +280,8 @@ class PinballFlipper extends BodyComponent {
 
   void press() {
     _isPressed = true;
-    debugPrint('Flipper ${isLeft ? 'LEFT' : 'RIGHT'} PRESSED');
+    // Access the game instance to use _calculatePan
+    // final gameRef = findGame() as PinballGame;
     audioManager.playSoundEffect(
       'audio/flipper_press.mp3',
       impactForce: 1.0,
@@ -292,7 +290,7 @@ class PinballFlipper extends BodyComponent {
 
   void release() {
     _isPressed = false;
-    debugPrint('Flipper ${isLeft ? 'LEFT' : 'RIGHT'} RELEASED');
+    // final gameRef = findGame() as PinballGame;
     audioManager.playSoundEffect(
       'audio/flipper_release.mp3',
       impactForce: 1.0,

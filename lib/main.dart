@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import for SystemChrome
 import 'package:pinball_mobile/game/game_provider.dart';
 import 'package:pinball_mobile/menu/main_menu.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,8 @@ import 'package:pinball_mobile/game/achievement_manager.dart'; // Import Achieve
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Set preferred orientations to portrait only
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final prefs = await SharedPreferences.getInstance();
   final highScoreManager = HighScoreManager(prefs);
   final audioManager = AudioManager(); // Instantiate AudioManager once

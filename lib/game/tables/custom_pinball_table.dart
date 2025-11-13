@@ -1,11 +1,14 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
 import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/hole.dart';
+import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/ramp.dart';
 import 'package:pinball_mobile/game/components/spinner.dart';
 // import 'package:pinball_mobile/game/components/target.dart';
+import 'package:pinball_mobile/game/components/wall_body.dart';
 // import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/game/table_config_manager.dart';
@@ -15,6 +18,7 @@ import 'package:pinball_mobile/game/forge2d/pinball_body.dart'; // Added
 
 class CustomPinballTable extends PinballGame {
   final TableConfig tableConfig;
+
   CustomPinballTable({
     required this.tableConfig,
     required super.prefs,
@@ -27,8 +31,8 @@ class CustomPinballTable extends PinballGame {
 
   @override
   Future<void> loadTableElements() async {
-    await super.loadTableElements(); // Call super to load common elements
-
+    await super.loadTableElements();
+    
     // Spawn initial ball
     spawnBall();
 

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
+import 'package:pinball_mobile/game/components/wall_body.dart'; // Added for WallBody
+
+import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:pinball_mobile/game/high_score_manager.dart';
 // import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
@@ -16,10 +21,6 @@ class SpaceAdventureTable extends PinballGame {
     required super.audioManager,
     required super.achievementManager,
   });
-
-
-
-
 
   @override
   Future<void> loadTableElements() async {
