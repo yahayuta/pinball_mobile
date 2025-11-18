@@ -14,7 +14,7 @@ class PinballBall extends BodyComponent {
 
   PinballBall({
     required this.initialPosition,
-    this.radius = 1.75, // 10 pixels in game scale = 0.5 meters in physics scale
+    this.radius = 2.0, // 10 pixels in game scale = 0.5 meters in physics scale
     this.sprite,
     this.initialVelocity,
   });

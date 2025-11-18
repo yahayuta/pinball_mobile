@@ -29,7 +29,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
     final fixtureDef = FixtureDef(
       shape,
       friction: 0.3,
-      restitution: 0.8, // Make it bouncy so it launches the ball
+      restitution: 0.9, // Make it bouncy so it launches the ball
       isSensor: false, // Allow collision so it can push the ball
       userData: this,
     );
