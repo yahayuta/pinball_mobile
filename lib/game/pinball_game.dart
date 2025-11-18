@@ -151,7 +151,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.75);
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
-      radius: size.x * 0.0125,
+      radius: size.x * 0.025,
       sprite: ballSprite, // Pass the ball sprite
       initialVelocity: velocity,
     );

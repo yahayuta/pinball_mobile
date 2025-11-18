@@ -27,9 +27,9 @@ class PinballBall extends BodyComponent {
     // Define the body characteristics
     final fixtureDef = FixtureDef(
       shape,
-      density: 1.0,
-      restitution: 0.9, // Reduced bounciness for realism
-      friction: 0.3, // Increased friction
+      density: 0.3,
+      restitution: 1.3, // Increased bounciness
+      friction: 0.2, // Reduced friction for lighter feel
     );
 
     // Create the body definition
@@ -180,8 +180,8 @@ class PinballFlipper extends BodyComponent {
   final AudioManager audioManager;
   final Sprite? sprite; // Added sprite property
 
-  static const double flipperUpAngle = -0.6; // In radians, ~35 degrees up
-  static const double flipperDownAngle = 0.2; // In radians, ~12 degrees down
+  static const double flipperUpAngle = -1.5; // In radians, ~86 degrees up
+  static const double flipperDownAngle = 0.6; // In radians, ~34 degrees down
   bool _isPressed = false;
 
   late final RevoluteJoint _joint;
@@ -208,8 +208,8 @@ class PinballFlipper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 0.3,
-      friction: 0.6,
+      restitution: 0.8, // Increased from 0.3 for more bounce
+      friction: 0.4, // Reduced from 0.6 for better contact
     );
 
     final bodyDef = BodyDef(
@@ -249,9 +249,9 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
-      _joint.motorSpeed = isLeft ? -40.0 : 40.0;
+      _joint.motorSpeed = isLeft ? -110.0 : 110.0; // Increased to 110
     } else {
-      _joint.motorSpeed = isLeft ? 40.0 : -40.0;
+      _joint.motorSpeed = isLeft ? 110.0 : -110.0; // Increased to 110
     }
   }
 

@@ -20,7 +20,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
   Body createBody() {
     final shape = PolygonShape()
       ..setAsBox(
-        1.0, // 2m wide = 40px
+        1.0, // 2.0m wide = 40px
         3.0, // 6m tall = 120px
         Vector2.zero(),
         0,
@@ -28,8 +28,8 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
     final fixtureDef = FixtureDef(
       shape,
-      friction: 0.3,
-      restitution: 0.9, // Make it bouncy so it launches the ball
+      friction: 0.0,
+      restitution: 1.2, // High bounciness but not excessive
       isSensor: false, // Allow collision so it can push the ball
       userData: this,
     );
@@ -48,7 +48,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   void increaseCharge(double dt) {
     if (!charging) return;
-    charge += dt * 10.0; // simple linear charge
+    charge += dt * 15.0; // Increased from 10.0 for faster charge
     if (charge > maxCharge) charge = maxCharge;
     debugPrint('Launcher charge: ${(charge / maxCharge * 100).toStringAsFixed(0)}%');
   }
@@ -66,10 +66,9 @@ class Launcher extends BodyComponent with ContactCallbacks {
     }
     
     for (final ball in _ballsToLaunch) {
-      // Apply a strong impulse UPWARD into the playfield
-      // X: negative (left), Y: large positive (upward)
-      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 75000000.0; // Scale based on charge
-      final impulse = Vector2(-magnitude * 0.3, -magnitude); // Mostly upward
+      // Apply a very strong impulse UPWARD into the playfield
+      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 250000000.0; // Increased to 250M
+      final impulse = Vector2(-magnitude * 0.02, -magnitude); // Nearly pure vertical
       debugPrint('Applying impulse: $impulse (magnitude=$magnitude) to ball at ${ball.position}');
       ball.applyLinearImpulse(impulse);
     }
@@ -88,47 +87,144 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = Colors.black87
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
+    // Draw outer launcher tube with ultra-realistic metallic finish
+    final tubePaint = Paint()
+      ..color = Colors.grey[900]!
+      ..style = PaintingStyle.fill;
 
-    // Draw launcher background with border
-    final rect = Rect.fromCenter(
+    final tubeRect = Rect.fromCenter(
       center: Offset.zero,
-      width: 2.0, // 2m wide
-      height: 6.0, // 6m tall
+      width: 2.0,
+      height: 6.0,
     );
-    canvas.drawRect(rect, paint);
-    paint.style = PaintingStyle.stroke;
-    paint.color = Colors.white;
-    canvas.drawRect(rect, paint);
+    canvas.drawRect(tubeRect, tubePaint);
+    
+    // Draw metallic rim with beveled effect
+    canvas.drawRect(
+      tubeRect,
+      Paint()
+        ..color = Colors.grey[200]!
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.3,
+    );
+    
+    // Inner bevel light
+    canvas.drawLine(
+      const Offset(-0.9, -2.85),
+      const Offset(-0.9, 2.85),
+      Paint()
+        ..color = Colors.white.withAlpha(150)
+        ..strokeWidth = 0.2,
+    );
+    
+    // Inner bevel shadow
+    canvas.drawLine(
+      const Offset(0.9, -2.85),
+      const Offset(0.9, 2.85),
+      Paint()
+        ..color = Colors.black.withAlpha(120)
+        ..strokeWidth = 0.2,
+    );
 
-    // Draw charge bar with border
+    // Draw spring plunger with enhanced realism
     if (charge > 0) {
-      final barHeight = (charge / maxCharge).clamp(0.0, 1.0) * 5.8;
-      final barRect = Rect.fromLTRB(
-        -0.9, // Left (m)
-        2.9 - barHeight, // Top (m)
-        0.9, // Right (m)
-        2.9, // Bottom (m)
+      final chargePercent = (charge / maxCharge).clamp(0.0, 1.0);
+      final plungerHeight = chargePercent * 4.8;
+      final plungerTop = 2.4 - plungerHeight;
+      
+      final plungerRect = Rect.fromLTRB(
+        -0.65,
+        plungerTop,
+        0.65,
+        2.4,
       );
-      Color barColor;
-      if (charge / maxCharge < 0.33) {
-        barColor = Colors.green;
-      } else if (charge / maxCharge < 0.66) {
-        barColor = Colors.yellow;
+      
+      // Plunger color progression
+      Color plungerColor;
+      if (chargePercent < 0.33) {
+        plungerColor = Colors.green[400]!;
+      } else if (chargePercent < 0.66) {
+        plungerColor = Colors.amber[500]!;
       } else {
-        barColor = Colors.red;
+        plungerColor = Colors.red[400]!;
       }
-      canvas.drawRect(barRect, Paint()..color = barColor..style = PaintingStyle.fill);
+      
+      // Plunger main body
       canvas.drawRect(
-        barRect,
+        plungerRect,
         Paint()
-          ..color = Colors.white
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.0,
+          ..color = plungerColor
+          ..style = PaintingStyle.fill,
       );
+      
+      // Plunger top highlight (beveled edge)
+      canvas.drawRect(
+        Rect.fromLTRB(
+          plungerRect.left,
+          plungerTop,
+          plungerRect.right,
+          plungerTop + 0.2,
+        ),
+        Paint()
+          ..color = Colors.white.withAlpha(180)
+          ..style = PaintingStyle.fill,
+      );
+      
+      // Plunger side highlight
+      canvas.drawRect(
+        Rect.fromLTRB(
+          plungerRect.left,
+          plungerTop,
+          plungerRect.left + 0.15,
+          plungerRect.bottom,
+        ),
+        Paint()
+          ..color = Colors.white.withAlpha(100)
+          ..style = PaintingStyle.fill,
+      );
+      
+      // Plunger border
+      canvas.drawRect(
+        plungerRect,
+        Paint()
+          ..color = Colors.black
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.18,
+      );
+      
+      // Draw compressed spring coils below plunger
+      final coilStartY = 2.45;
+      final coilSpacing = 0.22;
+      for (int i = 0; i < 7; i++) {
+        final coilY = coilStartY + (i * coilSpacing);
+        if (coilY < 4.0) {
+          canvas.drawCircle(
+            Offset(0, coilY),
+            0.26,
+            Paint()
+              ..color = Colors.grey[400]!
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 0.14,
+          );
+        }
+      }
+    } else {
+      // Draw relaxed spring coils
+      final coilStartY = 2.8;
+      final coilSpacing = 0.45;
+      for (int i = 0; i < 5; i++) {
+        final coilY = coilStartY + (i * coilSpacing);
+        if (coilY < 4.2) {
+          canvas.drawCircle(
+            Offset(0, coilY),
+            0.32,
+            Paint()
+              ..color = Colors.grey[600]!
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 0.11,
+          );
+        }
+      }
     }
   }
 
