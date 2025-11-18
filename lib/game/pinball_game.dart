@@ -152,7 +152,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.75);
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
-      radius: size.x * 0.025,
+      radius: size.x * 0.03,
       sprite: ballSprite, // Pass the ball sprite
       initialVelocity: velocity,
     );
@@ -280,7 +280,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   @mustCallSuper
   Future<void> loadTableElements() async {
     // Initialize flippers
-    final flipperLength = size.x / 8;
+    final flipperLength = size.x / 7;
     leftFlipper = PinballFlipper(
       position: Vector2(size.x * 0.3, size.y * 0.9),
       isLeft: false,
