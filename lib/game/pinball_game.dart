@@ -13,6 +13,7 @@ import 'package:pinball_mobile/game/audio_manager.dart';
 // import 'package:pinball_mobile/game/components/target.dart';
 import 'package:pinball_mobile/game/achievement_manager.dart';
 import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
+import 'components/hud.dart';
 import 'components/launcher.dart';
 import 'components/visual_effects.dart';
 import 'components/power_up.dart';
@@ -251,6 +252,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       _gameStartTime = DateTime.now();
       _gameDuration = Duration(seconds: gameModeManager.currentGameMode.timeLimitSeconds);
     }
+    
+    final highScores = _highScoreManager.getHighScores();
+    add(Hud(highScore: highScores.isNotEmpty ? highScores.first.score : 0));
   }
 
   // Helper: try loading an asset sprite, otherwise create a simple colored
