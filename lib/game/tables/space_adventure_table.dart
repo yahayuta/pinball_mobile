@@ -26,8 +26,7 @@ class SpaceAdventureTable extends PinballGame {
   Future<void> loadTableElements() async {
     await super.loadTableElements(); // Call super to load common elements
 
-    // Spawn initial ball
-    spawnBall();
+
 
     // Add a multi-ball target
     await add(
