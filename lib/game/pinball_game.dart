@@ -54,6 +54,18 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   DateTime? _ballSaveEndTime;
   Timer? _ballSaveTimer;
 
+  DateTime? _gameStartTime;
+  Duration? _gameDuration;
+
+  Duration get gameTimeRemaining {
+    if (_gameStartTime != null && _gameDuration != null) {
+      final elapsed = DateTime.now().difference(_gameStartTime!);
+      final remaining = _gameDuration! - elapsed;
+      return remaining.isNegative ? Duration.zero : remaining;
+    }
+    return Duration.zero;
+  }
+
   bool _tilted = false;
   int _tiltWarnings = 0;
 
@@ -233,6 +245,12 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       }
     });
     await loadTableElements(); // Call initGameElements after all sprites are loaded
+
+    // Initialize game timer for timed modes
+    if (gameModeManager.currentGameMode.type == GameModeType.timed) {
+      _gameStartTime = DateTime.now();
+      _gameDuration = Duration(seconds: gameModeManager.currentGameMode.timeLimitSeconds);
+    }
   }
 
   // Helper: try loading an asset sprite, otherwise create a simple colored

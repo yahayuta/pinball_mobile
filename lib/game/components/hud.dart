@@ -49,7 +49,7 @@ class Hud extends Component with HasGameReference<PinballGame> {
     ];
 
     if (gameMode.type == GameModeType.timed) {
-      lines.insert(0, 'Time: ${game.remainingTime}');
+      lines.insert(0, 'Time: ${(game.gameTimeRemaining.inMilliseconds / 1000.0).toStringAsFixed(1)}s');
     } else if (gameMode.type == GameModeType.challenge) {
       lines.insert(0, 'Target: ${gameMode.scoreTarget}');
     }

@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart'; // Import for ChangeNotifier
 
 class AudioManager with ChangeNotifier {
   static final AudioManager _instance = AudioManager._internal();
@@ -61,11 +60,13 @@ class AudioManager with ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   void dispose() {
     _backgroundPlayer.dispose();
     for (var player in _effectPlayers.values) {
       player.dispose();
     }
     _effectPlayers.clear();
+    super.dispose();
   }
 }
