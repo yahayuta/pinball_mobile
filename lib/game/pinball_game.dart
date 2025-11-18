@@ -300,7 +300,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     ); // Left wall
     // New right wall for launcher channel
     add(
-      WallBody(position: Vector2(size.x * 0.9, size.y / 2), size: Vector2(1, size.y)),
+      WallBody(position: Vector2(size.x * 0.9, size.y * 0.75), size: Vector2(1, size.y * 0.5)),
     );
     // Dedicated launcher channel
     add(
