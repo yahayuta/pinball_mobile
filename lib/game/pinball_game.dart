@@ -99,7 +99,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     required this.achievementManager,
     this.currentPlayerName = 'Player 1',
   }) : _highScoreManager = highScoreManager,
-       super(gravity: Vector2(0, 20.0)) {
+       super(gravity: Vector2(0, 10.0)) {
     debugMode = true;
   }
 
