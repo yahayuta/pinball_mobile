@@ -282,14 +282,14 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Initialize flippers
     final flipperLength = size.x / 4;
     leftFlipper = PinballFlipper(
-      position: Vector2(size.x * 0.3, size.y * 0.9),
+      position: Vector2(size.x * 0.25, size.y * 0.9),
       isLeft: false,
       length: flipperLength,
       audioManager: audioManager,
       sprite: flipperLeftSprite, // Pass left flipper sprite
     );
     rightFlipper = PinballFlipper(
-      position: Vector2(size.x * 0.7, size.y * 0.9),
+      position: Vector2(size.x * 0.75, size.y * 0.9),
       isLeft: true,
       length: flipperLength,
       audioManager: audioManager,
