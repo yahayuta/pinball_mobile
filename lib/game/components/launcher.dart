@@ -67,7 +67,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
     
     for (final ball in _ballsToLaunch) {
       // Apply a very strong impulse UPWARD into the playfield
-      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 750000000.0; // Increased to 750M
+      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 1000000000.0; // Increased to 1B
       final impulse = Vector2(0, -magnitude); // Purely vertical impulse
       debugPrint('Applying impulse: $impulse (magnitude=$magnitude) to ball at ${ball.position}');
       ball.applyLinearImpulse(impulse);

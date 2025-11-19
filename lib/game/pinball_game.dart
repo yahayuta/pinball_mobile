@@ -280,7 +280,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   @mustCallSuper
   Future<void> loadTableElements() async {
     // Initialize flippers
-    final flipperLength = size.x / 5;
+    final flipperLength = size.x / 4;
     leftFlipper = PinballFlipper(
       position: Vector2(size.x * 0.3, size.y * 0.9),
       isLeft: false,
