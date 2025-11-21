@@ -23,6 +23,7 @@ import 'forge2d/pinball_body.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Added
 import 'components/wall_body.dart';
+import 'components/guide_wall.dart';
 // import 'components/launcher_ramp.dart'; // Import the new LauncherRamp component
 
 class PinballGame extends Forge2DGame with KeyboardEvents implements ContactListener {
@@ -310,29 +311,11 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     launcher = Launcher(position: Vector2(size.x * 0.95, size.y * 0.8));
     add(launcher);
 
-    // Add walls
-    add(
-      WallBody(position: Vector2(size.x / 2, 0), size: Vector2(size.x, 1)),
-    ); // Top wall
-    add(
-      WallBody(position: Vector2(size.x / 2, size.y), size: Vector2(size.x, 1)),
-    ); // Bottom wall
-    add(
-      WallBody(position: Vector2(0, size.y / 2), size: Vector2(1, size.y)),
-    ); // Left wall
-    // New right wall for launcher channel
-    add(
-      WallBody(position: Vector2(size.x * 0.9, size.y * 0.75), size: Vector2(1, size.y * 0.5)),
-    );
-    // Dedicated launcher channel (right boundary of channel, now full height)
-    add(
-      WallBody(position: Vector2(size.x * 0.98, size.y / 2), size: Vector2(1, size.y)),
-    );
-
-    // New horizontal wall at the top of the launcher lane (tuned: extremely upper and strongly angled to upside)
-    add(
-      WallBody(position: Vector2(size.x * 0.94, size.y * 0.01), size: Vector2(size.x * 0.08, 1), angle: 0.4),
-    );
+    // Create realistic wall layout
+    _createMainPlayfieldWalls();
+    _createInlaneOutlaneWalls();
+    _createSlingshotWalls();
+    _createLauncherLaneWalls();
 
     // Add bumpers with sprites
     add(
@@ -356,6 +339,121 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Spawn initial ball
     spawnBall(velocity: Vector2(0, -50));
 
+  }
+
+  // Helper method: Create main playfield boundary walls
+  void _createMainPlayfieldWalls() {
+    // Top wall
+    add(WallBody(
+      position: Vector2(size.x / 2, 0),
+      size: Vector2(size.x, 1),
+      restitution: 0.6,
+    ));
+
+    // Bottom wall (drain area)
+    add(WallBody(
+      position: Vector2(size.x / 2, size.y),
+      size: Vector2(size.x, 1),
+      restitution: 0.3,
+    ));
+
+    // Left wall (full height)
+    add(WallBody(
+      position: Vector2(0, size.y / 2),
+      size: Vector2(1, size.y),
+      restitution: 0.6,
+    ));
+
+    // Left angled wall (upper section) - creates classic pinball shape
+    add(GuideWall([
+      Vector2(size.x * 0.05, size.y * 0.1),
+      Vector2(size.x * 0.15, size.y * 0.5),
+      Vector2(size.x * 0.15, size.y * 0.7),
+    ], color: Colors.cyan, restitution: 0.5));
+
+    // Right upper angled wall REMOVED to allow clear launcher lane exit path
+  }
+
+  // Helper method: Create inlane and outlane walls
+  void _createInlaneOutlaneWalls() {
+    // Left outlane wall (outer channel leading to drain)
+    add(GuideWall([
+      Vector2(size.x * 0.05, size.y * 0.7),
+      Vector2(size.x * 0.08, size.y * 0.85),
+      Vector2(size.x * 0.12, size.y * 0.95),
+    ], color: Colors.orange, restitution: 0.4));
+
+    // Left inlane wall (inner channel returning to flipper)
+    add(GuideWall([
+      Vector2(size.x * 0.15, size.y * 0.7),
+      Vector2(size.x * 0.18, size.y * 0.85),
+      Vector2(size.x * 0.22, size.y * 0.92),
+    ], color: Colors.green, restitution: 0.3));
+
+    // Right inlane wall (inner channel returning to flipper)
+    add(GuideWall([
+      Vector2(size.x * 0.85, size.y * 0.7),
+      Vector2(size.x * 0.82, size.y * 0.85),
+      Vector2(size.x * 0.78, size.y * 0.92),
+    ], color: Colors.green, restitution: 0.3));
+
+    // Right outlane wall (outer channel leading to drain)
+    add(GuideWall([
+      Vector2(size.x * 0.88, size.y * 0.7),
+      Vector2(size.x * 0.88, size.y * 0.85),
+      Vector2(size.x * 0.88, size.y * 0.95),
+    ], color: Colors.orange, restitution: 0.4));
+  }
+
+  // Helper method: Create slingshot walls near flippers
+  void _createSlingshotWalls() {
+    // Left slingshot (angled wall that kicks ball energetically)
+    add(WallBody(
+      position: Vector2(size.x * 0.2, size.y * 0.88),
+      size: Vector2(size.x * 0.08, 1),
+      angle: -0.5, // Angled toward center
+      color: Colors.red,
+      restitution: 0.9, // Very bouncy for slingshot effect
+      friction: 0.1,
+    ));
+
+    // Right slingshot (angled wall that kicks ball energetically)
+    add(WallBody(
+      position: Vector2(size.x * 0.8, size.y * 0.88),
+      size: Vector2(size.x * 0.08, 1),
+      angle: 0.5, // Angled toward center
+      color: Colors.red,
+      restitution: 0.9, // Very bouncy for slingshot effect
+      friction: 0.1,
+    ));
+  }
+
+  // Helper method: Create launcher lane walls
+  void _createLauncherLaneWalls() {
+    // Restore ORIGINAL working launcher lane configuration
+    
+    // Left wall of launcher channel (half height, allows ball exit at top)
+    add(WallBody(
+      position: Vector2(size.x * 0.9, size.y * 0.75),
+      size: Vector2(1, size.y * 0.5),
+      restitution: 0.5,
+    ));
+    
+    // Right wall of launcher channel (full height outer boundary)
+    add(WallBody(
+      position: Vector2(size.x * 0.98, size.y / 2),
+      size: Vector2(1, size.y),
+      restitution: 0.5,
+    ));
+    
+    // Angled wall at top of launcher lane (guides ball into playfield)
+    add(WallBody(
+      position: Vector2(size.x * 0.94, size.y * 0.01),
+      size: Vector2(size.x * 0.08, 1),
+      angle: 0.4,
+      color: Colors.yellow,
+      restitution: 0.6,
+    ));
   }
 
   @override

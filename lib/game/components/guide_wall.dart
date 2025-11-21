@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 class GuideWall extends BodyComponent {
   final List<Vector2> vertices;
   final Color color;
+  final double restitution;
 
-  GuideWall(this.vertices, {this.color = Colors.grey});
+  GuideWall(this.vertices, {this.color = Colors.grey, this.restitution = 0.0});
 
   @override
   Body createBody() {
     final shape = ChainShape()..createChain(vertices);
-    final fixtureDef = FixtureDef(shape, friction: 0.1, restitution: 0.0);
+    final fixtureDef = FixtureDef(shape, friction: 0.1, restitution: restitution);
     final bodyDef = BodyDef(type: BodyType.static);
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }
@@ -20,7 +21,7 @@ class GuideWall extends BodyComponent {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.2;
+      ..strokeWidth = 0.5;
     for (var i = 0; i < vertices.length - 1; i++) {
       canvas.drawLine(
         Offset(vertices[i].x, vertices[i].y),

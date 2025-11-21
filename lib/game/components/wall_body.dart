@@ -10,6 +10,8 @@ class WallBody extends BodyComponent {
   final double angle;
   final Color color;
   final Sprite? sprite; // Added sprite property
+  final double friction;
+  final double restitution;
 
   WallBody({
     required this.position,
@@ -17,6 +19,8 @@ class WallBody extends BodyComponent {
     this.angle = 0.0,
     this.color = Colors.grey,
     this.sprite, // Added sprite to constructor
+    this.friction = 0.3,
+    this.restitution = 0.5,
   });
 
   @override
@@ -30,8 +34,8 @@ class WallBody extends BodyComponent {
     
     final fixtureDef = FixtureDef(
       shape,
-      friction: 0.3,
-      restitution: 0.5,
+      friction: friction,
+      restitution: restitution,
     );
 
     final bodyDef = BodyDef(
