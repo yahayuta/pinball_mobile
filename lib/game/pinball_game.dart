@@ -610,19 +610,31 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     super.update(dt);
 
     if (balls.isNotEmpty) {
-      final targetPosition = balls.first.position;
-      camera.viewfinder.position = targetPosition;
+      final ballsToRemove = <PinballBall>[];
+      for (final ball in balls) {
+        if (ball.body.position.y > size.y + 10.0) {
+          ballsToRemove.add(ball);
+        }
+      }
+      for (final ball in ballsToRemove) {
+        onBallLost(ball);
+      }
 
-      // Dynamic zoom based on ball speed
-      const double minZoom = 8.0;
-      const double maxZoom = 12.0;
-      const double minSpeed = 10.0;
-      const double maxSpeed = 100.0;
+      if (balls.isNotEmpty) {
+        final targetPosition = balls.first.position;
+        camera.viewfinder.position = targetPosition;
 
-      final ballSpeed = balls.first.body.linearVelocity.length;
-      final zoomFactor = (ballSpeed - minSpeed) / (maxSpeed - minSpeed);
-      final newZoom = lerpDouble(maxZoom, minZoom, zoomFactor.clamp(0.0, 1.0))!;
-      camera.viewfinder.zoom = newZoom;
+        // Dynamic zoom based on ball speed
+        const double minZoom = 8.0;
+        const double maxZoom = 12.0;
+        const double minSpeed = 10.0;
+        const double maxSpeed = 100.0;
+
+        final ballSpeed = balls.first.body.linearVelocity.length;
+        final zoomFactor = (ballSpeed - minSpeed) / (maxSpeed - minSpeed);
+        final newZoom = lerpDouble(maxZoom, minZoom, zoomFactor.clamp(0.0, 1.0))!;
+        camera.viewfinder.zoom = newZoom;
+      }
     }
 
     // Workaround for spacebar KeyUp not being registered on web
