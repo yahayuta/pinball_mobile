@@ -13,15 +13,20 @@ import 'package:pinball_mobile/game/components/rollover_switch.dart';
 import 'package:pinball_mobile/game/components/slingshot.dart';
 import 'package:pinball_mobile/game/components/kickback.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/scoring_manager.dart';
 
 class SpaceAdventureTable extends PinballGame {
+  late final ScoringManager scoringManager;
+  
   SpaceAdventureTable({
     required super.prefs,
     required super.highScoreManager,
     required super.gameModeManager,
     required super.audioManager,
     required super.achievementManager,
-  });
+  }) {
+    scoringManager = ScoringManager(this);
+  }
 
   @override
   Future<void> loadTableElements() async {
@@ -34,25 +39,37 @@ class SpaceAdventureTable extends PinballGame {
     // Top Rollover Lanes (spell bonus)
     await add(RolloverSwitch(
       position: Vector2(size.x * 0.25, size.y * 0.08),
-      onActivate: (ball) => addScore(500, ball.body.position),
+      onActivate: (ball) {
+        scoringManager.hitTopLane(0);
+        addScore(500, ball.body.position);
+      },
       color: Colors.amber,
       audioManager: audioManager,
     ));
     await add(RolloverSwitch(
       position: Vector2(size.x * 0.40, size.y * 0.08),
-      onActivate: (ball) => addScore(500, ball.body.position),
+      onActivate: (ball) {
+        scoringManager.hitTopLane(1);
+        addScore(500, ball.body.position);
+      },
       color: Colors.amber,
       audioManager: audioManager,
     ));
     await add(RolloverSwitch(
       position: Vector2(size.x * 0.55, size.y * 0.08),
-      onActivate: (ball) => addScore(500, ball.body.position),
+      onActivate: (ball) {
+        scoringManager.hitTopLane(2);
+        addScore(500, ball.body.position);
+      },
       color: Colors.amber,
       audioManager: audioManager,
     ));
     await add(RolloverSwitch(
       position: Vector2(size.x * 0.70, size.y * 0.08),
-      onActivate: (ball) => addScore(500, ball.body.position),
+      onActivate: (ball) {
+        scoringManager.hitTopLane(3);
+        addScore(500, ball.body.position);
+      },
       color: Colors.amber,
       audioManager: audioManager,
     ));
@@ -100,35 +117,50 @@ class SpaceAdventureTable extends PinballGame {
     // Drop Target Bank - 5 targets
     await add(DropTarget(
       position: Vector2(size.x * 0.30, size.y * 0.40),
-      onHit: (ball) => addScore(200, ball.body.position),
+      onHit: (ball) {
+        scoringManager.hitDropTarget(0);
+        addScore(200, ball.body.position);
+      },
       color: Colors.pink,
       audioManager: audioManager,
       sprite: dropTargetSprite,
     ));
     await add(DropTarget(
       position: Vector2(size.x * 0.40, size.y * 0.40),
-      onHit: (ball) => addScore(200, ball.body.position),
+      onHit: (ball) {
+        scoringManager.hitDropTarget(1);
+        addScore(200, ball.body.position);
+      },
       color: Colors.pink,
       audioManager: audioManager,
       sprite: dropTargetSprite,
     ));
     await add(DropTarget(
       position: Vector2(size.x * 0.50, size.y * 0.40),
-      onHit: (ball) => addScore(200, ball.body.position),
+      onHit: (ball) {
+        scoringManager.hitDropTarget(2);
+        addScore(200, ball.body.position);
+      },
       color: Colors.pink,
       audioManager: audioManager,
       sprite: dropTargetSprite,
     ));
     await add(DropTarget(
       position: Vector2(size.x * 0.60, size.y * 0.40),
-      onHit: (ball) => addScore(200, ball.body.position),
+      onHit: (ball) {
+        scoringManager.hitDropTarget(3);
+        addScore(200, ball.body.position);
+      },
       color: Colors.pink,
       audioManager: audioManager,
       sprite: dropTargetSprite,
     ));
     await add(DropTarget(
       position: Vector2(size.x * 0.70, size.y * 0.40),
-      onHit: (ball) => addScore(200, ball.body.position),
+      onHit: (ball) {
+        scoringManager.hitDropTarget(4);
+        addScore(200, ball.body.position);
+      },
       color: Colors.pink,
       audioManager: audioManager,
       sprite: dropTargetSprite,
@@ -229,7 +261,8 @@ class SpaceAdventureTable extends PinballGame {
     await add(RolloverSwitch(
       position: Vector2(size.x * 0.92, size.y * 0.50),
       onActivate: (ball) {
-        addScore(1000, ball.body.position); // Skill shot bonus
+        scoringManager.awardSkillShot();
+        addScore(1000, ball.body.position); // Base skill shot bonus
       },
       color: Colors.yellow,
       audioManager: audioManager,

@@ -36,8 +36,8 @@ class Slingshot extends BodyComponent with ContactCallbacks {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - immovable
-      restitution: 1.0, // Very bouncy
-      friction: 0.1,
+      restitution: 1.2, // Very bouncy (increased from 1.0)
+      friction: 0.05, // Reduced friction for cleaner kick
       userData: this,
     );
 
@@ -62,10 +62,15 @@ class Slingshot extends BodyComponent with ContactCallbacks {
     _isActivated = true;
     _activationTime = 0.0;
     
-    // Apply strong impulse away from slingshot
+    // Apply strong impulse away from slingshot with upward component
     final impulseDirection = (ball.body.position - body.position)..normalize();
-    final impulseStrength = 8000.0; // Strong kick
-    ball.body.applyLinearImpulse(impulseDirection * impulseStrength);
+    // Add upward component for more dynamic gameplay
+    final adjustedDirection = Vector2(
+      impulseDirection.x,
+      impulseDirection.y - 0.2, // Upward bias
+    )..normalize();
+    final impulseStrength = 10000.0; // Increased from 8000 for more dramatic kick
+    ball.body.applyLinearImpulse(adjustedDirection * impulseStrength);
     
     audioManager.playSoundEffect('audio/slingshot.mp3', impactForce: 1.0);
     onHit?.call(ball);

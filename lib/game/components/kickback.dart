@@ -63,9 +63,13 @@ class Kickback extends BodyComponent with ContactCallbacks {
     _isActive = false;
     _cooldownTime = 0.0;
     
-    // Apply strong horizontal impulse toward center
+    // Apply strong horizontal impulse toward center with upward component
     final direction = isLeftSide ? 1.0 : -1.0;
-    final impulse = Vector2(direction * 15000.0, -5000.0); // Horizontal + slight upward
+    // Increased forces for more effective saves
+    final impulse = Vector2(
+      direction * 18000.0, // Increased from 15000
+      -8000.0, // Increased upward component from -5000
+    );
     ball.body.applyLinearImpulse(impulse);
     
     audioManager.playSoundEffect('audio/kickback.mp3', impactForce: 1.0);
