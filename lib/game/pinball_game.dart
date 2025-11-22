@@ -24,10 +24,12 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Added
 import 'components/wall_body.dart';
 import 'components/guide_wall.dart';
+import 'components/out_hole.dart'; // Added import
 // import 'components/launcher_ramp.dart'; // Import the new LauncherRamp component
 
 class PinballGame extends Forge2DGame with KeyboardEvents implements ContactListener {
   final List<PinballBall> balls = [];
+  final Set<PinballBall> _ballsBeingRemoved = {}; // Set to track balls being removed
   late final PinballFlipper leftFlipper;
   late final PinballFlipper rightFlipper;
   late final Launcher launcher;
@@ -49,6 +51,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   late final AchievementManager achievementManager;
 
   int score = 0;
+  int lives = 3; // Added lives counter
   int combo = 0;
   double maxHeightReached = 0;
 
@@ -125,28 +128,57 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   }
 
   void onBallLost(PinballBall ball) {
+    if (_ballsBeingRemoved.contains(ball)) return;
+    _ballsBeingRemoved.add(ball);
+    
+    debugPrint('Ball lost: $ball');
+
+    // Remove from game logic immediately
     balls.remove(ball);
-    remove(ball);
 
+    // Handle game rules (lives, spawning)
     if (_ballSaveActive) {
+      debugPrint('Ball save active, spawning new ball');
       spawnBall();
-      return;
+    } else if (balls.isEmpty) {
+      lives--; // Decrement lives
+      debugPrint('Lives remaining: $lives');
+      
+      if (lives > 0) {
+        // Still have lives, spawn new ball
+        spawnBall();
+      } else {
+        // Game Over
+        debugPrint('Game Over');
+        if (!_tilted) {
+          _highScoreManager.updateHighScore(currentPlayerName, score);
+          audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0);
+          achievementManager.updateProgress('first_game', 1);
+        }
+        combo = 0;
+        maxHeightReached = 0;
+        _tilted = false;
+        _tiltWarnings = 0;
+        lives = 3; // Reset lives
+        score = 0; // Reset score
+        leftFlipper.body.setAwake(true);
+        rightFlipper.body.setAwake(true);
+        spawnBall();
+      }
     }
 
-    if (balls.isEmpty) {
-      if (!_tilted) {
-        _highScoreManager.updateHighScore(currentPlayerName, score); // Pass player name
-        audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0); // New sound effect
-        achievementManager.updateProgress('first_game', 1); // Update first game achievement
-      }
-      combo = 0;
-      maxHeightReached = 0;
-      _tilted = false;
-      _tiltWarnings = 0;
-      leftFlipper.body.setAwake(true);
-      rightFlipper.body.setAwake(true);
-      spawnBall();
-    }
+    // Schedule physical removal for the next frame using a TimerComponent
+    add(TimerComponent(
+      period: 0.05,
+      removeOnFinish: true,
+      onTick: () {
+        if (ball.isMounted) {
+          debugPrint('Removing ball body: $ball');
+          remove(ball);
+          _ballsBeingRemoved.remove(ball);
+        }
+      },
+    ));
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
@@ -351,10 +383,10 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     ));
 
     // Bottom wall (drain area)
-    add(WallBody(
-      position: Vector2(size.x / 2, size.y),
-      size: Vector2(size.x, 1),
-      restitution: 0.3,
+    // Bottom wall (drain area) - REPLACED with OutHole
+    add(OutHole(
+      position: Vector2(size.x / 2, size.y + 1.0), // Slightly below visible area
+      size: Vector2(size.x, 2.0), // Wide enough to catch everything
     ));
 
     // Left wall (full height)
@@ -532,8 +564,6 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       final rand = Random().nextInt(3);
       if (rand == 0) {
         add(ScorePowerUp(position: Vector2(x, y)));
-      } else if (rand == 1) {
-        add(MultiBallPowerUp(position: Vector2(x, y)));
       } else {
         add(BallSavePowerUp(position: Vector2(x, y)));
       }

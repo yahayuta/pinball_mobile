@@ -27,20 +27,6 @@ class DefaultPinballTable extends PinballGame {
 
 
 
-    // Add a multi-ball target
-    await add(
-      PinballTarget(
-        position: Vector2(size.x * 0.75, size.y * 0.33),
-        hitsToTrigger: 3,
-        onHit: (ball) {
-          addScore(1000, Vector2(size.x * 0.75, size.y * 0.33));
-          spawnBall();
-          spawnBall();
-        },
-        sprite: targetSprite,
-      ),
-    );
-
     // Add Pop Bumpers
     await add(
       PopBumper(

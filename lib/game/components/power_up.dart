@@ -39,40 +39,7 @@ class ScorePowerUp extends BodyComponent with ContactCallbacks {
   }
 }
 
-class MultiBallPowerUp extends BodyComponent with ContactCallbacks {
-  MultiBallPowerUp({required Vector2 position})
-    : super(
-        bodyDef: BodyDef(position: position, type: BodyType.static),
-      );
 
-  @override
-  Body createBody() {
-    final shape = CircleShape()..radius = 1.0;
-
-    final fixtureDef = FixtureDef(shape, isSensor: true, userData: this);
-
-    return world.createBody(bodyDef as BodyDef)..createFixture(fixtureDef);
-  }
-
-  @override
-  void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.fill;
-
-    canvas.drawCircle(Offset.zero, 1.0, paint);
-  }
-
-  @override
-  void beginContact(Object other, Contact contact) {
-    if (other is PinballBall) {
-      (game as PinballGame).spawnBall();
-      (game as PinballGame).spawnBall();
-      (game as PinballGame).audioManager.playSoundEffect('audio/power_up_collect.mp3'); // New sound effect
-      removeFromParent();
-    }
-  }
-}
 
 class BallSavePowerUp extends BodyComponent with ContactCallbacks {
   BallSavePowerUp({required Vector2 position})

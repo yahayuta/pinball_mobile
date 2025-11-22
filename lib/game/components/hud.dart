@@ -27,6 +27,7 @@ class Hud extends Component with HasGameReference<PinballGame> {
     final charge = launcher.charge;
     final maxCharge = launcher.maxCharge;
     final score = game.score;
+    final lives = game.lives; // Get lives
     final combo = game.combo;
     final maxHeight = game.maxHeightReached;
     final ballSaveActive = game.isBallSaveActive;
@@ -39,7 +40,7 @@ class Hud extends Component with HasGameReference<PinballGame> {
       'Score: $score${combo > 0 ? ' (${combo}x combo!)' : ''}',
       'High Score: $highScore',
       'Max Height: ${maxHeight.toStringAsFixed(0)}',
-      'Balls: ${balls.length}',
+      'Balls: $lives',
       if (ballSaveActive)
         'Ball Save: ${(game.ballSaveTimeRemaining.inMilliseconds / 1000.0).toStringAsFixed(1)}s',
       if (isTilted) 'TILT!',
