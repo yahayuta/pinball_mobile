@@ -103,7 +103,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     required this.achievementManager,
     this.currentPlayerName = 'Player 1',
   }) : _highScoreManager = highScoreManager,
-       super(gravity: Vector2(0, 25.0)) { // Stronger gravity to simulate angled table
+       super(gravity: Vector2(0, 18.0)) { // Reduced from 25.0 for better balance with heavier ball
     debugMode = true;
   }
 
