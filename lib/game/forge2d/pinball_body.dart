@@ -27,9 +27,9 @@ class PinballBall extends BodyComponent {
     // Define the body characteristics
     final fixtureDef = FixtureDef(
       shape,
-      density: 1.2, // Scaled density representing steel (realistic weight)
-      restitution: 0.65, // Realistic steel ball bounce coefficient
-      friction: 0.4, // Realistic steel-on-playfield friction
+      density: 0.05,
+      restitution: 2.4, // Increased bounciness
+      friction: 0.2, // Reduced friction for lighter feel
     );
 
     // Create the body definition
@@ -38,8 +38,6 @@ class PinballBall extends BodyComponent {
       position: initialPosition,
       bullet: true, // Enable continuous collision detection
       userData: this, // For collision callbacks
-      linearDamping: 0.05, // Air resistance and rolling resistance
-      angularDamping: 0.1, // Rotational energy loss
     );
 
     final body = world.createBody(bodyDef)..createFixture(fixtureDef);
@@ -108,7 +106,7 @@ class PinballBumper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 1.8, // Spring-loaded bumpers actively propel the ball
+      restitution: 1.0, // Perfectly elastic collision
       friction: 0.2,
       userData: this,
     );
@@ -210,8 +208,8 @@ class PinballFlipper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 0.8, // Rubber-coated flippers have good bounce but not perfect
-      friction: 0.5, // Rubber provides good grip for ball control
+      restitution: 1.0, // Increased from 0.3 for more bounce
+      friction: 0.4, // Reduced from 0.6 for better contact
     );
 
     final bodyDef = BodyDef(
@@ -321,7 +319,7 @@ class PinballPost extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 0.5, // Metal posts less bouncy than rubber components
+      restitution: 0.6, // Increased bounciness
       friction: 0.2,
     );
 
