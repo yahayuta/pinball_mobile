@@ -11,6 +11,7 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
   final double height;
   final void Function(PinballBall)? onHit;
   final int hitsToTrigger;
+  final String? id;
   int _hitCount = 0;
   Sprite? sprite;
 
@@ -24,6 +25,7 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
     this.height = 1.0,
     this.onHit,
     this.hitsToTrigger = 1,
+    this.id,
     this.sprite,
   });
 
@@ -91,7 +93,11 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
       _isHit = true;
       _hitTime = 0;
       _hitCount++;
-      (game as PinballGame).audioManager.playSoundEffect('audio/target_hit.mp3'); // New sound effect
+      final gameRef = game as PinballGame;
+      gameRef.audioManager.playSoundEffect('audio/target_hit.mp3');
+      if (id != null) {
+        gameRef.missionManager.onObjectHit(id!);
+      }
       if (onHit != null && _hitCount >= hitsToTrigger) {
         onHit!(other);
         _hitCount = 0;

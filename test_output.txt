@@ -1,0 +1,29 @@
+00:00 +0: loading C:/Users/yasun/develop/pinball_mobile/test/game/mission_manager_test.dart
+test/game/mission_manager_test.dart:23:110: Error: A non-null value must be returned since the return type 'Future<void>' doesn't allow null.
+ - 'Future' is from 'dart:async'.
+      when(() => mockAudioManager.playSoundEffect(any(), impactForce: any(named: 'impactForce'))).thenAnswer((_) {});
+                                                                                          ^
+lib/game/pinball_game.dart:108:40: Error: The argument type 'Null' can't be assigned to the parameter type 'PinballGame'.
+ - 'PinballGame' is from 'package:pinball_mobile/game/pinball_game.dart' ('lib/game/pinball_game.dart').
+       missionManager = MissionManager(null), // Temporary init, fixed in body
+                                       ^
+lib/game/components/pinball_light.dart:84:53: Error: The method 'sin' isn't defined for the type 'double'.
+Try correcting the name to the name of an existing method, or defining a method named 'sin'.
+      _opacity = 0.3 + 0.7 * (0.5 * (1 + (t * 6.28).sin())); // 0.3 to 1.0
+                                                    ^^^
+00:00 +0 -1: loading C:/Users/yasun/develop/pinball_mobile/test/game/mission_manager_test.dart [E]
+  Failed to load "C:/Users/yasun/develop/pinball_mobile/test/game/mission_manager_test.dart":
+  Compilation failed for testPath=C:/Users/yasun/develop/pinball_mobile/test/game/mission_manager_test.dart: test/game/mission_manager_test.dart:23:110: Error: A non-null value must be returned since the return type 'Future<void>' doesn't allow null.
+   - 'Future' is from 'dart:async'.
+        when(() => mockAudioManager.playSoundEffect(any(), impactForce: any(named: 'impactForce'))).thenAnswer((_) {});
+                                                                                                               ^
+  lib/game/pinball_game.dart:108:40: Error: The argument type 'Null' can't be assigned to the parameter type 'PinballGame'.
+   - 'PinballGame' is from 'package:pinball_mobile/game/pinball_game.dart' ('lib/game/pinball_game.dart').
+         missionManager = MissionManager(null), // Temporary init, fixed in body
+                                         ^
+  lib/game/components/pinball_light.dart:84:53: Error: The method 'sin' isn't defined for the type 'double'.
+  Try correcting the name to the name of an existing method, or defining a method named 'sin'.
+        _opacity = 0.3 + 0.7 * (0.5 * (1 + (t * 6.28).sin())); // 0.3 to 1.0
+                                                      ^^^
+  .
+00:00 +0 -1: Some tests failed.

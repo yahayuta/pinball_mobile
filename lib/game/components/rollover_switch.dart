@@ -3,6 +3,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/pinball_game.dart';
 
 /// A rollover switch that detects when the ball passes over it.
 /// Commonly used in lanes and ramps to award points and track progress.
@@ -13,6 +14,7 @@ class RolloverSwitch extends BodyComponent with ContactCallbacks {
   final Function(PinballBall)? onActivate;
   final Color color;
   final AudioManager audioManager;
+  final String? id;
   
   bool _isActivated = false;
   double _activationTime = 0.0;
@@ -24,6 +26,7 @@ class RolloverSwitch extends BodyComponent with ContactCallbacks {
     this.onActivate,
     this.color = Colors.yellow,
     required this.audioManager,
+    this.id,
   });
 
   @override
@@ -56,6 +59,9 @@ class RolloverSwitch extends BodyComponent with ContactCallbacks {
     _isActivated = true;
     _activationTime = 0.0;
     audioManager.playSoundEffect('audio/rollover.mp3', impactForce: 0.7);
+    if (id != null) {
+      (game as PinballGame).missionManager.onObjectHit(id!);
+    }
     onActivate?.call(ball);
   }
 

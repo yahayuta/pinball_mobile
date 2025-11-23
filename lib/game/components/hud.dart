@@ -2,16 +2,33 @@ import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import '../pinball_game.dart';
-import '../game_mode_manager.dart'; // Added for GameModeType
 
 class Hud extends Component with HasGameReference<PinballGame> {
   late final TextPaint _tp;
+  late final TextPaint _missionTitleTp;
+  late final TextPaint _missionBodyTp;
   int highScore;
 
   Hud({required this.highScore}) {
     _tp = TextPaint(
       style: const TextStyle(
         color: Colors.white,
+        fontSize: 16, // Increased size
+        fontFamily: 'Courier',
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    _missionTitleTp = TextPaint(
+      style: const TextStyle(
+        color: Colors.yellowAccent,
+        fontSize: 18,
+        fontFamily: 'Courier',
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    _missionBodyTp = TextPaint(
+      style: const TextStyle(
+        color: Colors.white70,
         fontSize: 14,
         fontFamily: 'Courier',
       ),
@@ -23,42 +40,53 @@ class Hud extends Component with HasGameReference<PinballGame> {
     super.render(canvas);
     // Read game state
     final launcher = game.launcher;
-    final balls = game.balls;
+    final lives = game.lives;
+    final score = game.score;
+    final combo = game.combo;
     final charge = launcher.charge;
     final maxCharge = launcher.maxCharge;
-    final score = game.score;
-    final lives = game.lives; // Get lives
-    final combo = game.combo;
-    final maxHeight = game.maxHeightReached;
     final ballSaveActive = game.isBallSaveActive;
     final tiltWarnings = game.tiltWarnings;
     final isTilted = game.isTilted;
-    final gameMode = game.gameModeManager.currentGameMode;
+    
+    // Draw background for HUD
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(4, 4, 300, 200),
+        Radius.circular(8),
+      ),
+      Paint()..color = Colors.black.withValues(alpha: 0.7),
+    );
 
     // Build display lines
     final lines = <String>[
-      'Score: $score${combo > 0 ? ' (${combo}x combo!)' : ''}',
+      'Score: $score${combo > 0 ? ' (${combo}x)' : ''}',
       'High Score: $highScore',
-      'Max Height: ${maxHeight.toStringAsFixed(0)}',
       'Balls: $lives',
       if (ballSaveActive)
         'Ball Save: ${(game.ballSaveTimeRemaining.inMilliseconds / 1000.0).toStringAsFixed(1)}s',
       if (isTilted) 'TILT!',
-      if (!isTilted && tiltWarnings > 0) 'Tilt Warnings: $tiltWarnings',
-      '', // spacer
-      'Charge: ${charge.toStringAsFixed(2)} / ${maxCharge.toStringAsFixed(2)}',
+      if (!isTilted && tiltWarnings > 0) 'Warnings: $tiltWarnings',
+      'Charge: ${(charge / maxCharge * 100).toStringAsFixed(0)}%',
     ];
 
-    if (gameMode.type == GameModeType.timed) {
-      lines.insert(0, 'Time: ${(game.gameTimeRemaining.inMilliseconds / 1000.0).toStringAsFixed(1)}s');
-    } else if (gameMode.type == GameModeType.challenge) {
-      lines.insert(0, 'Target: ${gameMode.scoreTarget}');
+    var y = 10.0;
+    for (final l in lines) {
+      _tp.render(canvas, l, Vector2(10, y));
+      y += 20;
     }
 
-    var y = 4.0;
-    for (final l in lines) {
-      _tp.render(canvas, l, Vector2(8, y));
+    // Mission Display
+    if (game.missionManager.currentMission != null) {
+      y += 10;
+      _missionTitleTp.render(canvas, 'MISSION: ${game.missionManager.currentMission!.title}', Vector2(10, y));
+      y += 22;
+      _missionBodyTp.render(canvas, game.missionManager.currentMission!.description, Vector2(10, y));
       y += 18;
+      _missionBodyTp.render(canvas, 'Progress: ${(game.missionManager.currentMission!.progress * 100).toStringAsFixed(0)}%', Vector2(10, y));
+    } else {
+      y += 10;
+      _missionBodyTp.render(canvas, 'No Active Mission', Vector2(10, y));
     }
   }
 }

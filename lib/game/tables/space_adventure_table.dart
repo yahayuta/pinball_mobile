@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:pinball_mobile/game/components/launcher.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
-import 'package:pinball_mobile/game/components/wall_body.dart';
 import 'package:pinball_mobile/game/components/guide_wall.dart';
 import 'package:pinball_mobile/game/components/pop_bumper.dart';
 import 'package:pinball_mobile/game/components/drop_target.dart';
@@ -12,8 +10,9 @@ import 'package:pinball_mobile/game/components/target.dart';
 import 'package:pinball_mobile/game/components/rollover_switch.dart';
 import 'package:pinball_mobile/game/components/slingshot.dart';
 import 'package:pinball_mobile/game/components/kickback.dart';
-import 'package:pinball_mobile/game/audio_manager.dart';
 import 'package:pinball_mobile/game/scoring_manager.dart';
+import 'package:pinball_mobile/game/components/pinball_light.dart';
+import 'package:pinball_mobile/game/mission_manager.dart';
 
 class SpaceAdventureTable extends PinballGame {
   late final ScoringManager scoringManager;
@@ -38,41 +37,56 @@ class SpaceAdventureTable extends PinballGame {
     
     // Top Rollover Lanes (spell bonus)
     await add(RolloverSwitch(
+      id: 'lane_1',
       position: Vector2(size.x * 0.25, size.y * 0.08),
       onActivate: (ball) {
         scoringManager.hitTopLane(0);
         addScore(500, ball.body.position);
+        lightManager.blink('light_lane_1', color: Colors.amber);
       },
       color: Colors.amber,
       audioManager: audioManager,
     ));
+    await add(PinballLight(id: 'light_lane_1', position: Vector2(size.x * 0.25, size.y * 0.05), size: Vector2.all(2.0)));
+
     await add(RolloverSwitch(
+      id: 'lane_2',
       position: Vector2(size.x * 0.40, size.y * 0.08),
       onActivate: (ball) {
         scoringManager.hitTopLane(1);
         addScore(500, ball.body.position);
+        lightManager.blink('light_lane_2', color: Colors.amber);
       },
       color: Colors.amber,
       audioManager: audioManager,
     ));
+    await add(PinballLight(id: 'light_lane_2', position: Vector2(size.x * 0.40, size.y * 0.05), size: Vector2.all(2.0)));
+
     await add(RolloverSwitch(
+      id: 'lane_3',
       position: Vector2(size.x * 0.55, size.y * 0.08),
       onActivate: (ball) {
         scoringManager.hitTopLane(2);
         addScore(500, ball.body.position);
+        lightManager.blink('light_lane_3', color: Colors.amber);
       },
       color: Colors.amber,
       audioManager: audioManager,
     ));
+    await add(PinballLight(id: 'light_lane_3', position: Vector2(size.x * 0.55, size.y * 0.05), size: Vector2.all(2.0)));
+
     await add(RolloverSwitch(
+      id: 'lane_4',
       position: Vector2(size.x * 0.70, size.y * 0.08),
       onActivate: (ball) {
         scoringManager.hitTopLane(3);
         addScore(500, ball.body.position);
+        lightManager.blink('light_lane_4', color: Colors.amber);
       },
       color: Colors.amber,
       audioManager: audioManager,
     ));
+    await add(PinballLight(id: 'light_lane_4', position: Vector2(size.x * 0.70, size.y * 0.05), size: Vector2.all(2.0)));
 
     // Pop Bumpers - Triangle formation
     await add(PopBumper(
@@ -115,56 +129,23 @@ class SpaceAdventureTable extends PinballGame {
     ));
 
     // Drop Target Bank - 5 targets
-    await add(DropTarget(
-      position: Vector2(size.x * 0.30, size.y * 0.40),
-      onHit: (ball) {
-        scoringManager.hitDropTarget(0);
-        addScore(200, ball.body.position);
-      },
-      color: Colors.pink,
-      audioManager: audioManager,
-      sprite: dropTargetSprite,
-    ));
-    await add(DropTarget(
-      position: Vector2(size.x * 0.40, size.y * 0.40),
-      onHit: (ball) {
-        scoringManager.hitDropTarget(1);
-        addScore(200, ball.body.position);
-      },
-      color: Colors.pink,
-      audioManager: audioManager,
-      sprite: dropTargetSprite,
-    ));
-    await add(DropTarget(
-      position: Vector2(size.x * 0.50, size.y * 0.40),
-      onHit: (ball) {
-        scoringManager.hitDropTarget(2);
-        addScore(200, ball.body.position);
-      },
-      color: Colors.pink,
-      audioManager: audioManager,
-      sprite: dropTargetSprite,
-    ));
-    await add(DropTarget(
-      position: Vector2(size.x * 0.60, size.y * 0.40),
-      onHit: (ball) {
-        scoringManager.hitDropTarget(3);
-        addScore(200, ball.body.position);
-      },
-      color: Colors.pink,
-      audioManager: audioManager,
-      sprite: dropTargetSprite,
-    ));
-    await add(DropTarget(
-      position: Vector2(size.x * 0.70, size.y * 0.40),
-      onHit: (ball) {
-        scoringManager.hitDropTarget(4);
-        addScore(200, ball.body.position);
-      },
-      color: Colors.pink,
-      audioManager: audioManager,
-      sprite: dropTargetSprite,
-    ));
+    for (int i = 0; i < 5; i++) {
+      final xPos = size.x * (0.30 + i * 0.10);
+      final id = 'drop_target_$i';
+      await add(DropTarget(
+        id: id,
+        position: Vector2(xPos, size.y * 0.40),
+        onHit: (ball) {
+          scoringManager.hitDropTarget(i);
+          addScore(200, ball.body.position);
+          lightManager.turnOn('light_$id', color: Colors.pink);
+        },
+        color: Colors.pink,
+        audioManager: audioManager,
+        sprite: dropTargetSprite,
+      ));
+      await add(PinballLight(id: 'light_$id', position: Vector2(xPos, size.y * 0.43), size: Vector2.all(1.5), shape: LightShape.rect));
+    }
 
     // ============================================================
     // MID PLAYFIELD (35-70%) - Targets, Lanes, Guide Walls
@@ -172,20 +153,27 @@ class SpaceAdventureTable extends PinballGame {
 
     // Static Targets
     await add(PinballTarget(
+      id: 'multiball_target',
       position: Vector2(size.x * 0.25, size.y * 0.55),
       hitsToTrigger: 3,
       onHit: (ball) {
         addScore(1000, Vector2(size.x * 0.25, size.y * 0.55));
         spawnBall(); // Multi-ball reward
+        lightManager.pulse('light_multiball', color: Colors.red);
       },
       sprite: targetSprite,
     ));
+    await add(PinballLight(id: 'light_multiball', position: Vector2(size.x * 0.25, size.y * 0.58), size: Vector2.all(2.0), shape: LightShape.triangle));
+
     await add(PinballTarget(
+      id: 'target_left',
       position: Vector2(size.x * 0.50, size.y * 0.60),
       onHit: (ball) => addScore(300, ball.body.position),
       sprite: targetSprite,
     ));
+    
     await add(PinballTarget(
+      id: 'target_right',
       position: Vector2(size.x * 0.75, size.y * 0.55),
       onHit: (ball) => addScore(300, ball.body.position),
       sprite: targetSprite,
@@ -226,12 +214,14 @@ class SpaceAdventureTable extends PinballGame {
 
     // Inlane Rollover Switches
     await add(RolloverSwitch(
+      id: 'inlane_left',
       position: Vector2(size.x * 0.28, size.y * 0.85),
       onActivate: (ball) => addScore(250, ball.body.position),
       color: Colors.green,
       audioManager: audioManager,
     ));
     await add(RolloverSwitch(
+      id: 'inlane_right',
       position: Vector2(size.x * 0.72, size.y * 0.85),
       onActivate: (ball) => addScore(250, ball.body.position),
       color: Colors.green,
@@ -259,6 +249,7 @@ class SpaceAdventureTable extends PinballGame {
     // ============================================================
     
     await add(RolloverSwitch(
+      id: 'launcher_exit',
       position: Vector2(size.x * 0.92, size.y * 0.50),
       onActivate: (ball) {
         scoringManager.awardSkillShot();
@@ -267,5 +258,41 @@ class SpaceAdventureTable extends PinballGame {
       color: Colors.yellow,
       audioManager: audioManager,
     ));
+
+    // Register Lights
+    lightManager.registerLight('light_lane_1', children.whereType<PinballLight>().firstWhere((l) => l.id == 'light_lane_1'));
+    lightManager.registerLight('light_lane_2', children.whereType<PinballLight>().firstWhere((l) => l.id == 'light_lane_2'));
+    lightManager.registerLight('light_lane_3', children.whereType<PinballLight>().firstWhere((l) => l.id == 'light_lane_3'));
+    lightManager.registerLight('light_lane_4', children.whereType<PinballLight>().firstWhere((l) => l.id == 'light_lane_4'));
+    for (int i = 0; i < 5; i++) {
+      lightManager.registerLight('light_drop_target_$i', children.whereType<PinballLight>().firstWhere((l) => l.id == 'light_drop_target_$i'));
+    }
+    lightManager.registerLight('light_multiball', children.whereType<PinballLight>().firstWhere((l) => l.id == 'light_multiball'));
+
+    // Setup Missions
+    _setupMissions();
+  }
+
+  void _setupMissions() {
+    missionManager.addMission(Mission(
+      id: 'launch_readiness',
+      title: 'Launch Readiness',
+      description: 'Hit all 5 drop targets to prepare for launch.',
+      type: MissionType.collection,
+      scoreReward: 5000,
+      requiredTargetIds: ['drop_target_0', 'drop_target_1', 'drop_target_2', 'drop_target_3', 'drop_target_4'],
+    ));
+
+    missionManager.addMission(Mission(
+      id: 'orbit_master',
+      title: 'Orbit Master',
+      description: 'Complete the top lanes sequence.',
+      type: MissionType.sequence,
+      scoreReward: 10000,
+      requiredTargetIds: ['lane_1', 'lane_2', 'lane_3', 'lane_4'],
+    ));
+
+    // Start first mission automatically for now
+    missionManager.startMission('launch_readiness');
   }
 }
