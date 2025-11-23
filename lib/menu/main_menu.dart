@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:pinball_mobile/game/game_provider.dart';
 import 'package:pinball_mobile/menu/high_score_screen.dart';
 import 'package:pinball_mobile/menu/settings_screen.dart';
 import 'package:pinball_mobile/menu/tutorial_screen.dart';
-import 'package:pinball_mobile/menu/leaderboard_screen.dart';
-import 'package:pinball_mobile/menu/multiplayer_screen.dart';
-import 'package:pinball_mobile/menu/table_editor_screen.dart';
-import 'package:pinball_mobile/menu/achievements_screen.dart';
-import 'package:pinball_mobile/menu/social_screen.dart';
 import 'package:pinball_mobile/menu/table_selection_screen.dart';
-// import 'package:provider/provider.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -25,118 +18,121 @@ class MainMenu extends StatelessWidget {
             const Text(
               'Pinball',
               style: TextStyle(
-                fontSize: 50,
+                fontSize: 64,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                letterSpacing: 4,
               ),
             ),
-            const SizedBox(height: 50),
-            Expanded(
+            const SizedBox(height: 80),
+            // Primary action - larger button
+            SizedBox(
+              width: 280,
+              height: 70,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TableSelectionScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[700],
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('PLAY'),
+              ),
+            ),
+            const SizedBox(height: 40),
+            // Secondary actions - standard buttons
+            SizedBox(
+              width: 280,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TableSelectionScreen(),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HighScoreScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[800],
+                        foregroundColor: Colors.white,
+                        textStyle: const TextStyle(fontSize: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      );
-                    },
-                    child: const Text('Select Table'),
+                      ),
+                      child: const Text('High Scores'),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HighScoreScreen(), // Removed const
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TutorialScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[800],
+                        foregroundColor: Colors.white,
+                        textStyle: const TextStyle(fontSize: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      );
-                    },
-                    child: const Text('High Scores'),
+                      ),
+                      child: const Text('How to Play'),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SettingsScreen(),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[800],
+                        foregroundColor: Colors.white,
+                        textStyle: const TextStyle(fontSize: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      );
-                    },
-                    child: const Text('Settings'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TutorialScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('How to Play'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LeaderboardScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Leaderboard'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MultiplayerScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Multiplayer'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TableEditorScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Table Editor'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AchievementsScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Achievements'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SocialScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Social'),
+                      ),
+                      child: const Text('Settings'),
+                    ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
