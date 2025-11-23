@@ -1,38 +1,35 @@
-import 'package:pinball_mobile/game/tables/default_pinball_table.dart'; // Added
+import 'package:pinball_mobile/game/tables/default_pinball_table.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
-import 'package:pinball_mobile/game/table_config_manager.dart'; // Added
-import 'package:pinball_mobile/game/game_mode_manager.dart'; // Added
+import 'package:pinball_mobile/game/game_mode_manager.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
 import 'package:pinball_mobile/game/achievement_manager.dart';
 
 class GameProvider extends ChangeNotifier {
-  late PinballGame _game; // Changed to late, not late final
-  late final TableConfigManager tableConfigManager; // Added
-  late final GameModeManager gameModeManager; // Added
+  late PinballGame _game;
+  late final GameModeManager gameModeManager;
 
   GameProvider({
     required SharedPreferences prefs,
     required HighScoreManager highScoreManager,
-    required AudioManager audioManager, // Added
-    required AchievementManager achievementManager, // Added
+    required AudioManager audioManager,
+    required AchievementManager achievementManager,
   }) {
-    tableConfigManager = TableConfigManager(prefs); // Initialized
-    gameModeManager = GameModeManager(); // Initialized
+    gameModeManager = GameModeManager();
     _game = DefaultPinballTable(
       prefs: prefs,
       highScoreManager: highScoreManager,
-      gameModeManager: gameModeManager, // Added
-      audioManager: audioManager, // Added
-      achievementManager: achievementManager, // Added
+      gameModeManager: gameModeManager,
+      audioManager: audioManager,
+      achievementManager: achievementManager,
     );
-    _highScoreManager = highScoreManager; // Initialize _highScoreManager
+    _highScoreManager = highScoreManager;
   }
 
-  late final HighScoreManager _highScoreManager; // Declare _highScoreManager
-  HighScoreManager get highScoreManager => _highScoreManager; // Add getter
+  late final HighScoreManager _highScoreManager;
+  HighScoreManager get highScoreManager => _highScoreManager;
 
   PinballGame get game => _game;
 
