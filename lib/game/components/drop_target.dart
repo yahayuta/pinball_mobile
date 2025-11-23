@@ -3,6 +3,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/pinball_game.dart';
 
 class DropTarget extends BodyComponent with ContactCallbacks {
   @override
@@ -11,6 +12,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
   final Function(PinballBall)? onHit;
   final Color color;
   final AudioManager audioManager;
+  final String? id;
   Sprite? sprite;
 
   bool _isDown = false;
@@ -22,6 +24,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     this.onHit,
     this.color = Colors.green,
     required this.audioManager,
+    this.id,
     this.sprite,
   }) : size = size ?? Vector2(2.0, 4.0);
 
@@ -67,6 +70,9 @@ class DropTarget extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     if (other is PinballBall && !_isDown) {
       hit();
+      if (id != null) {
+        (game as PinballGame).missionManager.onObjectHit(id!);
+      }
       onHit?.call(other);
     }
   }

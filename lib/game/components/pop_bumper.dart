@@ -34,8 +34,8 @@ class PopBumper extends BodyComponent with ContactCallbacks {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 2.0, // Extra bouncy to propel the ball
-      friction: 0.1,
+      restitution: 2.5, // Extra bouncy to propel the ball (increased from 2.0)
+      friction: 0.05, // Reduced friction for smoother bounce
       userData: this,
     );
 
@@ -52,10 +52,15 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     if (other is PinballBall) {
       activate();
-      // Apply impulse to the ball
+      // Apply impulse to the ball with slight upward bias
       final impulseDirection = (other.body.position - body.position)
         ..normalize();
-      other.body.applyLinearImpulse(impulseDirection * 5000);
+      // Add slight upward component to keep ball in play
+      final adjustedDirection = Vector2(
+        impulseDirection.x,
+        impulseDirection.y - 0.15, // Slight upward bias
+      )..normalize();
+      other.body.applyLinearImpulse(adjustedDirection * 7000); // Increased from 5000
       onHit?.call(other);
     }
   }
