@@ -19,7 +19,7 @@ class DefaultPinballTable extends PinballGame {
     required super.gameModeManager,
     required super.audioManager,
     required super.achievementManager,
-  });
+  }) : super(backgroundImagePath: 'images/playfield.png');
 
   @override
   Future<void> loadTableElements() async {

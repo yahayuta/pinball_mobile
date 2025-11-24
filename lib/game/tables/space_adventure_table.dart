@@ -23,7 +23,7 @@ class SpaceAdventureTable extends PinballGame {
     required super.gameModeManager,
     required super.audioManager,
     required super.achievementManager,
-  }) {
+  }) : super(backgroundImagePath: 'images/space_adventure_playfield.png') {
     scoringManager = ScoringManager(this);
   }
 
