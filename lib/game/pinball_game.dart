@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Added
 import 'components/wall_body.dart';
 import 'components/guide_wall.dart';
 import 'components/out_hole.dart'; // Added import
+import 'components/table_background.dart'; // Added import
 // import 'components/launcher_ramp.dart'; // Import the new LauncherRamp component
 
 class PinballGame extends Forge2DGame with KeyboardEvents implements ContactListener {
@@ -105,6 +106,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     required this.audioManager,
     required this.achievementManager,
     this.currentPlayerName = 'Player 1',
+    this.backgroundImagePath,
   }) : _highScoreManager = highScoreManager,
        lightManager = LightManager(),
        super(gravity: Vector2(0, 10.0)) {
@@ -115,6 +117,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   final GameModeManager gameModeManager;
   late final MissionManager missionManager;
   late final LightManager lightManager; // Declared here
+  final String? backgroundImagePath; // Added field
 
   late String currentPlayerName; // Removed default initialization
 
@@ -261,7 +264,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Load sprites (fall back to simple generated placeholders if images are
     // missing from assets/images/). This keeps the game runnable while the
     // artist-provided images are added later.
-    playfieldSprite = await _loadSpriteOrPlaceholder('images/playfield.png', color: Colors.brown, sizePx: 512);
+    final bgPath = backgroundImagePath ?? 'images/playfield.png';
+    playfieldSprite = await _loadSpriteOrPlaceholder(bgPath, color: Colors.brown, sizePx: 512);
     wallSprite = await _loadSpriteOrPlaceholder('images/wall.png', color: Colors.grey, sizePx: 256);
     ballSprite = await _loadSpriteOrPlaceholder('images/ball.png', color: Colors.white, sizePx: 64); // Load ball sprite
     bumperSprite = await _loadSpriteOrPlaceholder('images/bumper.png', color: Colors.red, sizePx: 96); // Load bumper sprite
@@ -324,6 +328,12 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
 
   @mustCallSuper
   Future<void> loadTableElements() async {
+    // Add background first so it's behind everything
+    add(TableBackground(
+      sprite: playfieldSprite,
+      size: size,
+    ));
+
     // Initialize flippers
     final flipperLength = size.x / 5;
     leftFlipper = PinballFlipper(
