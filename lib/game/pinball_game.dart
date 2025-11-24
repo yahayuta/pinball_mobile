@@ -174,18 +174,14 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       }
     }
 
-    // Schedule physical removal for the next frame using a TimerComponent
-    add(TimerComponent(
-      period: 0.05,
-      removeOnFinish: true,
-      onTick: () {
-        if (ball.isMounted) {
-          debugPrint('Removing ball body: $ball');
-          remove(ball);
-          _ballsBeingRemoved.remove(ball);
-        }
-      },
-    ));
+    // Remove the ball component immediately
+    // This is safe in Flame/Forge2D as component removal is processed at the end of the tick
+    ball.removeFromParent();
+    
+    // Clean up from the set after a short delay to ensure we don't process it again in the same frame
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _ballsBeingRemoved.remove(ball);
+    });
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
@@ -629,7 +625,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     if (balls.isNotEmpty) {
       final ballsToRemove = <PinballBall>[];
       for (final ball in balls) {
-        if (ball.body.position.y > size.y + 10.0) {
+        if (ball.isMounted && ball.body.position.y > size.y + 10.0) {
           ballsToRemove.add(ball);
         }
       }
@@ -637,7 +633,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
         onBallLost(ball);
       }
 
-      if (balls.isNotEmpty) {
+      if (balls.isNotEmpty && balls.first.isMounted) {
         final targetPosition = balls.first.position;
         camera.viewfinder.position = targetPosition;
 
