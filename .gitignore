@@ -2,6 +2,10 @@
 *.class
 *.lock
 *.log
+*.out
+*.tmp
+console.log
+logs/
 *.pyc
 *.swp
 .DS_Store
