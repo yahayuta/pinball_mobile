@@ -20,8 +20,8 @@ class Launcher extends BodyComponent with ContactCallbacks {
   Body createBody() {
     final shape = PolygonShape()
       ..setAsBox(
-        1.0, // 2.0m wide = 40px
-        3.0, // 6m tall = 120px
+        (game as PinballGame).size.x * 0.1, // Wider base
+        10.0, // Taller
         Vector2.zero(),
         0,
       );
@@ -66,11 +66,12 @@ class Launcher extends BodyComponent with ContactCallbacks {
     }
     
     for (final ball in _ballsToLaunch) {
-      // Apply a very strong impulse UPWARD into the playfield
-      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 5000000000.0; // Increased to 5B
-      final impulse = Vector2(0, -magnitude); // Purely vertical impulse
-      debugPrint('Applying impulse: $impulse (magnitude=$magnitude) to ball at ${ball.position}');
-      ball.applyLinearImpulse(impulse);
+      // Significantly increased velocity to ensure ball reaches main table
+      final launchSpeed = ((c / maxCharge).clamp(0.3, 1.0)) * 1500.0;
+      
+      final velocity = Vector2(0, -launchSpeed);
+      debugPrint('Setting launch velocity: $velocity to ball at ${ball.position}');
+      ball.linearVelocity = velocity;
     }
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3');
     _ballsToLaunch.clear();

@@ -27,9 +27,9 @@ class PinballBall extends BodyComponent {
     // Define the body characteristics
     final fixtureDef = FixtureDef(
       shape,
-      density: 0.05,
-      restitution: 2.4, // Increased bounciness
-      friction: 0.2, // Reduced friction for lighter feel
+      density: 1.0,
+      restitution: 0.5, // Reduced bounciness for steel ball
+      friction: 0.05, // Smooth steel ball
     );
 
     // Create the body definition
@@ -106,7 +106,7 @@ class PinballBumper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 1.0, // Perfectly elastic collision
+      restitution: 1.5, // Active kicking effect
       friction: 0.2,
       userData: this,
     );
@@ -208,7 +208,7 @@ class PinballFlipper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 1.0, // Increased from 0.3 for more bounce
+      restitution: 0.5, // Reduced from 1.0
       friction: 0.4, // Reduced from 0.6 for better contact
     );
 
@@ -319,7 +319,7 @@ class PinballPost extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 0.6, // Increased bounciness
+      restitution: 0.4, // Reduced bounciness
       friction: 0.2,
     );
 
