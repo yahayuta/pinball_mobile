@@ -400,7 +400,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Top wall
     add(WallBody(
       position: Vector2(size.x / 2, 0),
-      size: Vector2(size.x, 1),
+      size: Vector2(size.x, 3), // Increased thickness
       restitution: 0.5,
     ));
 
@@ -414,7 +414,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Left wall (full height)
     add(WallBody(
       position: Vector2(0, size.y / 2),
-      size: Vector2(1, size.y),
+      size: Vector2(3, size.y), // Increased thickness
       restitution: 0.5,
     ));
 
@@ -489,7 +489,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Left wall of launcher channel (only at bottom to avoid blocking ball)
     add(WallBody(
       position: Vector2(size.x * 0.89, size.y * 0.925), // Widened from 0.9
-      size: Vector2(1, size.y * 0.15),
+      size: Vector2(2, size.y * 0.15), // Increased thickness
       restitution: 0.1,
       friction: 0.0, // Removed friction
     ));
@@ -497,7 +497,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     // Right wall of launcher channel (full height outer boundary)
     add(WallBody(
       position: Vector2(size.x * 0.98, size.y / 2),
-      size: Vector2(1, size.y),
+      size: Vector2(3, size.y), // Increased thickness
       restitution: 0.1,
       friction: 0.0, // Removed friction
     ));

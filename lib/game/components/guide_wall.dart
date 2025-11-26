@@ -21,7 +21,7 @@ class GuideWall extends BodyComponent {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
+      ..strokeWidth = 3.0; // Increased visual thickness
     for (var i = 0; i < vertices.length - 1; i++) {
       canvas.drawLine(
         Offset(vertices[i].x, vertices[i].y),
