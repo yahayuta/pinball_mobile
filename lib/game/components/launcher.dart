@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math'; // Added for sin/exp
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -10,6 +11,10 @@ class Launcher extends BodyComponent with ContactCallbacks {
   double charge = 0.0; // 0.0 .. maxCharge
   final double maxCharge;
   bool charging = false;
+  
+  // Animation state
+  bool _rebounding = false;
+  double _reboundTime = 0.0;
 
   final List<Body> _ballsToLaunch = [];
   final Map<Body, Timer> _removalTimers = {};
@@ -20,8 +25,8 @@ class Launcher extends BodyComponent with ContactCallbacks {
   Body createBody() {
     final shape = PolygonShape()
       ..setAsBox(
-        1.0, // 2.0m wide = 40px
-        3.0, // 6m tall = 120px
+        (game as PinballGame).size.x * 0.05, // Reduced width from 0.1 to 0.05 to avoid wall collisions
+        10.0, // Taller
         Vector2.zero(),
         0,
       );
@@ -41,6 +46,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   void startCharging() {
     charging = true;
+    _rebounding = false; // Stop rebounding if we start charging again
     charge = 0.0;
     debugPrint('Launcher: START CHARGING');
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_charge.mp3'); // New sound effect
@@ -55,6 +61,9 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   double releaseCharge() {
     charging = false;
+    _rebounding = true;
+    _reboundTime = 0.0;
+    
     final c = charge;
     charge = 0.0;
     debugPrint('Launcher: RELEASE with charge=$c, balls=${_ballsToLaunch.length}');
@@ -66,11 +75,14 @@ class Launcher extends BodyComponent with ContactCallbacks {
     }
     
     for (final ball in _ballsToLaunch) {
-      // Apply a very strong impulse UPWARD into the playfield
-      final magnitude = (c / maxCharge).clamp(0.0, 1.0) * 5000000000.0; // Increased to 5B
-      final impulse = Vector2(0, -magnitude); // Purely vertical impulse
-      debugPrint('Applying impulse: $impulse (magnitude=$magnitude) to ball at ${ball.position}');
-      ball.applyLinearImpulse(impulse);
+      // Maximum velocity to guarantee ball reaches top easily
+      final launchSpeed = ((c / maxCharge).clamp(0.3, 1.0)) * 200000.0;
+      
+      final velocity = Vector2(0, -launchSpeed);
+      debugPrint('Setting launch velocity: $velocity to ball at ${ball.position}');
+      ball.linearVelocity = velocity;
+      // Nudge ball up significantly to break any static friction/contact and clear the launcher body
+      ball.setTransform(ball.position + Vector2(0, -2.0), 0);
     }
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.mp3');
     _ballsToLaunch.clear();
@@ -82,6 +94,13 @@ class Launcher extends BodyComponent with ContactCallbacks {
     super.update(dt);
     if (charging) {
       increaseCharge(dt);
+    }
+    if (_rebounding) {
+      _reboundTime += dt;
+      if (_reboundTime > 1.0) { // Animation duration
+        _rebounding = false;
+        _reboundTime = 0.0;
+      }
     }
   }
 
@@ -126,106 +145,81 @@ class Launcher extends BodyComponent with ContactCallbacks {
         ..strokeWidth = 0.2,
     );
 
-    // Draw spring plunger with enhanced realism
-    if (charge > 0) {
+    // Calculate plunger position based on state
+    double plungerOffset = 0.0;
+    
+    if (charging) {
       final chargePercent = (charge / maxCharge).clamp(0.0, 1.0);
-      final plungerHeight = chargePercent * 4.8;
-      final plungerTop = 2.4 - plungerHeight;
-      
-      final plungerRect = Rect.fromLTRB(
-        -0.65,
-        plungerTop,
-        0.65,
-        2.4,
-      );
-      
-      // Plunger color progression
-      Color plungerColor;
-      if (chargePercent < 0.33) {
-        plungerColor = Colors.green[400]!;
-      } else if (chargePercent < 0.66) {
-        plungerColor = Colors.amber[500]!;
-      } else {
-        plungerColor = Colors.red[400]!;
-      }
-      
-      // Plunger main body
-      canvas.drawRect(
-        plungerRect,
-        Paint()
-          ..color = plungerColor
-          ..style = PaintingStyle.fill,
-      );
-      
-      // Plunger top highlight (beveled edge)
-      canvas.drawRect(
-        Rect.fromLTRB(
-          plungerRect.left,
-          plungerTop,
-          plungerRect.right,
-          plungerTop + 0.2,
-        ),
-        Paint()
-          ..color = Colors.white.withAlpha(180)
-          ..style = PaintingStyle.fill,
-      );
-      
-      // Plunger side highlight
-      canvas.drawRect(
-        Rect.fromLTRB(
-          plungerRect.left,
-          plungerTop,
-          plungerRect.left + 0.15,
-          plungerRect.bottom,
-        ),
-        Paint()
-          ..color = Colors.white.withAlpha(100)
-          ..style = PaintingStyle.fill,
-      );
-      
-      // Plunger border
-      canvas.drawRect(
-        plungerRect,
-        Paint()
-          ..color = Colors.black
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.18,
-      );
-      
-      // Draw compressed spring coils below plunger
-      final coilStartY = 2.45;
-      final coilSpacing = 0.22;
-      for (int i = 0; i < 7; i++) {
-        final coilY = coilStartY + (i * coilSpacing);
-        if (coilY < 4.0) {
-          canvas.drawCircle(
-            Offset(0, coilY),
-            0.26,
-            Paint()
-              ..color = Colors.grey[400]!
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 0.14,
-          );
-        }
-      }
-    } else {
-      // Draw relaxed spring coils
-      final coilStartY = 2.8;
-      final coilSpacing = 0.45;
-      for (int i = 0; i < 5; i++) {
-        final coilY = coilStartY + (i * coilSpacing);
-        if (coilY < 4.2) {
-          canvas.drawCircle(
-            Offset(0, coilY),
-            0.32,
-            Paint()
-              ..color = Colors.grey[600]!
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 0.11,
-          );
-        }
-      }
+      plungerOffset = chargePercent * 3.0; // Pull back distance
+    } else if (_rebounding) {
+      // Damped sine wave for boing effect
+      // Amplitude starts at release point (approx last charge) but let's just make it visual
+      // We want it to oscillate around 0 (resting)
+      // t=0, value should be 0 (released) -> wait, released means it shoots forward?
+      // No, released means it snaps from pulled back (positive offset) to resting (0) but overshoots.
+      // Actually, physically it snaps to 0 very fast (hitting the ball) then might vibrate.
+      // Let's simulate a vibration.
+      final t = _reboundTime * 15.0; // Speed
+      final decay = exp(-_reboundTime * 3.0);
+      plungerOffset = sin(t) * 0.5 * decay;
     }
+
+    final restingY = -2.0;
+    final currentTipY = restingY + plungerOffset;
+    
+    final plungerRect = Rect.fromLTRB(
+      -0.6,
+      currentTipY,
+      0.6,
+      currentTipY + 4.0, // Length of plunger rod
+    );
+    
+    // Draw plunger rod/handle
+    canvas.drawRect(
+      plungerRect,
+      Paint()..color = Colors.grey[400]!..style = PaintingStyle.fill
+    );
+    canvas.drawRect(
+      plungerRect,
+      Paint()..color = Colors.black..style = PaintingStyle.stroke..strokeWidth=0.1
+    );
+    
+    // Draw Knob at bottom
+    canvas.drawCircle(
+      Offset(0, currentTipY + 4.0),
+      0.8,
+      Paint()..color = Colors.red[900]!
+    );
+    
+    // Draw Spring
+    final springStartY = -4.5; // Fixed top anchor
+    final springEndY = currentTipY; // Moving bottom anchor (attached to plunger head)
+    
+    final springPaint = Paint()
+      ..color = Colors.grey[300]!
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.15
+      ..strokeCap = StrokeCap.round;
+      
+    final path = Path();
+    path.moveTo(0, springStartY);
+    
+    final height = springEndY - springStartY;
+    // Ensure height is positive to avoid drawing issues if compressed too much
+    final effectiveHeight = height > 0.1 ? height : 0.1;
+    
+    final coils = 10;
+    final coilHeight = effectiveHeight / coils;
+    final width = 0.8;
+    
+    for (int i = 0; i < coils; i++) {
+      final y = springStartY + i * coilHeight;
+      path.lineTo(width, y + coilHeight / 2);
+      path.lineTo(-width, y + coilHeight);
+    }
+    path.lineTo(0, springEndY);
+    
+    canvas.drawPath(path, springPaint);
   }
 
   @override

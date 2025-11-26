@@ -109,7 +109,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     this.backgroundImagePath,
   }) : _highScoreManager = highScoreManager,
        lightManager = LightManager(),
-       super(gravity: Vector2(0, 10.0)) {
+       super(gravity: Vector2(0, 15.0)) {
     debugMode = true;
     missionManager = MissionManager(this);
   }
@@ -390,8 +390,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     );
     */
 
-    // Spawn initial ball
-    spawnBall(velocity: Vector2(0, -50));
+    // Spawn initial ball (no initial velocity - let launcher handle it)
+    spawnBall();
 
   }
 
@@ -401,7 +401,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     add(WallBody(
       position: Vector2(size.x / 2, 0),
       size: Vector2(size.x, 1),
-      restitution: 0.6,
+      restitution: 0.5,
     ));
 
     // Bottom wall (drain area)
@@ -415,7 +415,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     add(WallBody(
       position: Vector2(0, size.y / 2),
       size: Vector2(1, size.y),
-      restitution: 0.6,
+      restitution: 0.5,
     ));
 
     // Left angled wall (upper section) - creates classic pinball shape
@@ -423,7 +423,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       Vector2(size.x * 0.05, size.y * 0.1),
       Vector2(size.x * 0.15, size.y * 0.5),
       Vector2(size.x * 0.15, size.y * 0.7),
-    ], color: Colors.cyan, restitution: 0.5));
+    ], color: Colors.cyan, restitution: 0.4));
 
     // Right upper angled wall REMOVED to allow clear launcher lane exit path
   }
@@ -435,28 +435,28 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       Vector2(size.x * 0.05, size.y * 0.7),
       Vector2(size.x * 0.08, size.y * 0.85),
       Vector2(size.x * 0.12, size.y * 0.95),
-    ], color: Colors.orange, restitution: 0.4));
+    ], color: Colors.orange, restitution: 0.3));
 
     // Left inlane wall (inner channel returning to flipper)
     add(GuideWall([
       Vector2(size.x * 0.15, size.y * 0.7),
       Vector2(size.x * 0.18, size.y * 0.85),
       Vector2(size.x * 0.22, size.y * 0.92),
-    ], color: Colors.green, restitution: 0.3));
+    ], color: Colors.green, restitution: 0.2));
 
     // Right inlane wall (inner channel returning to flipper)
     add(GuideWall([
       Vector2(size.x * 0.85, size.y * 0.7),
       Vector2(size.x * 0.82, size.y * 0.85),
       Vector2(size.x * 0.78, size.y * 0.92),
-    ], color: Colors.green, restitution: 0.3));
+    ], color: Colors.green, restitution: 0.2));
 
     // Right outlane wall (outer channel leading to drain)
     add(GuideWall([
       Vector2(size.x * 0.88, size.y * 0.7),
       Vector2(size.x * 0.88, size.y * 0.85),
       Vector2(size.x * 0.88, size.y * 0.95),
-    ], color: Colors.orange, restitution: 0.4));
+    ], color: Colors.orange, restitution: 0.3));
   }
 
   // Helper method: Create slingshot walls near flippers
@@ -467,7 +467,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       size: Vector2(size.x * 0.08, 1),
       angle: -0.5, // Angled toward center
       color: Colors.red,
-      restitution: 0.9, // Very bouncy for slingshot effect
+      restitution: 0.8, // Very bouncy for slingshot effect
       friction: 0.1,
     ));
 
@@ -477,37 +477,40 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       size: Vector2(size.x * 0.08, 1),
       angle: 0.5, // Angled toward center
       color: Colors.red,
-      restitution: 0.9, // Very bouncy for slingshot effect
+      restitution: 0.8, // Very bouncy for slingshot effect
       friction: 0.1,
     ));
   }
 
   // Helper method: Create launcher lane walls
   void _createLauncherLaneWalls() {
-    // Restore ORIGINAL working launcher lane configuration
+    // Simplified launcher lane - clear path to main table
     
-    // Left wall of launcher channel (half height, allows ball exit at top)
+    // Left wall of launcher channel (only at bottom to avoid blocking ball)
     add(WallBody(
-      position: Vector2(size.x * 0.9, size.y * 0.75),
-      size: Vector2(1, size.y * 0.5),
-      restitution: 0.5,
+      position: Vector2(size.x * 0.89, size.y * 0.925), // Widened from 0.9
+      size: Vector2(1, size.y * 0.15),
+      restitution: 0.1,
+      friction: 0.0, // Removed friction
     ));
     
     // Right wall of launcher channel (full height outer boundary)
     add(WallBody(
       position: Vector2(size.x * 0.98, size.y / 2),
       size: Vector2(1, size.y),
-      restitution: 0.5,
+      restitution: 0.1,
+      friction: 0.0, // Removed friction
     ));
     
-    // Angled wall at top of launcher lane (guides ball into playfield)
-    add(WallBody(
-      position: Vector2(size.x * 0.94, size.y * 0.01),
-      size: Vector2(size.x * 0.08, 1),
-      angle: 0.4,
-      color: Colors.yellow,
-      restitution: 0.6,
-    ));
+    // NO angled wall at top - clear exit path for ball
+    
+    // Top curve (Dumper) to direct ball into playfield
+    add(GuideWall([
+      Vector2(size.x * 0.98, size.y * 0.15),
+      Vector2(size.x * 0.95, size.y * 0.05),
+      Vector2(size.x * 0.85, size.y * 0.02),
+      Vector2(size.x * 0.75, size.y * 0.05),
+    ], color: Colors.cyan, restitution: 0.3));
   }
 
   @override
