@@ -451,12 +451,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       Vector2(size.x * 0.78, size.y * 0.92),
     ], color: Colors.green, restitution: 0.2));
 
-    // Right outlane wall (outer channel leading to drain)
-    add(GuideWall([
-      Vector2(size.x * 0.88, size.y * 0.7),
-      Vector2(size.x * 0.88, size.y * 0.85),
-      Vector2(size.x * 0.88, size.y * 0.95),
-    ], color: Colors.orange, restitution: 0.3));
+    // Right outlane wall REMOVED - merged with launcher wall
   }
 
   // Helper method: Create slingshot walls near flippers
@@ -486,12 +481,13 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   void _createLauncherLaneWalls() {
     // Simplified launcher lane - clear path to main table
     
-    // Left wall of launcher channel (only at bottom to avoid blocking ball)
+    // Left wall of launcher channel (extended and thickened to act as main boundary)
     add(WallBody(
-      position: Vector2(size.x * 0.89, size.y * 0.925), // Widened from 0.9
-      size: Vector2(2, size.y * 0.15), // Increased thickness
+      position: Vector2(size.x * 0.88, size.y * 0.6), // Matched to previous outlane X position
+      size: Vector2(4.0, size.y * 0.8), // Thicker (4.0) and tall
       restitution: 0.1,
-      friction: 0.0, // Removed friction
+      friction: 0.0,
+      color: Colors.orange, // Visible color
     ));
     
     // Right wall of launcher channel (full height outer boundary)
