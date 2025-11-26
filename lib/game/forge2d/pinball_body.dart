@@ -38,6 +38,7 @@ class PinballBall extends BodyComponent {
       position: initialPosition,
       bullet: true, // Enable continuous collision detection
       userData: this, // For collision callbacks
+      linearDamping: 0.0, // No air resistance
     );
 
     final body = world.createBody(bodyDef)..createFixture(fixtureDef);

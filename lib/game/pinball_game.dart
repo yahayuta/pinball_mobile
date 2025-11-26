@@ -109,7 +109,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     this.backgroundImagePath,
   }) : _highScoreManager = highScoreManager,
        lightManager = LightManager(),
-       super(gravity: Vector2(0, 300.0)) {
+       super(gravity: Vector2(0, 15.0)) {
     debugMode = true;
     missionManager = MissionManager(this);
   }
@@ -488,9 +488,10 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     
     // Left wall of launcher channel (only at bottom to avoid blocking ball)
     add(WallBody(
-      position: Vector2(size.x * 0.9, size.y * 0.925),
+      position: Vector2(size.x * 0.89, size.y * 0.925), // Widened from 0.9
       size: Vector2(1, size.y * 0.15),
       restitution: 0.1,
+      friction: 0.0, // Removed friction
     ));
     
     // Right wall of launcher channel (full height outer boundary)
@@ -498,9 +499,18 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       position: Vector2(size.x * 0.98, size.y / 2),
       size: Vector2(1, size.y),
       restitution: 0.1,
+      friction: 0.0, // Removed friction
     ));
     
     // NO angled wall at top - clear exit path for ball
+    
+    // Top curve (Dumper) to direct ball into playfield
+    add(GuideWall([
+      Vector2(size.x * 0.98, size.y * 0.15),
+      Vector2(size.x * 0.95, size.y * 0.05),
+      Vector2(size.x * 0.85, size.y * 0.02),
+      Vector2(size.x * 0.75, size.y * 0.05),
+    ], color: Colors.cyan, restitution: 0.3));
   }
 
   @override
