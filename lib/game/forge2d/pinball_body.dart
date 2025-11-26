@@ -259,7 +259,20 @@ class PinballFlipper extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2(length, length / 2.5));
+      final height = length / 2.5;
+      final xOffset = isLeft ? -length / 2 : length / 2; // Center offset based on body shape
+      final yOffset = -height / 2; // Center vertically
+      
+      // The body shape is defined as:
+      // Vector2(isLeft ? -length / 2 : length / 2, 0)
+      // So the center of the rect is at (isLeft ? -length/2 : length/2, 0) relative to body position
+      
+      // We need to draw the sprite centered at that offset
+      sprite!.render(
+        canvas, 
+        position: Vector2(isLeft ? -length : 0, -height / 2), 
+        size: Vector2(length, height)
+      );
     } else {
       final paint = Paint()
         ..color = color

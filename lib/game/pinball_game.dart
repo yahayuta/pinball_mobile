@@ -110,7 +110,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   }) : _highScoreManager = highScoreManager,
        lightManager = LightManager(),
        super(gravity: Vector2(0, 15.0)) {
-    debugMode = true;
+    debugMode = false;
     missionManager = MissionManager(this);
   }
 
