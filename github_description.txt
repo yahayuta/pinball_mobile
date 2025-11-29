@@ -1,1 +1,0 @@
-A realistic pinball machine emulation game built with Flutter and Flame. Features physics-based gameplay, classic pinball elements like flippers, pop bumpers, and drop targets, and a score tracking system. This project is in active development.

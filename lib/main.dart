@@ -8,28 +8,28 @@ import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/audio_manager.dart'; // Import AudioManager
 import 'package:pinball_mobile/game/achievement_manager.dart'; // Import AchievementManager
 
-void main() async {
+void main({AudioManager? audioManager, AchievementManager? achievementManager}) async {
   WidgetsFlutterBinding.ensureInitialized();
   // Set preferred orientations to portrait only
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final prefs = await SharedPreferences.getInstance();
   final highScoreManager = HighScoreManager(prefs);
-  final audioManager = AudioManager(); // Instantiate AudioManager once
-  final achievementManager = AchievementManager(prefs); // Instantiate AchievementManager once
+  final actualAudioManager = audioManager ?? AudioManager(); // Instantiate AudioManager once
+  final actualAchievementManager = achievementManager ?? AchievementManager(prefs); // Instantiate AchievementManager once
 
   runApp(
     MultiProvider(
       providers: [
         Provider<SharedPreferences>.value(value: prefs),
         Provider<HighScoreManager>.value(value: highScoreManager),
-        ChangeNotifierProvider<AudioManager>.value(value: audioManager), // Provide AudioManager
-        ChangeNotifierProvider<AchievementManager>.value(value: achievementManager), // Provide AchievementManager
+        ChangeNotifierProvider<AudioManager>.value(value: actualAudioManager), // Provide AudioManager
+        ChangeNotifierProvider<AchievementManager>.value(value: actualAchievementManager), // Provide AchievementManager
         ChangeNotifierProvider(
           create: (context) => GameProvider(
             prefs: prefs,
             highScoreManager: highScoreManager,
-            audioManager: audioManager, // Pass AudioManager
-            achievementManager: achievementManager,
+            audioManager: actualAudioManager, // Pass AudioManager
+            achievementManager: actualAchievementManager,
           ),
         ),
       ],

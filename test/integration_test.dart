@@ -6,13 +6,42 @@ import 'package:pinball_mobile/menu/table_selection_screen.dart';
 import 'package:pinball_mobile/menu/high_score_screen.dart';
 import 'package:pinball_mobile/menu/tutorial_screen.dart';
 import 'package:pinball_mobile/menu/settings_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/achievement_manager.dart';
+
+class MockAudioManager extends Mock implements AudioManager {}
+class MockAchievementManager extends Mock implements AchievementManager {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('End-to-end app test', () {
+    late MockAudioManager mockAudioManager;
+    late MockAchievementManager mockAchievementManager;
+
+    setUpAll(() {
+      SharedPreferences.setMockInitialValues({});
+      
+      mockAudioManager = MockAudioManager();
+      when(() => mockAudioManager.init()).thenAnswer((_) async {});
+      when(() => mockAudioManager.playBackgroundMusic(any())).thenAnswer((_) async {});
+      when(() => mockAudioManager.playSoundEffect(any(), impactForce: any(named: 'impactForce'))).thenAnswer((_) async {});
+      when(() => mockAudioManager.dispose()).thenAnswer((_) async {});
+      when(() => mockAudioManager.musicVolume).thenReturn(0.5);
+      when(() => mockAudioManager.sfxVolume).thenReturn(0.7);
+      when(() => mockAudioManager.setMusicVolume(any())).thenAnswer((_) {});
+      when(() => mockAudioManager.setSfxVolume(any())).thenAnswer((_) {});
+
+      mockAchievementManager = MockAchievementManager();
+      when(() => mockAchievementManager.updateProgress(any(), any())).thenAnswer((_) {});
+      when(() => mockAchievementManager.setProgress(any(), any())).thenAnswer((_) {});
+      when(() => mockAchievementManager.allAchievements).thenReturn([]);
+    });
+
     testWidgets('App starts and navigates through main menu options', (WidgetTester tester) async {
-      app.main();
+      app.main(audioManager: mockAudioManager, achievementManager: mockAchievementManager);
       await tester.pumpAndSettle();
 
       // Verify MainMenu is displayed
