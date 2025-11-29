@@ -260,8 +260,6 @@ class PinballFlipper extends BodyComponent {
   void render(Canvas canvas) {
     if (sprite != null) {
       final height = length / 2.5;
-      final xOffset = isLeft ? -length / 2 : length / 2; // Center offset based on body shape
-      final yOffset = -height / 2; // Center vertically
       
       // The body shape is defined as:
       // Vector2(isLeft ? -length / 2 : length / 2, 0)

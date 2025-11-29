@@ -1,4 +1,4 @@
-import 'package:flame/components.dart';
+
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -10,6 +10,7 @@ class Slingshot extends BodyComponent with ContactCallbacks {
   @override
   final Vector2 position;
   final Vector2 size;
+  @override
   final double angle;
   final Function(PinballBall)? onHit;
   final Color color;

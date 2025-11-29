@@ -3,6 +3,7 @@ import 'package:pinball_mobile/game/pinball_game.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 
 class OutHole extends BodyComponent with ContactCallbacks {
+  @override
   final Vector2 position;
   final Vector2 size;
 

@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flame/input.dart';
-import 'package:flame/components.dart' hide Timer, FixedResolutionViewport;
+import 'package:flame/components.dart' hide Timer;
 import 'package:flame/camera.dart';
-import 'package:flame/components.dart' show FixedResolutionViewport;
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
