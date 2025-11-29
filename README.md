@@ -3,7 +3,7 @@
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)
 
-A feature-rich mobile pinball game built with Flutter and Flame/Forge2D. Experience realistic physics, engaging gameplay elements, and tilt controls on your mobile device.
+A realistic pinball machine emulation game built with Flutter and Flame. Features physics-based gameplay, classic pinball elements like flippers, pop bumpers, and drop targets, and a score tracking system. This project is in active development.
 
 ## Features
 
@@ -20,6 +20,7 @@ A feature-rich mobile pinball game built with Flutter and Flame/Forge2D. Experie
 ## Gameplay Enhancements
 
 -   **Tuned Launcher Lane**: Optimized wall layout for consistent ball entry into the playfield.
+-   **Refactoring**: Removed unused code and resources to improve performance and maintainability.
 
 ## Screenshots
 
