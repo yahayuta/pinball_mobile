@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/achievement_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:pinball_mobile/menu/menu_theme.dart';
 
 class HighScoreScreen extends StatelessWidget {
   const HighScoreScreen({super.key});
@@ -11,24 +12,52 @@ class HighScoreScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text('Progress'),
-          backgroundColor: Colors.black,
-          bottom: const TabBar(
-            indicatorColor: Colors.blue,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white60,
-            tabs: [
-              Tab(text: 'High Scores', icon: Icon(Icons.emoji_events)),
-              Tab(text: 'Achievements', icon: Icon(Icons.star)),
-            ],
-          ),
-        ),
-        body: TabBarView(
+        body: Stack(
           children: [
-            _buildHighScoresTab(context),
-            _buildAchievementsTab(context),
+            // Background
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/menu_background.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.black.withValues(alpha: 0.7),
+            ),
+            Column(
+              children: [
+                AppBar(
+                  title: Text('PROGRESS', style: GameMenuTheme.titleStyle.copyWith(fontSize: 28)),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: GameMenuTheme.primaryColor),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  bottom: const TabBar(
+                    indicatorColor: GameMenuTheme.primaryColor,
+                    labelColor: GameMenuTheme.primaryColor,
+                    unselectedLabelColor: Colors.white60,
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                    tabs: [
+                      Tab(text: 'HIGH SCORES', icon: Icon(Icons.emoji_events)),
+                      Tab(text: 'ACHIEVEMENTS', icon: Icon(Icons.star)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      _buildHighScoresTab(context),
+                      _buildAchievementsTab(context),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -43,24 +72,20 @@ class HighScoreScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Top Scores',
-              style: TextStyle(
-                fontSize: 32,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+              'TOP SCORES',
+              style: GameMenuTheme.titleStyle.copyWith(fontSize: 24, color: Colors.white),
             ),
           ),
           Expanded(
             child: highScores.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       'No high scores yet!\nPlay a game to set a record.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Colors.white70),
+                      style: GameMenuTheme.bodyTextStyle.copyWith(fontSize: 18),
                     ),
                   )
                 : ListView.builder(
@@ -76,9 +101,14 @@ class HighScoreScreen extends StatelessWidget {
                               : Colors.orange[800];
 
                       return Card(
-                        color: isTopThree
-                            ? Colors.blueGrey[900]
-                            : Colors.grey[900],
+                        color: Colors.black.withValues(alpha: 0.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(
+                            color: isTopThree ? GameMenuTheme.primaryColor : Colors.grey[800]!,
+                            width: 1,
+                          ),
+                        ),
                         margin: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -94,9 +124,8 @@ class HighScoreScreen extends StatelessWidget {
                                       )
                                     : Text(
                                         '${index + 1}.',
-                                        style: const TextStyle(
+                                        style: GameMenuTheme.bodyTextStyle.copyWith(
                                           fontSize: 20,
-                                          color: Colors.white70,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -105,24 +134,18 @@ class HighScoreScreen extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   scoreEntry.playerName,
-                                  style: TextStyle(
+                                  style: GameMenuTheme.bodyTextStyle.copyWith(
                                     fontSize: 20,
-                                    color: isTopThree
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontWeight: isTopThree
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                    color: isTopThree ? Colors.white : Colors.white70,
+                                    fontWeight: isTopThree ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
                               ),
                               Text(
                                 scoreEntry.score.toString(),
-                                style: TextStyle(
+                                style: GameMenuTheme.bodyTextStyle.copyWith(
                                   fontSize: 22,
-                                  color: isTopThree
-                                      ? Colors.yellow
-                                      : Colors.yellow[700],
+                                  color: isTopThree ? GameMenuTheme.secondaryColor : Colors.white70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -143,13 +166,10 @@ class HighScoreScreen extends StatelessWidget {
     final allAchievements = achievementManager.allAchievements;
 
     if (allAchievements.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'No achievements defined.',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white70,
-          ),
+          style: GameMenuTheme.bodyTextStyle.copyWith(fontSize: 20),
         ),
       );
     }
@@ -163,7 +183,14 @@ class HighScoreScreen extends StatelessWidget {
         final progress = achievementManager.getProgress(achievement.id);
 
         return Card(
-          color: Colors.blueGrey[800],
+          color: Colors.black.withValues(alpha: 0.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(
+              color: isUnlocked ? GameMenuTheme.secondaryColor : Colors.grey[800]!,
+              width: 1,
+            ),
+          ),
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -178,7 +205,7 @@ class HighScoreScreen extends StatelessWidget {
                     return Icon(
                       isUnlocked ? Icons.star : Icons.star_border,
                       size: 60,
-                      color: isUnlocked ? Colors.yellow : Colors.grey,
+                      color: isUnlocked ? GameMenuTheme.secondaryColor : Colors.grey,
                     );
                   },
                 ),
@@ -189,7 +216,7 @@ class HighScoreScreen extends StatelessWidget {
                     children: [
                       Text(
                         achievement.name,
-                        style: TextStyle(
+                        style: GameMenuTheme.bodyTextStyle.copyWith(
                           fontSize: 20,
                           color: isUnlocked ? Colors.white : Colors.grey,
                           fontWeight: FontWeight.bold,
@@ -198,7 +225,7 @@ class HighScoreScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         achievement.description,
-                        style: TextStyle(
+                        style: GameMenuTheme.bodyTextStyle.copyWith(
                           fontSize: 14,
                           color: isUnlocked ? Colors.white70 : Colors.grey[600],
                         ),
@@ -209,23 +236,23 @@ class HighScoreScreen extends StatelessWidget {
                           value: progress / achievement.targetValue,
                           backgroundColor: Colors.grey[700],
                           valueColor:
-                              const AlwaysStoppedAnimation<Color>(Colors.green),
+                              const AlwaysStoppedAnimation<Color>(GameMenuTheme.primaryColor),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Progress: $progress / ${achievement.targetValue}',
-                          style: const TextStyle(
+                          style: GameMenuTheme.bodyTextStyle.copyWith(
                             fontSize: 12,
                             color: Colors.white54,
                           ),
                         ),
                       ],
                       if (isUnlocked)
-                        const Text(
+                        Text(
                           'UNLOCKED!',
-                          style: TextStyle(
+                          style: GameMenuTheme.bodyTextStyle.copyWith(
                             fontSize: 16,
-                            color: Colors.greenAccent,
+                            color: GameMenuTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

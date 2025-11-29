@@ -3,6 +3,7 @@ import 'package:pinball_mobile/menu/high_score_screen.dart';
 import 'package:pinball_mobile/menu/settings_screen.dart';
 import 'package:pinball_mobile/menu/tutorial_screen.dart';
 import 'package:pinball_mobile/menu/table_selection_screen.dart';
+import 'package:pinball_mobile/menu/menu_theme.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -10,131 +11,123 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Pinball',
-              style: TextStyle(
-                fontSize: 64,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 4,
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/menu_background.png'),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 80),
-            // Primary action - larger button
-            SizedBox(
-              width: 280,
-              height: 70,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TableSelectionScreen(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[700],
-                  foregroundColor: Colors.white,
-                  textStyle: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+          ),
+          // Overlay for better text readability
+          Container(
+            color: Colors.black.withValues(alpha: 0.6),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'PINBALL',
+                  style: GameMenuTheme.titleStyle,
+                ),
+                Text(
+                  'ARCADE',
+                  style: GameMenuTheme.titleStyle.copyWith(
+                    fontSize: 32,
+                    color: GameMenuTheme.secondaryColor,
+                    shadows: [
+                      const Shadow(
+                        blurRadius: 10.0,
+                        color: GameMenuTheme.secondaryColor,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
                   ),
                 ),
-                child: const Text('PLAY'),
-              ),
+                const SizedBox(height: 80),
+                // Primary action
+                SizedBox(
+                  width: 280,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TableSelectionScreen(),
+                        ),
+                      );
+                    },
+                    style: GameMenuTheme.primaryButtonStyle,
+                    child: Text(
+                      'PLAY',
+                      style: GameMenuTheme.buttonTextStyle,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                // Secondary actions
+                SizedBox(
+                  width: 240,
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HighScoreScreen(),
+                            ),
+                          );
+                        },
+                        style: GameMenuTheme.secondaryButtonStyle,
+                        child: Text(
+                          'HIGH SCORES',
+                          style: GameMenuTheme.buttonTextStyle.copyWith(fontSize: 18),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TutorialScreen(),
+                            ),
+                          );
+                        },
+                        style: GameMenuTheme.secondaryButtonStyle,
+                        child: Text(
+                          'HOW TO PLAY',
+                          style: GameMenuTheme.buttonTextStyle.copyWith(fontSize: 18),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SettingsScreen(),
+                            ),
+                          );
+                        },
+                        style: GameMenuTheme.secondaryButtonStyle,
+                        child: Text(
+                          'SETTINGS',
+                          style: GameMenuTheme.buttonTextStyle.copyWith(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 40),
-            // Secondary actions - standard buttons
-            SizedBox(
-              width: 280,
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HighScoreScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[800],
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('High Scores'),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TutorialScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[800],
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('How to Play'),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[800],
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('Settings'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 40),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
