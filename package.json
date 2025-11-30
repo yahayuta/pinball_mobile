@@ -1,0 +1,29 @@
+{
+  "name": "pinball_mobile",
+  "version": "1.0.0",
+  "description": "A realistic pinball machine emulation game built with Flutter and Flame.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yahayuta/pinball_mobile.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yahayuta/pinball_mobile/issues"
+  },
+  "homepage": "https://github.com/yahayuta/pinball_mobile#readme",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.3",
+    "lamejs": "^1.2.1",
+    "node-wav": "^0.0.2"
+  }
+}
