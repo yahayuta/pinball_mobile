@@ -52,14 +52,20 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return Container(
           color: Colors.black, // Background for the empty space
-          alignment: Alignment.center,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 500, // Max width for mobile-like experience
-            ),
-            child: ClipRect(
-              child: child,
-            ),
+          child: Stack(
+            children: [
+              // Centered game viewport (constrained to 500px)
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 500, // Max width for mobile-like experience
+                  ),
+                  child: ClipRect(
+                    child: child,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

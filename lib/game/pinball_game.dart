@@ -14,7 +14,7 @@ import 'package:pinball_mobile/game/achievement_manager.dart';
 import 'package:pinball_mobile/game/game_mode_manager.dart';
 import 'package:pinball_mobile/game/mission_manager.dart';
 import 'package:pinball_mobile/game/light_manager.dart';
-import 'components/hud.dart';
+
 import 'components/launcher.dart';
 import 'components/visual_effects.dart';
 import 'components/power_up.dart';
@@ -35,7 +35,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   late final PinballFlipper leftFlipper;
   late final PinballFlipper rightFlipper;
   late final Launcher launcher;
-  late final Hud _hud;
+
 
   late Sprite playfieldSprite; // Declared
   late Sprite wallSprite; // Declared
@@ -48,6 +48,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   late Sprite dropTargetSprite; // Declared
 
   late HighScoreManager _highScoreManager;
+  HighScoreManager get highScoreManager => _highScoreManager;
   @visibleForTesting
   set highScoreManager(HighScoreManager value) => _highScoreManager = value;
   late final AudioManager audioManager;
@@ -243,12 +244,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     camera.viewfinder.anchor = Anchor.center;
     camera.viewfinder.zoom = 1.0; // Reset zoom to 1.0 as FixedResolutionViewport handles scaling
     
-    // Re-add HUD to new viewport if initialized
-    try {
-      camera.viewport.add(_hud);
-    } catch (e) {
-      // HUD might not be initialized yet on first resize
-    }
+
   }
 
   @override
@@ -299,9 +295,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       _gameDuration = Duration(seconds: gameModeManager.currentGameMode.timeLimitSeconds);
     }
     
-    final highScores = _highScoreManager.getHighScores();
-    _hud = Hud(highScore: highScores.isNotEmpty ? highScores.first.score : 0);
-    camera.viewport.add(_hud);
+
     add(lightManager);
   }
 

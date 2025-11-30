@@ -3,17 +3,20 @@ import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import '../pinball_game.dart';
 
-class Hud extends Component with HasGameReference<PinballGame> {
+class Hud extends PositionComponent with HasGameReference<PinballGame> {
   late final TextPaint _tp;
   late final TextPaint _missionTitleTp;
   late final TextPaint _missionBodyTp;
   int highScore;
 
-  Hud({required this.highScore}) {
+  Hud({required this.highScore}) : super(
+    position: Vector2(10, 10),
+    anchor: Anchor.topLeft,
+  ) {
     _tp = TextPaint(
       style: const TextStyle(
         color: Colors.white,
-        fontSize: 16, // Increased size
+        fontSize: 16,
         fontFamily: 'Courier',
         fontWeight: FontWeight.bold,
       ),
@@ -49,10 +52,10 @@ class Hud extends Component with HasGameReference<PinballGame> {
     final tiltWarnings = game.tiltWarnings;
     final isTilted = game.isTilted;
     
-    // Draw background for HUD
+    // Draw background for HUD (relative to component position)
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(4, 4, 300, 200),
+        Rect.fromLTWH(0, 0, 300, 200),
         Radius.circular(8),
       ),
       Paint()..color = Colors.black.withValues(alpha: 0.7),
@@ -70,23 +73,23 @@ class Hud extends Component with HasGameReference<PinballGame> {
       'Charge: ${(charge / maxCharge * 100).toStringAsFixed(0)}%',
     ];
 
-    var y = 10.0;
+    var y = 6.0;
     for (final l in lines) {
-      _tp.render(canvas, l, Vector2(10, y));
+      _tp.render(canvas, l, Vector2(6, y));
       y += 20;
     }
 
-    // Mission Display
+    // Mission Display (relative to component position)
     if (game.missionManager.currentMission != null) {
       y += 10;
-      _missionTitleTp.render(canvas, 'MISSION: ${game.missionManager.currentMission!.title}', Vector2(10, y));
+      _missionTitleTp.render(canvas, 'MISSION: ${game.missionManager.currentMission!.title}', Vector2(6, y));
       y += 22;
-      _missionBodyTp.render(canvas, game.missionManager.currentMission!.description, Vector2(10, y));
+      _missionBodyTp.render(canvas, game.missionManager.currentMission!.description, Vector2(6, y));
       y += 18;
-      _missionBodyTp.render(canvas, 'Progress: ${(game.missionManager.currentMission!.progress * 100).toStringAsFixed(0)}%', Vector2(10, y));
+      _missionBodyTp.render(canvas, 'Progress: ${(game.missionManager.currentMission!.progress * 100).toStringAsFixed(0)}%', Vector2(6, y));
     } else {
       y += 10;
-      _missionBodyTp.render(canvas, 'No Active Mission', Vector2(10, y));
+      _missionBodyTp.render(canvas, 'No Active Mission', Vector2(6, y));
     }
   }
 }
