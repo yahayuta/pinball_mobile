@@ -20,13 +20,11 @@ class AudioManager with ChangeNotifier {
   }
 
   Future<void> playBackgroundMusic(String assetPath) async {
-    if (kIsWeb) return;
     await _backgroundPlayer.setVolume(_musicVolume);
     await _backgroundPlayer.play(AssetSource(assetPath));
   }
 
   Future<void> playSoundEffect(dynamic assetPath, {double impactForce = 1.0}) async {
-    if (kIsWeb) return;
 
     String selectedAssetPath;
     if (assetPath is List<String>) {

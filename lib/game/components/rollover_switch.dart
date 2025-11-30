@@ -1,4 +1,3 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -58,7 +57,7 @@ class RolloverSwitch extends BodyComponent with ContactCallbacks {
   void activate(PinballBall ball) {
     _isActivated = true;
     _activationTime = 0.0;
-    audioManager.playSoundEffect('audio/rollover.mp3', impactForce: 0.7);
+    audioManager.playSoundEffect('audio/rollover.wav', impactForce: 0.7); // Assuming rollover.wav exists or use default
     if (id != null) {
       (game as PinballGame).missionManager.onObjectHit(id!);
     }

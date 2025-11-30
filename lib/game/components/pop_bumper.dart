@@ -68,7 +68,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   void activate() {
     _isActivated = true;
     _activationTime = 0.0;
-    audioManager.playSoundEffect('audio/bumper.mp3');
+    audioManager.playSoundEffect('audio/bumper.wav');
     parent?.add(BumperHitEffect(position: position, color: color));
   }
 

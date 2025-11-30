@@ -40,24 +40,11 @@ class PinballRamp extends BodyComponent with ContactCallbacks {
     canvas.drawPath(path, paint);
   }
 
-  @override
-  void beginContact(Object other, Contact contact) {
-    if (other is PinballBall) {
-      if (!_ballsInside.contains(other.body)) {
-        _ballsInside.add(other.body);
-        other.body.gravityScale = Vector2.zero();
-        (game as PinballGame).audioManager.playSoundEffect('audio/ramp_enter.mp3'); // New sound effect
-      }
-    }
-  }
-
-  @override
-  void endContact(Object other, Contact contact) {
     if (other is PinballBall) {
       if (_ballsInside.contains(other.body)) {
         _ballsInside.remove(other.body);
         other.body.gravityScale = Vector2(0, 1);
-        (game as PinballGame).audioManager.playSoundEffect('audio/ramp_exit.mp3'); // New sound effect
+        (game as PinballGame).audioManager.playSoundEffect('audio/ramp_exit.wav'); // New sound effect
       }
     }
   }

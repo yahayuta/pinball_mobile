@@ -1,7 +1,7 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
-import 'package:pinball_mobile/game/pinball_game.dart'; // Added for PinballGame type
+import 'package:pinball_mobile/game/pinball_game.dart';
 
 class PinballSpinner extends BodyComponent with ContactCallbacks {
   final double width;
@@ -59,7 +59,7 @@ class PinballSpinner extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     if (other is PinballBall) {
       onSpin(100);
-      (game as PinballGame).audioManager.playSoundEffect('audio/spinner.mp3'); // New sound effect
+      (game as PinballGame).audioManager.playSoundEffect('audio/spinner.wav');
     }
   }
 }

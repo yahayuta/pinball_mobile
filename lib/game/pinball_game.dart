@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'dart:ui'; // Added
 import 'package:pinball_mobile/game/high_score_manager.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
-// import 'package:pinball_mobile/game/components/target.dart';
 import 'package:pinball_mobile/game/achievement_manager.dart';
 import 'package:pinball_mobile/game/game_mode_manager.dart';
 import 'package:pinball_mobile/game/mission_manager.dart';
@@ -27,7 +26,6 @@ import 'components/wall_body.dart';
 import 'components/guide_wall.dart';
 import 'components/out_hole.dart'; // Added import
 import 'components/table_background.dart'; // Added import
-// import 'components/launcher_ramp.dart'; // Import the new LauncherRamp component
 
 class PinballGame extends Forge2DGame with KeyboardEvents implements ContactListener {
   final List<PinballBall> balls = [];
@@ -123,7 +121,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
 
   void addScore(int points, Vector2 position) {
     score += points * (combo + 1);
-    audioManager.playSoundEffect('audio/score.mp3', impactForce: 1.0);
+    audioManager.playSoundEffect('audio/score.wav', impactForce: 1.0);
     add(ScorePopup(position: position, score: points, combo: combo));
     achievementManager.setProgress('score_1000', score); // Update score achievement
     if (combo > 0) {
@@ -162,7 +160,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
         debugPrint('Game Over');
         if (!_tilted) {
           _highScoreManager.updateHighScore(currentPlayerName, score);
-          audioManager.playSoundEffect('audio/game_over.mp3', impactForce: 1.0);
+          audioManager.playSoundEffect('audio/game_over.wav', impactForce: 1.0);
           achievementManager.updateProgress('first_game', 1);
         }
         combo = 0;
@@ -198,7 +196,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     balls.add(ball);
     add(ball);
     audioManager.playSoundEffect(
-      'audio/ball_spawn.mp3',
+      'audio/ball_spawn.wav',
       impactForce: 1.0,
     ); // New sound effect
   }
@@ -207,7 +205,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     _ballSaveActive = true;
     _ballSaveEndTime = DateTime.now().add(const Duration(seconds: 5));
     _ballSaveTimer?.cancel();
-    audioManager.playSoundEffect('audio/ball_save.mp3', impactForce: 1.0); // New sound effect
+    audioManager.playSoundEffect('audio/ball_save.wav', impactForce: 1.0); // New sound effect
     _ballSaveTimer = Timer(const Duration(seconds: 5), () {
       _ballSaveActive = false;
     });
@@ -251,7 +249,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   Future<void> onLoad() async {
     await super.onLoad();
     await audioManager.init();
-    audioManager.playBackgroundMusic('audio/background.mp3');
+    audioManager.playBackgroundMusic('audio/background.wav');
     
     Flame.images.prefix = '';
 
@@ -374,14 +372,6 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     add(
       PinballBumper(position: Vector2(size.x * 0.5, size.y * 0.15), radius: 0.5, sprite: bumperSprite),
     );
-    /*
-    add(
-      LauncherRamp(
-        position: Vector2(size.x, size.y * 0.8), // Bottom-right corner of the ramp
-        size: Vector2(size.x * 0.15, size.y * 0.6), // Width and height of the ramp
-      ),
-    );
-    */
 
     // Spawn initial ball (no initial velocity - let launcher handle it)
     spawnBall();
@@ -540,31 +530,31 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       if (otherBody is PinballBumper) {
         otherBody.activate();
         audioManager.playSoundEffect(
-          ['audio/bumper.mp3', 'audio/score.mp3'],
+          ['audio/bumper.wav', 'audio/score.wav'],
           impactForce: impactForce,
         );
         addScore(10, otherBody.position);
       } else if (otherBody is PinballTarget) {
         audioManager.playSoundEffect(
-          'audio/target_hit.mp3',
+          'audio/target_hit.wav',
           impactForce: impactForce,
         );
         addScore(5, otherBody.position);
       } else if (otherBody is PinballPost) {
         audioManager.playSoundEffect(
-          'audio/spinner.mp3', // Using spinner for post hit
+          'audio/spinner.wav', // Using spinner for post hit
           impactForce: impactForce,
         );
       } else if (otherBody is PinballFlipper) {
         // Flipper sounds are handled by press/release, but we can add a subtle hit sound
         audioManager.playSoundEffect(
-          'audio/flipper_press.mp3',
+          'audio/flipper_press.wav',
           impactForce: impactForce * 0.5,
         );
       } else {
         // Generic collision sound for other objects
         audioManager.playSoundEffect(
-          'audio/score.mp3',
+          'audio/score.wav',
           impactForce: impactForce * 0.2,
         );
       }
@@ -581,7 +571,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       } else {
         add(BallSavePowerUp(position: Vector2(x, y)));
       }
-      audioManager.playSoundEffect('audio/power_up_spawn.mp3', impactForce: 1.0); // New sound effect
+      audioManager.playSoundEffect('audio/power_up_spawn.wav', impactForce: 1.0); // New sound effect
     });
   }
 
@@ -592,7 +582,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   void _triggerTilt() {
     if (!_tilted) {
       _tilted = true;
-      audioManager.playSoundEffect('audio/tilt.mp3', impactForce: 1.0); // Assuming a tilt sound
+      audioManager.playSoundEffect('audio/tilt.wav', impactForce: 1.0); // Assuming a tilt sound
       // Optionally, add a visual "TILT" message
       add(
         TextComponent(
@@ -699,7 +689,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       ball.body.applyLinearImpulse(impulse);
     }
 
-    audioManager.playSoundEffect('audio/target_hit.mp3', impactForce: 1.0); // Placeholder sound
+    audioManager.playSoundEffect('audio/target_hit.wav', impactForce: 1.0); // Placeholder sound
   }
 
   KeyEventResult _handleKeyDown(LogicalKeyboardKey key) {

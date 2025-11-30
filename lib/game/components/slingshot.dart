@@ -1,4 +1,3 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -70,10 +69,10 @@ class Slingshot extends BodyComponent with ContactCallbacks {
       impulseDirection.x,
       impulseDirection.y - 0.2, // Upward bias
     )..normalize();
-    final impulseStrength = 10000.0; // Increased from 8000 for more dramatic kick
+    final impulseStrength = 10000.0;
     ball.body.applyLinearImpulse(adjustedDirection * impulseStrength);
     
-    audioManager.playSoundEffect('audio/slingshot.mp3', impactForce: 1.0);
+    audioManager.playSoundEffect('audio/bumper.wav', impactForce: 1.5); // Replaced slingshot.mp3 with bumper.wav as placeholder
     onHit?.call(ball);
   }
 

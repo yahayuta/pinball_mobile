@@ -1,4 +1,3 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
@@ -67,12 +66,12 @@ class Kickback extends BodyComponent with ContactCallbacks {
     final direction = isLeftSide ? 1.0 : -1.0;
     // Increased forces for more effective saves
     final impulse = Vector2(
-      direction * 18000.0, // Increased from 15000
-      -8000.0, // Increased upward component from -5000
+      direction * 18000.0,
+      -8000.0,
     );
     ball.body.applyLinearImpulse(impulse);
     
-    audioManager.playSoundEffect('audio/kickback.mp3', impactForce: 1.0);
+    audioManager.playSoundEffect('audio/bumper.wav', impactForce: 2.0); // Placeholder
     onActivate?.call(ball);
   }
 

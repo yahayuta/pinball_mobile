@@ -79,7 +79,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
 
   void hit() {
     _isDown = true;
-    audioManager.playSoundEffect('audio/drop_target.mp3');
+    audioManager.playSoundEffect('audio/drop_target.wav');
     _joint.motorSpeed = -10.0; // Move down
     Future.delayed(const Duration(seconds: 3), () => reset());
   }

@@ -2,7 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import '../forge2d/pinball_body.dart';
-import 'package:pinball_mobile/game/pinball_game.dart'; // Added for PinballGame type
+import 'package:pinball_mobile/game/pinball_game.dart';
 
 class PinballTarget extends BodyComponent with ContactCallbacks {
   @override
@@ -94,7 +94,7 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
       _hitTime = 0;
       _hitCount++;
       final gameRef = game as PinballGame;
-      gameRef.audioManager.playSoundEffect('audio/target_hit.mp3');
+      gameRef.audioManager.playSoundEffect('audio/target_hit.wav');
       if (id != null) {
         gameRef.missionManager.onObjectHit(id!);
       }
