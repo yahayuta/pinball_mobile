@@ -22,6 +22,12 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
 -   **Tuned Launcher Lane**: Optimized wall layout for consistent ball entry into the playfield.
 -   **Refactoring**: Removed unused code and resources to improve performance and maintainability.
 
+## Controls
+
+-   **Flippers**: Tap the left or right side of the screen to control the corresponding flipper.
+-   **Plunger**: Press and hold the bottom-right of the screen to charge the plunger, and release to launch the ball.
+-   **Tilt**: Physically tilt your device to nudge the pinball table.
+
 ## Screenshots
 
 | Main Menu | Gameplay |
