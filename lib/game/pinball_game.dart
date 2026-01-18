@@ -189,8 +189,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.75);
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
-      radius: size.x * 0.03,
-      sprite: ballSprite, // Pass the ball sprite
+      radius: 12.0,
+      sprite: ballSprite, 
       initialVelocity: velocity,
     );
     balls.add(ball);
@@ -251,22 +251,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     await audioManager.init();
     audioManager.playBackgroundMusic('audio/background.wav');
     
-    Flame.images.prefix = '';
-
-
-    // Load sprites (fall back to simple generated placeholders if images are
-    // missing from assets/images/). This keeps the game runnable while the
-    // artist-provided images are added later.
-    final bgPath = backgroundImagePath ?? 'images/playfield.png';
+    // Load sprites using default Flame prefix (assets/images/)
+    final bgPath = backgroundImagePath?.replaceAll('images/', '') ?? 'playfield.png';
     playfieldSprite = await _loadSpriteOrPlaceholder(bgPath, color: Colors.brown, sizePx: 512);
-    wallSprite = await _loadSpriteOrPlaceholder('images/wall.png', color: Colors.grey, sizePx: 256);
-    ballSprite = await _loadSpriteOrPlaceholder('images/ball.png', color: Colors.white, sizePx: 64); // Load ball sprite
-    bumperSprite = await _loadSpriteOrPlaceholder('images/bumper.png', color: Colors.red, sizePx: 96); // Load bumper sprite
-    flipperLeftSprite = await _loadSpriteOrPlaceholder('images/flipper_left.png', color: Colors.blue, sizePx: 128); // Load left flipper sprite
-    flipperRightSprite = await _loadSpriteOrPlaceholder('images/flipper_right.png', color: Colors.blue, sizePx: 128); // Load right flipper sprite;
-    postSprite = await _loadSpriteOrPlaceholder('images/post.png', color: Colors.black, sizePx: 64); // Load post sprite
-    targetSprite = await _loadSpriteOrPlaceholder('images/target.png', color: Colors.purple, sizePx: 64); // Load target sprite
-    dropTargetSprite = await _loadSpriteOrPlaceholder('images/drop_target.png', color: Colors.orange, sizePx: 64); // Load drop target sprite
+    wallSprite = await _loadSpriteOrPlaceholder('wall.png', color: Colors.grey, sizePx: 256);
+    ballSprite = await _loadSpriteOrPlaceholder('ball.png', color: Colors.white, sizePx: 64);
+    bumperSprite = await _loadSpriteOrPlaceholder('bumper.png', color: Colors.red, sizePx: 96);
+    flipperLeftSprite = await _loadSpriteOrPlaceholder('flipper_left.png', color: Colors.blue, sizePx: 128);
+    flipperRightSprite = await _loadSpriteOrPlaceholder('flipper_right.png', color: Colors.blue, sizePx: 128);
+    postSprite = await _loadSpriteOrPlaceholder('post.png', color: Colors.black, sizePx: 64);
+    targetSprite = await _loadSpriteOrPlaceholder('target.png', color: Colors.purple, sizePx: 64);
+    dropTargetSprite = await _loadSpriteOrPlaceholder('drop_target.png', color: Colors.orange, sizePx: 64);
 
     _initPowerUpTimer();
     _accelerometerSubscription = accelerometerEventStream().listen((event) {
@@ -323,7 +318,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     add(TableBackground(
       sprite: playfieldSprite,
       size: size,
-    ));
+    )..priority = -100);
 
     // Initialize flippers
     final flipperLength = size.x / 5;
@@ -364,13 +359,28 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
 
     // Add bumpers with sprites
     add(
-      PinballBumper(position: Vector2(size.x * 0.25, size.y * 0.25), radius: 0.5, sprite: bumperSprite),
+      PinballBumper(
+        position: Vector2(size.x * 0.35, size.y * 0.25), 
+        radius: 20.0, 
+        sprite: bumperSprite,
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
     );
     add(
-      PinballBumper(position: Vector2(size.x * 0.75, size.y * 0.25), radius: 0.5, sprite: bumperSprite),
+      PinballBumper(
+        position: Vector2(size.x * 0.65, size.y * 0.25), 
+        radius: 20.0, 
+        sprite: bumperSprite,
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
     );
     add(
-      PinballBumper(position: Vector2(size.x * 0.5, size.y * 0.15), radius: 0.5, sprite: bumperSprite),
+      PinballBumper(
+        position: Vector2(size.x * 0.5, size.y * 0.15), 
+        radius: 20.0, 
+        sprite: bumperSprite,
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
     );
 
     // Spawn initial ball (no initial velocity - let launcher handle it)
@@ -630,8 +640,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
         camera.viewfinder.position = targetPosition;
 
         // Dynamic zoom based on ball speed
-        const double minZoom = 8.0;
-        const double maxZoom = 12.0;
+        const double minZoom = 1.0; 
+        const double maxZoom = 2.0;
         const double minSpeed = 10.0;
         const double maxSpeed = 100.0;
 
@@ -640,6 +650,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
         final newZoom = lerpDouble(maxZoom, minZoom, zoomFactor.clamp(0.0, 1.0))!;
         camera.viewfinder.zoom = newZoom;
       }
+    } else {
+      camera.viewfinder.position = size / 2;
+      camera.viewfinder.zoom = 1.0;
     }
 
     // Workaround for spacebar KeyUp not being registered on web

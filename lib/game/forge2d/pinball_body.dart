@@ -20,6 +20,11 @@ class PinballBall extends BodyComponent {
   });
 
   @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+  }
+
+  @override
   Body createBody() {
     // Create a circular fixture
     final shape = CircleShape()..radius = radius;
@@ -53,7 +58,12 @@ class PinballBall extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+      // Center the sprite on the body
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final paint = Paint()
         ..color = Colors.red
@@ -81,7 +91,7 @@ class PinballBall extends BodyComponent {
   }
 }
 
-class PinballBumper extends BodyComponent {
+class PinballBumper extends BodyComponent with ContactCallbacks {
   @override
   final Vector2 position;
   final double radius;
@@ -121,6 +131,14 @@ class PinballBumper extends BodyComponent {
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }
 
+  @override
+  void beginContact(Object other, Contact contact) {
+    if (other is PinballBall) {
+      activate();
+      onHit?.call(other);
+    }
+  }
+
   void activate() {
     _isActivated = true;
     _activationTime = 0.0;
@@ -141,7 +159,12 @@ class PinballBumper extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+      // Center the sprite on the body
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final renderColor = _isActivated ? Colors.yellow : color;
       final glowRadius = _isActivated ? radius * 1.2 : radius;
@@ -319,7 +342,7 @@ class PinballPost extends BodyComponent {
 
   PinballPost({
     required this.position,
-    this.radius = 0.2,
+    this.radius = 8.0, // Increased from 2.0
     this.color = Colors.white,
     this.sprite, // Added sprite to constructor
   });
@@ -346,7 +369,12 @@ class PinballPost extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+      // Center the sprite on the body
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final paint = Paint()
         ..color = color

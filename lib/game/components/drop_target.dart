@@ -26,7 +26,7 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     required this.audioManager,
     this.id,
     this.sprite,
-  }) : size = size ?? Vector2(2.0, 4.0);
+  }) : size = size ?? Vector2(10.0, 15.0);
 
   @override
   Body createBody() {
@@ -92,7 +92,11 @@ class DropTarget extends BodyComponent with ContactCallbacks {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.renderRect(canvas, Rect.fromCenter(center: Offset.zero, width: size.x * 20, height: size.y * 20));
+      sprite!.render(
+        canvas,
+        position: Vector2(-size.x / 2, -size.y / 2),
+        size: size,
+      );
     } else {
       final renderColor = _isDown ? Colors.grey : color;
 

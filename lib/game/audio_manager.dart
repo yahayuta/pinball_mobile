@@ -6,7 +6,6 @@ class AudioManager with ChangeNotifier {
   factory AudioManager() => _instance;
 
   AudioManager._internal();
-
   final AudioPlayer _backgroundPlayer = AudioPlayer();
   final Map<String, AudioPlayer> _effectPlayers = {};
   double _musicVolume = 0.5;

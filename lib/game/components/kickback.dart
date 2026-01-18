@@ -27,7 +27,7 @@ class Kickback extends BodyComponent with ContactCallbacks {
     this.onActivate,
     required this.audioManager,
     this.cooldownSeconds = 10.0,
-  }) : size = size ?? Vector2(2.0, 3.0);
+  }) : size = size ?? Vector2(10.0, 15.0);
 
   @override
   Body createBody() {
