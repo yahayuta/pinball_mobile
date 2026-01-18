@@ -14,17 +14,13 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
     -   **Slingshots**: Accelerate the ball for fast-paced action.
     -   **Rollover Lanes**: Skill shots for bonus points.
 -   **Tilt Control**: Use your device's accelerometer to nudge the ball (powered by `sensors_plus`).
--   **Visual Enhancements**:
-    -   **Dynamic Effects**: Ball trails, refined bumper hit particles, and polished score popups.
-    -   **High-Quality Assets**: Chrome-reflective ball, neon pop bumpers, and thematic playfield backgrounds.
--   **Audio**: Immersive sound effects using `audioplayers`.
--   **Social Sharing**: Share your high scores with friends via `share_plus`.
 
 ## Gameplay Enhancements
 
 -   **Visual Overhaul**: Replaced placeholder graphics with professional-grade sprites and added vibrant VFX.
+-   **Component Scaling**: Enlarged interactive elements (bumpers, drop targets, slingshots) to ensure they are clearly visible.
+-   **Improved Mechanics**: Fixed bumper scoring logic and optimized collision detection.
 -   **Tuned Launcher Lane**: Optimized wall layout for consistent ball entry into the playfield.
--   **Refactoring**: Removed unused code and resources to improve performance and maintainability.
 
 ## Controls
 
