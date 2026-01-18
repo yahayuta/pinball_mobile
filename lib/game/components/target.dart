@@ -90,8 +90,21 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.1;
       
-      canvas.drawRect(rect.deflate(0.2), detailPaint);
+      canvas.drawRect(rect.deflate(0.25), detailPaint);
+      canvas.drawCircle(Offset.zero, width * 0.15, detailPaint);
       
+      // Glass highlight
+      final highlightPaint = Paint()
+        ..shader = LinearGradient(
+          colors: [Colors.white.withAlpha(100), Colors.white.withAlpha(0)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ).createShader(rect.deflate(0.1));
+      canvas.drawOval(
+        Rect.fromLTWH(-width * 0.4, -height * 0.4, width * 0.5, height * 0.3),
+        highlightPaint,
+      );
+
       // Draw border with glow
       paint
         ..color = _isHit ? Colors.white : Colors.cyanAccent
