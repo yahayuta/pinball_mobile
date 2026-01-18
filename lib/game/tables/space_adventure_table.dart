@@ -47,7 +47,7 @@ class SpaceAdventureTable extends PinballGame {
       color: Colors.amber,
       audioManager: audioManager,
     ));
-    await add(PinballLight(id: 'light_lane_1', position: Vector2(size.x * 0.25, size.y * 0.05), size: Vector2.all(2.0)));
+    await add(PinballLight(id: 'light_lane_1', position: Vector2(size.x * 0.25, size.y * 0.05), size: Vector2.all(8.0)));
 
     await add(RolloverSwitch(
       id: 'lane_2',
@@ -60,7 +60,7 @@ class SpaceAdventureTable extends PinballGame {
       color: Colors.amber,
       audioManager: audioManager,
     ));
-    await add(PinballLight(id: 'light_lane_2', position: Vector2(size.x * 0.40, size.y * 0.05), size: Vector2.all(2.0)));
+    await add(PinballLight(id: 'light_lane_2', position: Vector2(size.x * 0.40, size.y * 0.05), size: Vector2.all(8.0)));
 
     await add(RolloverSwitch(
       id: 'lane_3',
@@ -73,7 +73,7 @@ class SpaceAdventureTable extends PinballGame {
       color: Colors.amber,
       audioManager: audioManager,
     ));
-    await add(PinballLight(id: 'light_lane_3', position: Vector2(size.x * 0.55, size.y * 0.05), size: Vector2.all(2.0)));
+    await add(PinballLight(id: 'light_lane_3', position: Vector2(size.x * 0.55, size.y * 0.05), size: Vector2.all(8.0)));
 
     await add(RolloverSwitch(
       id: 'lane_4',
@@ -86,12 +86,12 @@ class SpaceAdventureTable extends PinballGame {
       color: Colors.amber,
       audioManager: audioManager,
     ));
-    await add(PinballLight(id: 'light_lane_4', position: Vector2(size.x * 0.70, size.y * 0.05), size: Vector2.all(2.0)));
+    await add(PinballLight(id: 'light_lane_4', position: Vector2(size.x * 0.70, size.y * 0.05), size: Vector2.all(8.0)));
 
     // Pop Bumpers - Triangle formation
     await add(PopBumper(
       position: Vector2(size.x * 0.35, size.y * 0.25),
-      radius: 2.5,
+      radius: 20.0,
       onHit: (ball) => addScore(100, ball.body.position),
       color: Colors.red,
       audioManager: audioManager,
@@ -99,7 +99,7 @@ class SpaceAdventureTable extends PinballGame {
     ));
     await add(PopBumper(
       position: Vector2(size.x * 0.65, size.y * 0.25),
-      radius: 2.5,
+      radius: 20.0,
       onHit: (ball) => addScore(100, ball.body.position),
       color: Colors.blue,
       audioManager: audioManager,
@@ -107,7 +107,7 @@ class SpaceAdventureTable extends PinballGame {
     ));
     await add(PopBumper(
       position: Vector2(size.x * 0.50, size.y * 0.15),
-      radius: 2.5,
+      radius: 20.0,
       onHit: (ball) => addScore(100, ball.body.position),
       color: Colors.green,
       audioManager: audioManager,
@@ -117,14 +117,14 @@ class SpaceAdventureTable extends PinballGame {
     // Spinners on sides
     await add(PinballSpinner(
       position: Vector2(size.x * 0.20, size.y * 0.20),
-      width: 0.5,
-      height: 4.0,
+      width: 4.0,
+      height: 20.0,
       onSpin: (score) => addScore(score, Vector2(size.x * 0.20, size.y * 0.20)),
     ));
     await add(PinballSpinner(
       position: Vector2(size.x * 0.80, size.y * 0.20),
-      width: 0.5,
-      height: 4.0,
+      width: 4.0,
+      height: 20.0,
       onSpin: (score) => addScore(score, Vector2(size.x * 0.80, size.y * 0.20)),
     ));
 
@@ -135,6 +135,7 @@ class SpaceAdventureTable extends PinballGame {
       await add(DropTarget(
         id: id,
         position: Vector2(xPos, size.y * 0.40),
+        size: Vector2(15.0, 25.0), // Increased from default
         onHit: (ball) {
           scoringManager.hitDropTarget(i);
           addScore(200, ball.body.position);
@@ -144,7 +145,7 @@ class SpaceAdventureTable extends PinballGame {
         audioManager: audioManager,
         sprite: dropTargetSprite,
       ));
-      await add(PinballLight(id: 'light_$id', position: Vector2(xPos, size.y * 0.43), size: Vector2.all(1.5), shape: LightShape.rect));
+      await add(PinballLight(id: 'light_$id', position: Vector2(xPos, size.y * 0.43), size: Vector2.all(8.0), shape: LightShape.rect));
     }
 
     // ============================================================
@@ -163,7 +164,7 @@ class SpaceAdventureTable extends PinballGame {
       },
       sprite: targetSprite,
     ));
-    await add(PinballLight(id: 'light_multiball', position: Vector2(size.x * 0.25, size.y * 0.58), size: Vector2.all(2.0), shape: LightShape.triangle));
+    await add(PinballLight(id: 'light_multiball', position: Vector2(size.x * 0.25, size.y * 0.58), size: Vector2.all(10.0), shape: LightShape.triangle));
 
     await add(PinballTarget(
       id: 'target_left',
@@ -197,7 +198,6 @@ class SpaceAdventureTable extends PinballGame {
     // Slingshots near flippers
     await add(Slingshot(
       position: Vector2(size.x * 0.20, size.y * 0.88),
-      size: Vector2(4.0, 1.0),
       angle: -0.5,
       onHit: (ball) => addScore(50, ball.body.position),
       color: Colors.red,
@@ -205,7 +205,6 @@ class SpaceAdventureTable extends PinballGame {
     ));
     await add(Slingshot(
       position: Vector2(size.x * 0.80, size.y * 0.88),
-      size: Vector2(4.0, 1.0),
       angle: 0.5,
       onHit: (ball) => addScore(50, ball.body.position),
       color: Colors.red,

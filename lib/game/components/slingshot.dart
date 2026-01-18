@@ -26,7 +26,7 @@ class Slingshot extends BodyComponent with ContactCallbacks {
     this.onHit,
     this.color = Colors.red,
     required this.audioManager,
-  }) : size = size ?? Vector2(4.0, 1.0);
+  }) : size = size ?? Vector2(20.0, 5.0);
 
   @override
   Body createBody() {

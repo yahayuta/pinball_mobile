@@ -10,8 +10,8 @@ class PinballSpinner extends BodyComponent with ContactCallbacks {
 
   PinballSpinner({
     required Vector2 position,
-    this.width = 1.0,
-    this.height = 5.0,
+    this.width = 3.0,
+    this.height = 15.0,
     required this.onSpin,
   }) : super(
          bodyDef: BodyDef(position: position, type: BodyType.dynamic),

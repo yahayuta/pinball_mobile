@@ -334,7 +334,7 @@ class PinballPost extends BodyComponent {
 
   PinballPost({
     required this.position,
-    this.radius = 2.0,
+    this.radius = 8.0, // Increased from 2.0
     this.color = Colors.white,
     this.sprite, // Added sprite to constructor
   });

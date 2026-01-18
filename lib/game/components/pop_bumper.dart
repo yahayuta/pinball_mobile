@@ -21,7 +21,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
 
   PopBumper({
     required this.position,
-    this.radius = 5.0,
+    this.radius = 12.0,
     this.onHit,
     this.color = Colors.orange,
     required this.audioManager,

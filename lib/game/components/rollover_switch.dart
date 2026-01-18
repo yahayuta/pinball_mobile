@@ -21,7 +21,7 @@ class RolloverSwitch extends BodyComponent with ContactCallbacks {
   
   RolloverSwitch({
     required this.position,
-    this.radius = 1.5,
+    this.radius = 8.0,
     this.onActivate,
     this.color = Colors.yellow,
     required this.audioManager,

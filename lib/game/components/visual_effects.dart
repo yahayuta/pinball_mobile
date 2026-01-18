@@ -34,7 +34,7 @@ class BumperHitEffect extends ParticleSystemComponent {
             speed: (Vector2.random() - Vector2.all(0.5)) * 300,
             position: Vector2.zero(),
             child: FadingCircleParticle(
-              radius: 1.5 + (Vector2.random().x * 2), // Varied radius
+              radius: 4.0 + (Vector2.random().x * 6), // Increased from 1.5
               color: color,
               lifespan: 0.6,
             ),
@@ -67,7 +67,7 @@ class BallTrail extends ParticleSystemComponent {
           count: 1,
           lifespan: 0.3,
           generator: (i) => FadingCircleParticle(
-            radius: 4.0,
+            radius: 8.0, // Increased from 4.0
             color: trailColor.withValues(alpha: 0.3),
             lifespan: 0.3,
           ),
