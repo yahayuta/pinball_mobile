@@ -21,7 +21,7 @@ class PopBumper extends BodyComponent with ContactCallbacks {
 
   PopBumper({
     required this.position,
-    this.radius = 2.0,
+    this.radius = 5.0,
     this.onHit,
     this.color = Colors.orange,
     required this.audioManager,
@@ -97,7 +97,11 @@ class PopBumper extends BodyComponent with ContactCallbacks {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.renderRect(canvas, Rect.fromCircle(center: Offset.zero, radius: radius * 20));
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final renderColor = _isActivated ? Colors.yellow : color;
       final glowRadius = _isActivated ? radius * 1.2 : radius;

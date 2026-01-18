@@ -22,7 +22,6 @@ class PinballBall extends BodyComponent {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    add(BallTrail(target: this as PositionComponent, trailColor: Colors.cyanAccent));
   }
 
   @override
@@ -335,7 +334,7 @@ class PinballPost extends BodyComponent {
 
   PinballPost({
     required this.position,
-    this.radius = 0.2,
+    this.radius = 2.0,
     this.color = Colors.white,
     this.sprite, // Added sprite to constructor
   });
