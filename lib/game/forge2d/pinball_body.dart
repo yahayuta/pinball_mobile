@@ -362,7 +362,12 @@ class PinballPost extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+      // Center the sprite on the body
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final paint = Paint()
         ..color = color

@@ -251,22 +251,19 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     await audioManager.init();
     audioManager.playBackgroundMusic('audio/background.wav');
     
-    Flame.images.prefix = '';
-
-
     // Load sprites (fall back to simple generated placeholders if images are
     // missing from assets/images/). This keeps the game runnable while the
     // artist-provided images are added later.
-    final bgPath = backgroundImagePath ?? 'images/playfield.png';
+    final bgPath = backgroundImagePath ?? 'playfield.png';
     playfieldSprite = await _loadSpriteOrPlaceholder(bgPath, color: Colors.brown, sizePx: 512);
-    wallSprite = await _loadSpriteOrPlaceholder('images/wall.png', color: Colors.grey, sizePx: 256);
-    ballSprite = await _loadSpriteOrPlaceholder('images/ball.png', color: Colors.white, sizePx: 64); // Load ball sprite
-    bumperSprite = await _loadSpriteOrPlaceholder('images/bumper.png', color: Colors.red, sizePx: 96); // Load bumper sprite
-    flipperLeftSprite = await _loadSpriteOrPlaceholder('images/flipper_left.png', color: Colors.blue, sizePx: 128); // Load left flipper sprite
-    flipperRightSprite = await _loadSpriteOrPlaceholder('images/flipper_right.png', color: Colors.blue, sizePx: 128); // Load right flipper sprite;
-    postSprite = await _loadSpriteOrPlaceholder('images/post.png', color: Colors.black, sizePx: 64); // Load post sprite
-    targetSprite = await _loadSpriteOrPlaceholder('images/target.png', color: Colors.purple, sizePx: 64); // Load target sprite
-    dropTargetSprite = await _loadSpriteOrPlaceholder('images/drop_target.png', color: Colors.orange, sizePx: 64); // Load drop target sprite
+    wallSprite = await _loadSpriteOrPlaceholder('wall.png', color: Colors.grey, sizePx: 256);
+    ballSprite = await _loadSpriteOrPlaceholder('ball.png', color: Colors.white, sizePx: 64); // Load ball sprite
+    bumperSprite = await _loadSpriteOrPlaceholder('bumper.png', color: Colors.red, sizePx: 96); // Load bumper sprite
+    flipperLeftSprite = await _loadSpriteOrPlaceholder('flipper_left.png', color: Colors.blue, sizePx: 128); // Load left flipper sprite
+    flipperRightSprite = await _loadSpriteOrPlaceholder('flipper_right.png', color: Colors.blue, sizePx: 128); // Load right flipper sprite;
+    postSprite = await _loadSpriteOrPlaceholder('post.png', color: Colors.black, sizePx: 64); // Load post sprite
+    targetSprite = await _loadSpriteOrPlaceholder('target.png', color: Colors.purple, sizePx: 64); // Load target sprite
+    dropTargetSprite = await _loadSpriteOrPlaceholder('drop_target.png', color: Colors.orange, sizePx: 64); // Load drop target sprite
 
     _initPowerUpTimer();
     _accelerometerSubscription = accelerometerEventStream().listen((event) {
