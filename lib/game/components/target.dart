@@ -54,24 +54,49 @@ class PinballTarget extends BodyComponent with ContactCallbacks {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.renderRect(canvas, Rect.fromCenter(center: Offset.zero, width: width * 20, height: height * 20));
+      sprite!.render(
+        canvas,
+        position: Vector2(-width / 2, -height / 2),
+        size: Vector2(width, height),
+      );
     } else {
-      final paint = Paint()
-        ..color = _isHit ? Colors.red : Colors.blueGrey
-        ..style = PaintingStyle.fill;
-
       final rect = Rect.fromCenter(
         center: Offset.zero,
-        width: width * 20, // Convert to screen coordinates
-        height: height * 20, // Convert to screen coordinates
+        width: width,
+        height: height,
       );
+
+      // Draw background glow
+      final glowPaint = Paint()
+        ..color = (_isHit ? Colors.white : Colors.blue.withAlpha(100))
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, _isHit ? 2.0 : 1.0);
+      canvas.drawRect(rect.inflate(0.2), glowPaint);
+
+      // Main body
+      final paint = Paint()
+        ..shader = LinearGradient(
+          colors: _isHit 
+            ? [Colors.white, Colors.redAccent] 
+            : [Colors.blueGrey.shade800, Colors.blueGrey.shade400],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ).createShader(rect)
+        ..style = PaintingStyle.fill;
       canvas.drawRect(rect, paint);
 
-      // Draw border
-      paint
-        ..color = Colors.white
+      // Procedural detail: concentric design
+      final detailPaint = Paint()
+        ..color = _isHit ? Colors.white : Colors.cyanAccent.withAlpha(150)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0;
+        ..strokeWidth = 0.1;
+      
+      canvas.drawRect(rect.deflate(0.2), detailPaint);
+      
+      // Draw border with glow
+      paint
+        ..color = _isHit ? Colors.white : Colors.cyanAccent
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.15;
       canvas.drawRect(rect, paint);
     }
   }

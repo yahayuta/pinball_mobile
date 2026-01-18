@@ -18,16 +18,35 @@ class GuideWall extends BodyComponent {
 
   @override
   void render(Canvas canvas) {
+    // Background glow
+    final glowPaint = Paint()
+      ..color = color.withAlpha(80)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0 // Wide glow
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);
+    
+    final Path path = Path();
+    if (vertices.isNotEmpty) {
+      path.moveTo(vertices[0].x, vertices[0].y);
+      for (var i = 1; i < vertices.length; i++) {
+        path.lineTo(vertices[i].x, vertices[i].y);
+      }
+    }
+    
+    canvas.drawPath(path, glowPaint);
+
+    // Main neon line
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0; // Increased visual thickness
-    for (var i = 0; i < vertices.length - 1; i++) {
-      canvas.drawLine(
-        Offset(vertices[i].x, vertices[i].y),
-        Offset(vertices[i + 1].x, vertices[i + 1].y),
-        paint,
-      );
-    }
+      ..strokeWidth = 0.3; // Correct world units thickness
+    
+    canvas.drawPath(path, paint);
+
+    // Core bright line
+    paint
+      ..color = Colors.white
+      ..strokeWidth = 0.08;
+    canvas.drawPath(path, paint);
   }
 }

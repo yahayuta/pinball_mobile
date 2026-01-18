@@ -156,6 +156,8 @@ class SpaceAdventureTable extends PinballGame {
     await add(PinballTarget(
       id: 'multiball_target',
       position: Vector2(size.x * 0.25, size.y * 0.55),
+      width: 15.0,
+      height: 8.0,
       hitsToTrigger: 3,
       onHit: (ball) {
         addScore(1000, Vector2(size.x * 0.25, size.y * 0.55));
@@ -169,6 +171,8 @@ class SpaceAdventureTable extends PinballGame {
     await add(PinballTarget(
       id: 'target_left',
       position: Vector2(size.x * 0.50, size.y * 0.60),
+      width: 12.0,
+      height: 6.0,
       onHit: (ball) => addScore(300, ball.body.position),
       sprite: targetSprite,
     ));
@@ -176,6 +180,8 @@ class SpaceAdventureTable extends PinballGame {
     await add(PinballTarget(
       id: 'target_right',
       position: Vector2(size.x * 0.75, size.y * 0.55),
+      width: 12.0,
+      height: 6.0,
       onHit: (ball) => addScore(300, ball.body.position),
       sprite: targetSprite,
     ));
