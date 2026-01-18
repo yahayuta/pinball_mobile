@@ -34,7 +34,7 @@ dependencies:
 
 
 
-  flame: ^1.16.0
+  flame: ^1.29.0
   flame_forge2d: ^0.19.2+1
   forge2d: ^0.14.2
 

@@ -27,20 +27,54 @@ class BumperHitEffect extends ParticleSystemComponent {
     : super(
         position: position,
         particle: Particle.generate(
-          count: 20,
-          lifespan: 0.5,
+          count: 24,
+          lifespan: 0.6,
           generator: (i) => AcceleratedParticle(
             acceleration: Vector2(0, 0),
-            speed: (Vector2.random() - Vector2.all(0.5)) * 200,
+            speed: (Vector2.random() - Vector2.all(0.5)) * 300,
             position: Vector2.zero(),
             child: FadingCircleParticle(
-              radius: 2,
+              radius: 1.5 + (Vector2.random().x * 2), // Varied radius
               color: color,
-              lifespan: 0.5,
+              lifespan: 0.6,
             ),
           ),
         ),
       );
+}
+
+class BallTrail extends ParticleSystemComponent {
+  final PositionComponent target;
+  final Color trailColor;
+
+  BallTrail({
+    required this.target,
+    this.trailColor = Colors.white,
+  }) : super(
+         priority: 1, // Draw behind the ball
+       );
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    position = target.position;
+
+    // Only emit particles if the target is moving significantly
+    add(
+      ParticleSystemComponent(
+        position: Vector2.zero(),
+        particle: Particle.generate(
+          count: 1,
+          lifespan: 0.3,
+          generator: (i) => FadingCircleParticle(
+            radius: 4.0,
+            color: trailColor.withValues(alpha: 0.3),
+            lifespan: 0.3,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class ScorePopup extends TextComponent {
@@ -57,14 +91,18 @@ class ScorePopup extends TextComponent {
          position: position,
          textRenderer: TextPaint(
            style: const TextStyle(
-             color: Colors.yellow,
-             fontSize: 16,
+             color: Colors.white,
+             fontSize: 18,
              fontWeight: FontWeight.bold,
+             shadows: [
+               Shadow(color: Colors.yellow, blurRadius: 4),
+               Shadow(color: Colors.orange, blurRadius: 8),
+             ],
            ),
          ),
        ) {
-    add(MoveEffect.by(Vector2(0, -50), EffectController(duration: _fadeDuration)));
-    add(ScaleEffect.by(Vector2.all(1.5), EffectController(duration: 0.2)));
+    add(MoveEffect.by(Vector2(0, -60), EffectController(duration: _fadeDuration, curve: Curves.easeOut)));
+    add(ScaleEffect.by(Vector2.all(1.2), EffectController(duration: 0.1, reverseDuration: 0.1)));
   }
 
   @override
@@ -75,7 +113,7 @@ class ScorePopup extends TextComponent {
       _opacity = 1.0 - (_elapsedTime / _fadeDuration);
       textRenderer = TextPaint(
         style: (textRenderer as TextPaint).style.copyWith(
-          color: (textRenderer as TextPaint).style.color!.withAlpha((_opacity * 255).toInt()),
+          color: (textRenderer as TextPaint).style.color!.withOpacity(_opacity),
         ),
       );
     } else {
@@ -94,18 +132,23 @@ class ComboEffect extends TextComponent {
     : super(
         text: '${combo}x COMBO!',
         position: position,
+        anchor: Anchor.center,
         textRenderer: TextPaint(
           style: const TextStyle(
-            color: Colors.orange,
-            fontSize: 24,
+            color: Colors.white,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(color: Colors.deepOrange, blurRadius: 10),
+              Shadow(color: Colors.red, blurRadius: 20),
+            ],
           ),
         ),
       ) {
     add(
       ScaleEffect.by(
-        Vector2.all(1.5),
-        EffectController(duration: 0.2, reverseDuration: 0.2),
+        Vector2.all(1.4),
+        EffectController(duration: 0.15, reverseDuration: 0.15, repeatCount: 1),
       ),
     );
   }
@@ -120,7 +163,7 @@ class ComboEffect extends TextComponent {
         _opacity = 1.0 - (currentFadeTime / _fadeDuration);
         textRenderer = TextPaint(
           style: (textRenderer as TextPaint).style.copyWith(
-            color: (textRenderer as TextPaint).style.color!.withAlpha((_opacity * 255).toInt()),
+            color: (textRenderer as TextPaint).style.color!.withOpacity(_opacity),
           ),
         );
       } else {

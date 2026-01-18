@@ -20,6 +20,12 @@ class PinballBall extends BodyComponent {
   });
 
   @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(BallTrail(target: this as PositionComponent, trailColor: Colors.cyanAccent));
+  }
+
+  @override
   Body createBody() {
     // Create a circular fixture
     final shape = CircleShape()..radius = radius;
@@ -53,7 +59,12 @@ class PinballBall extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+      // Center the sprite on the body
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final paint = Paint()
         ..color = Colors.red
@@ -141,7 +152,12 @@ class PinballBumper extends BodyComponent {
   @override
   void render(Canvas canvas) {
     if (sprite != null) {
-      sprite!.render(canvas, position: Vector2.zero(), size: Vector2.all(radius * 2));
+      // Center the sprite on the body
+      sprite!.render(
+        canvas,
+        position: Vector2(-radius, -radius),
+        size: Vector2.all(radius * 2),
+      );
     } else {
       final renderColor = _isActivated ? Colors.yellow : color;
       final glowRadius = _isActivated ? radius * 1.2 : radius;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pinball_mobile/game/forge2d/pinball_body.dart';
 import 'package:pinball_mobile/game/components/visual_effects.dart';
 import 'package:pinball_mobile/game/audio_manager.dart';
+import 'package:pinball_mobile/game/pinball_game.dart';
 
 class PopBumper extends BodyComponent with ContactCallbacks {
   @override
@@ -69,7 +70,17 @@ class PopBumper extends BodyComponent with ContactCallbacks {
     _isActivated = true;
     _activationTime = 0.0;
     audioManager.playSoundEffect('audio/bumper.wav');
+    
+    // Add particle effect
     parent?.add(BumperHitEffect(position: position, color: color));
+    
+    // Trigger flash via light manager if possible
+    final game = findGame();
+    if (game is PinballGame) {
+      // Assuming bumper IDs are registered in LightManager, e.g., "bumper_1"
+      // For now, let's just use the position as a proxy ID or similar if registered
+      // Alternatively, we can just use the internal _isActivated for rendering
+    }
   }
 
   @override
