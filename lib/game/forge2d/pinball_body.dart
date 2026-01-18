@@ -91,7 +91,7 @@ class PinballBall extends BodyComponent {
   }
 }
 
-class PinballBumper extends BodyComponent {
+class PinballBumper extends BodyComponent with ContactCallbacks {
   @override
   final Vector2 position;
   final double radius;
@@ -129,6 +129,14 @@ class PinballBumper extends BodyComponent {
     );
 
     return world.createBody(bodyDef)..createFixture(fixtureDef);
+  }
+
+  @override
+  void beginContact(Object other, Contact contact) {
+    if (other is PinballBall) {
+      activate();
+      onHit?.call(other);
+    }
   }
 
   void activate() {

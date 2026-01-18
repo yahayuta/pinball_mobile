@@ -359,13 +359,28 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
 
     // Add bumpers with sprites
     add(
-      PinballBumper(position: Vector2(size.x * 0.35, size.y * 0.25), radius: 20.0, sprite: bumperSprite),
+      PinballBumper(
+        position: Vector2(size.x * 0.35, size.y * 0.25), 
+        radius: 20.0, 
+        sprite: bumperSprite,
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
     );
     add(
-      PinballBumper(position: Vector2(size.x * 0.65, size.y * 0.25), radius: 20.0, sprite: bumperSprite),
+      PinballBumper(
+        position: Vector2(size.x * 0.65, size.y * 0.25), 
+        radius: 20.0, 
+        sprite: bumperSprite,
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
     );
     add(
-      PinballBumper(position: Vector2(size.x * 0.5, size.y * 0.15), radius: 20.0, sprite: bumperSprite),
+      PinballBumper(
+        position: Vector2(size.x * 0.5, size.y * 0.15), 
+        radius: 20.0, 
+        sprite: bumperSprite,
+        onHit: (ball) => addScore(100, ball.body.position),
+      ),
     );
 
     // Spawn initial ball (no initial velocity - let launcher handle it)
