@@ -51,13 +51,13 @@ class DropTarget extends BodyComponent with ContactCallbacks {
     final anchorBody = world.createBody(BodyDef(position: position));
 
     final jointDef = PrismaticJointDef()
-      ..initialize(anchorBody, dropTargetBody, position, Vector2(0, 1))
+      ..initialize(anchorBody, dropTargetBody, position, Vector2(0, 1)) // axis is DOWN
       ..enableLimit = true
       ..lowerTranslation = 0.0
-      ..upperTranslation = size.y * 0.9
+      ..upperTranslation = size.y * 1.5 // Increased to ensure complete clearance
       ..enableMotor = true
-      ..motorSpeed = 10.0
-      ..maxMotorForce = 1000.0;
+      ..motorSpeed = -10.0 // RESTING/HOLD state (trying to move UP against lower limit)
+      ..maxMotorForce = 2000.0; // Increased force
 
     final PrismaticJoint newJoint = PrismaticJoint(jointDef);
     world.physicsWorld.createJoint(newJoint);
@@ -80,13 +80,25 @@ class DropTarget extends BodyComponent with ContactCallbacks {
   void hit() {
     _isDown = true;
     audioManager.playSoundEffect('audio/drop_target.wav');
-    _joint.motorSpeed = -10.0; // Move down
+    _joint.motorSpeed = 30.0; // Fast drop DOWN
+    
+    // Disable collision so ball can roll over
+    for (final fixture in body.fixtures) {
+      fixture.setSensor(true);
+    }
+    
     Future.delayed(const Duration(seconds: 3), () => reset());
   }
 
   void reset() {
+    if (!isMounted) return;
     _isDown = false;
-    _joint.motorSpeed = 10.0; // Move up
+    _joint.motorSpeed = -10.0; // Move UP back to position
+    
+    // Re-enable collision
+    for (final fixture in body.fixtures) {
+      fixture.setSensor(false);
+    }
   }
 
   @override
