@@ -27,7 +27,7 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
 -   **Visual Overhaul**: Replaced placeholder graphics with professional-grade sprites and added vibrant VFX.
 -   **Component Scaling**: Enlarged interactive elements (bumpers, drop targets, slingshots) to ensure they are clearly visible.
 -   **Improved Mechanics**: Fixed bumper scoring logic and optimized collision detection.
--   **Tuned Launcher Lane**: Optimized wall layout for consistent ball entry into the playfield.
+-   **Tuned Launcher Lane**: Overhauled wall geometry (45-degree deflection) and launch physics (high-speed vertical launch with spin) for consistent ball entry into the playfield.
 
 ## Controls
 

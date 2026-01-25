@@ -190,11 +190,12 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
-    final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.7);
-    debugPrint('PinballGame: Spawning ball at $ballSpawnPosition with radius 12.0');
+    final launcherLaneX = size.x * 0.93; // True center of 0.88..0.98
+    final ballSpawnPosition = position ?? Vector2(launcherLaneX, size.y * 0.7);
+    debugPrint('PinballGame: Spawning ball at $ballSpawnPosition with radius 6.0');
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
-      radius: 12.0,
+      radius: 4.0, // Restored balanced size
       sprite: ballSprite, 
       initialVelocity: velocity,
     );
@@ -353,7 +354,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     );
 
     // Initialize launcher
-    launcher = Launcher(position: Vector2(size.x * 0.95, size.y * 0.8));
+    final launcherLaneX = size.x * 0.93;
+    launcher = Launcher(position: Vector2(launcherLaneX, size.y * 0.8));
     add(launcher);
 
     // Create realistic wall layout
@@ -479,7 +481,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
   void _createLauncherLaneWalls() {
     // Simplified launcher lane - clear path to main table
     
-    // Left wall of launcher channel (ORIGINAL extended height)
+    // Reverted to original design: 0.88 to 0.98 offsets
+    
+    // Left wall of launcher channel
     add(WallBody(
       position: Vector2(size.x * 0.88, size.y * 0.6), 
       size: Vector2(4.0, size.y * 0.8), 
@@ -488,23 +492,31 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
       color: Colors.orange,
     ));
     
-    // Right wall of launcher channel (full height outer boundary)
+    // Right wall of launcher channel
     add(WallBody(
       position: Vector2(size.x * 0.98, size.y / 2),
-      size: Vector2(3, size.y), // Increased thickness
+      size: Vector2(3, size.y), 
       restitution: 0.1,
-      friction: 0.0, // Removed friction
+      friction: 0.0,
     ));
     
     // NO angled wall at top - clear exit path for ball
     
-    // ORIGINAL top curve (Dumper)
+    // 45-Degree Deflector Geometry
     add(GuideWall([
-      Vector2(size.x * 0.98, size.y * 0.15),
-      Vector2(size.x * 0.95, size.y * 0.05),
-      Vector2(size.x * 0.85, size.y * 0.02),
-      Vector2(size.x * 0.75, size.y * 0.05),
-    ], color: Colors.cyan, restitution: 0.3));
+      Vector2(size.x * 0.98, size.y * 0.25), // Start simple
+      Vector2(size.x * 0.95, size.y * 0.20), // Approach
+      Vector2(size.x * 0.85, size.y * 0.10), // 45-degree ramp (dy=0.10, dx=0.10 -> slope 1)
+      Vector2(size.x * 0.75, size.y * 0.05), // Exit
+    ], color: Colors.cyan, restitution: 0.5));
+    
+    // Launcher Plate (Floor) to prevent ball loss if it falls back
+    add(WallBody(
+      position: Vector2(size.x * 0.93, size.y * 0.98),
+      size: Vector2(size.x * 0.1, 2.0),
+      restitution: 0.2,
+      color: Colors.grey,
+    ));
   }
 
   @override

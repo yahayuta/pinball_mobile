@@ -20,14 +20,14 @@ class Launcher extends BodyComponent with ContactCallbacks {
   final Map<Body, Timer> _removalTimers = {};
   Timer? _autoLaunchTimer;
 
-  Launcher({required this.position, this.maxCharge = 5.0});
+  Launcher({required this.position, this.maxCharge = 10.0});
 
   @override
   Body createBody() {
     final shape = PolygonShape()
       ..setAsBox(
         (game as PinballGame).size.x * 0.1, 
-        50.0, // MUCH taller detection zone (was 10)
+        15.0, // Reduced detection zone height (was 50)
         Vector2.zero(),
         0,
       );
@@ -55,7 +55,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   void increaseCharge(double dt) {
     if (!charging) return;
-    charge += dt * 60.0; // Very fast charging
+    charge += dt * 45.0; // Balanced charging
     if (charge > maxCharge) charge = maxCharge;
   }
 
@@ -73,9 +73,12 @@ class Launcher extends BodyComponent with ContactCallbacks {
     for (final ball in balls) {
       if (!ball.isAwake) ball.setAwake(true);
       // Balanced power for guaranteed clearance
-      final launchSpeed = ((c / maxCharge).clamp(0.5, 1.0)) * 4000.0; 
+      // Fast vertical launch with slight nudge
+      final launchSpeed = ((c / maxCharge).clamp(0.5, 1.0)) * 2400.0; 
       debugPrint('Launcher: Launching $ball at speed $launchSpeed');
-      ball.linearVelocity = Vector2(0, -launchSpeed);
+      ball.linearVelocity = Vector2(-100, -launchSpeed); // Vertical launch with slight left bias
+      ball.angularVelocity = 0.0; 
+
     }
     
     (game as PinballGame).audioManager.playSoundEffect('audio/launcher_release.wav');
@@ -147,15 +150,12 @@ class Launcher extends BodyComponent with ContactCallbacks {
   @override
   void endContact(Object other, Contact contact) {
     if (other is PinballBall) {
-      // Small delay to ignore brief bounces out of the sensor
-      Timer(const Duration(milliseconds: 500), () {
-        if (!_ballsToLaunch.contains(other.body)) return;
-        // If the ball is still launched (velocity up), it's really leaving
-        if (other.body.linearVelocity.y < -1.0) {
-           _ballsToLaunch.remove(other.body);
-           debugPrint('Launcher: Ball departed');
-        }
-      });
+      // Immediate removal to allow re-sensing if it falls back quickly
+      if (!_ballsToLaunch.contains(other.body)) return;
+      if (other.body.linearVelocity.y < -1.0) {
+          _ballsToLaunch.remove(other.body);
+          debugPrint('Launcher: Ball departed');
+      }
     }
   }
 }
