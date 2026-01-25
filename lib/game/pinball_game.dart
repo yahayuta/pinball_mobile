@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flame/input.dart';
+import 'package:flame/events.dart';
 import 'package:flame/components.dart' hide Timer;
 import 'package:flame/camera.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
@@ -27,12 +28,15 @@ import 'components/guide_wall.dart';
 import 'components/out_hole.dart'; // Added import
 import 'components/table_background.dart'; // Added import
 
-class PinballGame extends Forge2DGame with KeyboardEvents implements ContactListener {
+class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implements ContactListener {
   final List<PinballBall> balls = [];
   final Set<PinballBall> _ballsBeingRemoved = {}; // Set to track balls being removed
   late final PinballFlipper leftFlipper;
   late final PinballFlipper rightFlipper;
+  late final PinballFlipper launcherLaneFlipper; // If needed
   late final Launcher launcher;
+
+  final Set<LogicalKeyboardKey> _keysPressed = {};
 
 
   late Sprite playfieldSprite; // Declared
@@ -186,7 +190,8 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
-    final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.75);
+    final ballSpawnPosition = position ?? Vector2(size.x * 0.95, size.y * 0.7);
+    debugPrint('PinballGame: Spawning ball at $ballSpawnPosition with radius 12.0');
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
       radius: 12.0,
@@ -324,14 +329,14 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     final flipperLength = size.x / 5;
     leftFlipper = PinballFlipper(
       position: Vector2(size.x * 0.25, size.y * 0.9),
-      isLeft: false,
+      isLeft: true,
       length: flipperLength,
       audioManager: audioManager,
       sprite: flipperLeftSprite, // Pass left flipper sprite
     );
     rightFlipper = PinballFlipper(
       position: Vector2(size.x * 0.75, size.y * 0.9),
-      isLeft: true,
+      isLeft: false,
       length: flipperLength,
       audioManager: audioManager,
       sprite: flipperRightSprite, // Pass right flipper sprite
@@ -474,13 +479,13 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   void _createLauncherLaneWalls() {
     // Simplified launcher lane - clear path to main table
     
-    // Left wall of launcher channel (extended and thickened to act as main boundary)
+    // Left wall of launcher channel (ORIGINAL extended height)
     add(WallBody(
-      position: Vector2(size.x * 0.88, size.y * 0.6), // Matched to previous outlane X position
-      size: Vector2(4.0, size.y * 0.8), // Thicker (4.0) and tall
+      position: Vector2(size.x * 0.88, size.y * 0.6), 
+      size: Vector2(4.0, size.y * 0.8), 
       restitution: 0.1,
       friction: 0.0,
-      color: Colors.orange, // Visible color
+      color: Colors.orange,
     ));
     
     // Right wall of launcher channel (full height outer boundary)
@@ -493,7 +498,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     
     // NO angled wall at top - clear exit path for ball
     
-    // Top curve (Dumper) to direct ball into playfield
+    // ORIGINAL top curve (Dumper)
     add(GuideWall([
       Vector2(size.x * 0.98, size.y * 0.15),
       Vector2(size.x * 0.95, size.y * 0.05),
@@ -655,8 +660,10 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       camera.viewfinder.zoom = 1.0;
     }
 
-    // Workaround for spacebar KeyUp not being registered on web
-    if (_spacebarWasPressed) {
+    // Workaround for spacebar KeyUp not being registered on certain platforms
+    // If the spacebar was pressed but is no longer in the set of pressed keys,
+    // and we haven't released the charge yet, do it now.
+    if (_spacebarWasPressed && !_keysPressed.contains(LogicalKeyboardKey.space)) {
       launcher.releaseCharge();
       activateBallSave();
       _spacebarWasPressed = false;
@@ -668,12 +675,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
+    _keysPressed.clear();
+    _keysPressed.addAll(keysPressed);
+
     if (_tilted) {
       return KeyEventResult.ignored;
     }
     if (event is KeyDownEvent) {
+      debugPrint('KeyDown: ${event.logicalKey.keyLabel}');
       return _handleKeyDown(event.logicalKey);
     } else if (event is KeyUpEvent) {
+      debugPrint('KeyUp: ${event.logicalKey.keyLabel}');
       return _handleKeyUp(event.logicalKey);
     }
     return KeyEventResult.ignored;
@@ -710,13 +722,13 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
       spawnBall();
       return KeyEventResult.handled;
     }
-    if (key == LogicalKeyboardKey.arrowLeft) {
+    if (key == LogicalKeyboardKey.arrowLeft || key == LogicalKeyboardKey.keyA) {
       leftFlipper.press();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.arrowRight) {
+    } else if (key == LogicalKeyboardKey.arrowRight || key == LogicalKeyboardKey.keyD) {
       rightFlipper.press();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.space) {
+    } else if (key == LogicalKeyboardKey.space || key == LogicalKeyboardKey.enter) {
       launcher.startCharging();
       _spacebarWasPressed = true; // Set flag for workaround
       return KeyEventResult.handled;
@@ -731,18 +743,65 @@ class PinballGame extends Forge2DGame with KeyboardEvents implements ContactList
   }
 
   KeyEventResult _handleKeyUp(LogicalKeyboardKey key) {
-    if (key == LogicalKeyboardKey.arrowLeft) {
+    if (key == LogicalKeyboardKey.arrowLeft || key == LogicalKeyboardKey.keyA) {
       leftFlipper.release();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.arrowRight) {
+    } else if (key == LogicalKeyboardKey.arrowRight || key == LogicalKeyboardKey.keyD) {
       rightFlipper.release();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.space) {
+    } else if (key == LogicalKeyboardKey.space || key == LogicalKeyboardKey.enter) {
       launcher.releaseCharge();
       activateBallSave();
-      _spacebarWasPressed = false; // Reset flag
+      _spacebarWasPressed = false;
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    // Legacy tap handlers disabled in favor of dedicated ControlButtons
+    /*
+    debugPrint('TapDown at ${event.localPosition}');
+    if (_tilted) return;
+    final screenWidth = size.x;
+    final tapX = event.localPosition.x;
+
+    if (tapX < screenWidth * 0.4) {
+      debugPrint('Tap: Left Flipper Press');
+      leftFlipper.press();
+    } else if (tapX > screenWidth * 0.6) {
+      debugPrint('Tap: Right Flipper Press');
+      rightFlipper.press();
+    } else {
+      debugPrint('Tap: Launcher Charge');
+      launcher.startCharging();
+      _spacebarWasPressed = true;
+    }
+    */
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    // Legacy tap handlers disabled in favor of dedicated ControlButtons
+    /*
+    debugPrint('TapUp at ${event.localPosition}');
+    if (_tilted) return;
+    final screenWidth = size.x;
+    final tapX = event.localPosition.x;
+
+    if (tapX < screenWidth * 0.4) {
+      debugPrint('Tap: Left Flipper Release');
+      leftFlipper.release();
+    } else if (tapX > screenWidth * 0.6) {
+      debugPrint('Tap: Right Flipper Release');
+      rightFlipper.release();
+    } else {
+      debugPrint('Tap: Launcher Release');
+      launcher.releaseCharge();
+      activateBallSave();
+      _spacebarWasPressed = false;
+    }
+    */
   }
 }

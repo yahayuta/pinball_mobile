@@ -47,7 +47,8 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
 
 -   [Flutter SDK](https://flutter.dev/docs/get-started/install) (version 3.9.2 or higher)
 -   Dart SDK
--   Android Studio / Xcode (for mobile emulation) or a physical device
+-   **Web Browsers**: Microsoft Edge (recommended), Google Chrome
+-   **Mobile**: Android Studio / Xcode (for mobile emulation) or a physical device
 
 ### Installation
 
@@ -66,9 +67,14 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
 
 3.  **Run the app:**
 
-    ```bash
-    flutter run
-    ```
+    -   **On Mobile / Desktop:**
+        ```bash
+        flutter run
+        ```
+    -   **On Microsoft Edge (Web):**
+        ```bash
+        flutter run -d edge
+        ```
 
 ## Project Structure
 
