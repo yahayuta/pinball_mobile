@@ -32,9 +32,9 @@ class PinballBall extends BodyComponent {
     // Define the body characteristics
     final fixtureDef = FixtureDef(
       shape,
-      density: 1.0,
-      restitution: 0.5, // Reduced bounciness for steel ball
-      friction: 0.05, // Smooth steel ball
+      density: 1.0, // High inertia for stability
+      restitution: 1.0, // Max bounciness
+      friction: 0.0, 
     );
 
     // Create the body definition
@@ -224,8 +224,8 @@ class PinballFlipper extends BodyComponent {
     final shape = PolygonShape()
       ..setAsBox(
         length / 2,
-        length / 5, // thickness
-        Vector2(isLeft ? -length / 2 : length / 2, 0),
+        length / 10, // thinner thickness for better look
+        Vector2(isLeft ? length / 2 : -length / 2, 0), // Pivot is at (0,0)
         0.0,
       );
 
@@ -250,15 +250,19 @@ class PinballFlipper extends BodyComponent {
       ..initialize(anchorBody, flipperBody, position)
       ..enableMotor = true
       ..motorSpeed = 0.0
-      ..maxMotorTorque = 1000000000.0 // Increased max motor torque
+      ..maxMotorTorque = 100000000.0 // Very high torque for snap
       ..enableLimit = true;
 
     if (isLeft) {
-      jointDef.lowerAngle = flipperUpAngle;
-      jointDef.upperAngle = flipperDownAngle;
+      // Left flipper: pivots on left, body extends right
+      // In this coordinate system, negative angle is UP, positive is DOWN
+      jointDef.lowerAngle = -0.6; // UP limit
+      jointDef.upperAngle = 0.5;  // DOWN limit
     } else {
-      jointDef.lowerAngle = -flipperDownAngle;
-      jointDef.upperAngle = -flipperUpAngle;
+      // Right flipper: pivots on right, body extends left
+      // Here, positive angle is UP, negative is DOWN
+      jointDef.lowerAngle = -0.5; // DOWN limit
+      jointDef.upperAngle = 0.6;  // UP limit
     }
 
     final RevoluteJoint newJoint = RevoluteJoint(jointDef);
@@ -273,9 +277,12 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
-      _joint.motorSpeed = isLeft ? -300.0 : 300.0; // Increased to 300
+      // Left flipper needs negative speed to go to lowerAngle (UP)
+      // Right flipper needs positive speed to go to upperAngle (UP)
+      _joint.motorSpeed = isLeft ? -100.0 : 100.0; 
     } else {
-      _joint.motorSpeed = isLeft ? 300.0 : -300.0; // Increased to 300
+      // Return to resting position
+      _joint.motorSpeed = isLeft ? 100.0 : -100.0;
     }
   }
 
@@ -285,13 +292,11 @@ class PinballFlipper extends BodyComponent {
       final height = length / 2.5;
       
       // The body shape is defined as:
-      // Vector2(isLeft ? -length / 2 : length / 2, 0)
-      // So the center of the rect is at (isLeft ? -length/2 : length/2, 0) relative to body position
+      // Vector2(isLeft ? length / 2 : -length / 2, 0)
       
-      // We need to draw the sprite centered at that offset
       sprite!.render(
         canvas, 
-        position: Vector2(isLeft ? -length : 0, -height / 2), 
+        position: Vector2(isLeft ? 0 : -length, -height / 2), 
         size: Vector2(length, height)
       );
     } else {
@@ -314,20 +319,22 @@ class PinballFlipper extends BodyComponent {
   }
 
   void press() {
+    debugPrint('Flipper: ${isLeft ? "LEFT" : "RIGHT"} PRESS');
     _isPressed = true;
     // Access the game instance to use _calculatePan
     // final gameRef = findGame() as PinballGame;
     audioManager.playSoundEffect(
-      'audio/flipper_press.mp3',
+      'audio/flipper_press.wav',
       impactForce: 1.0,
     );
   }
 
   void release() {
+    debugPrint('Flipper: ${isLeft ? "LEFT" : "RIGHT"} RELEASE');
     _isPressed = false;
     // final gameRef = findGame() as PinballGame;
     audioManager.playSoundEffect(
-      'audio/flipper_release.mp3',
+      'audio/flipper_release.wav',
       impactForce: 1.0,
     );
   }
