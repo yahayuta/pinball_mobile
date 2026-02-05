@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,7 @@ class PinballBumper extends BodyComponent with ContactCallbacks {
     final fixtureDef = FixtureDef(
       shape,
       density: 1000.0, // Very heavy - effectively immovable
-      restitution: 1.5, // Active kicking effect
+      restitution: 2.5, // Extreme restitution
       friction: 0.2,
       userData: this,
     );
@@ -207,6 +208,7 @@ class PinballFlipper extends BodyComponent {
   static const double flipperUpAngle = -1.5; // In radians, ~86 degrees up
   static const double flipperDownAngle = 0.6; // In radians, ~34 degrees down
   bool _isPressed = false;
+  double _agitationTime = 0.0; // Timer for agitation oscillation
 
   late final RevoluteJoint _joint;
 
@@ -232,7 +234,7 @@ class PinballFlipper extends BodyComponent {
     final fixtureDef = FixtureDef(
       shape,
       density: 10.0,
-      restitution: 0.5, // Reduced from 1.0
+      restitution: 1.2, // Very bouncy flippers
       friction: 0.4, // Reduced from 0.6 for better contact
     );
 
@@ -277,12 +279,16 @@ class PinballFlipper extends BodyComponent {
     super.update(dt);
 
     if (_isPressed) {
+      _agitationTime += dt;
+      // Ultra-high-frequency agitation
+      final agitation = sin(_agitationTime * 150.0) * 3000.0;
       // Left flipper needs negative speed to go to lowerAngle (UP)
       // Right flipper needs positive speed to go to upperAngle (UP)
-      _joint.motorSpeed = isLeft ? -100.0 : 100.0; 
+      _joint.motorSpeed = (isLeft ? -1200.0 : 1200.0) + agitation; 
     } else {
+      _agitationTime = 0.0; // Reset agitation
       // Return to resting position
-      _joint.motorSpeed = isLeft ? 100.0 : -100.0;
+      _joint.motorSpeed = isLeft ? 1200.0 : -1200.0;
     }
   }
 

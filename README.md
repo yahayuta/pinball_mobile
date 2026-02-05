@@ -19,6 +19,11 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
     -   **Procedural Neon Effects**: Advanced glowing rendering for walls and circular targets with dynamic hit feedback.
     -   **Optimized Scale**: Significantly increased component sizes for better visibility and playability on all screens.
     -   **Dynamic VFX**: Speed-sensitive ball trails and energetic particle impact effects.
+-   **Hyper-Giant Physics Overhaul**:
+    -   **Giant Ball**: Radius pushed to 15.0 for a powerful, high-impact feel.
+    -   **Agitated Flippers**: Violent vibration ("agitation") effect when flippers are held down for intense hit feedback.
+    -   **Hyper-Launcher**: 12000.0 launch force with widened lane (0.75-0.98) for consistent and reliable ball entry.
+    -   **High-Speed World**: Gravity increased to 40.0 for fast-paced, high-G gameplay.
 -   **Audio**: Immersive sound effects using `audioplayers`.
 -   **Social Sharing**: Share your high scores with friends via `share_plus`.
 
@@ -26,8 +31,8 @@ A realistic pinball machine emulation game built with Flutter and Flame. Feature
 
 -   **Visual Overhaul**: Replaced placeholder graphics with professional-grade sprites and added vibrant VFX.
 -   **Component Scaling**: Enlarged interactive elements (bumpers, drop targets, slingshots) to ensure they are clearly visible.
--   **Improved Mechanics**: Fixed bumper scoring logic and optimized collision detection.
--   **Tuned Launcher Lane**: Overhauled wall geometry (45-degree deflection) and launch physics (high-speed vertical launch with spin) for consistent ball entry into the playfield.
+-   **Improved Mechanics**: Fixed bumper scoring logic, optimized collision detection, and introduced "agitated" flipper physics.
+-   **Reliable Launcher Geometry**: Overhauled lane width and deflector curves to ensure giant balls consistently reach the main playfield.
 
 ## Controls
 

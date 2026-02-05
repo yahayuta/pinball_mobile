@@ -111,7 +111,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     this.backgroundImagePath,
   }) : _highScoreManager = highScoreManager,
        lightManager = LightManager(),
-       super(gravity: Vector2(0, 15.0)) {
+       super(gravity: Vector2(0, 40.0)) {
     debugMode = false;
     missionManager = MissionManager(this);
   }
@@ -190,12 +190,12 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
-    final launcherLaneX = size.x * 0.93; // True center of 0.88..0.98
+    final launcherLaneX = size.x * 0.865; // True center of 0.75..0.98
     final ballSpawnPosition = position ?? Vector2(launcherLaneX, size.y * 0.7);
-    debugPrint('PinballGame: Spawning ball at $ballSpawnPosition with radius 6.0');
+    debugPrint('PinballGame: Spawning ball at $ballSpawnPosition with radius 15.0');
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
-      radius: 4.0, // Restored balanced size
+      radius: 15.0, // Balanced large ball
       sprite: ballSprite, 
       initialVelocity: velocity,
     );
@@ -354,7 +354,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     );
 
     // Initialize launcher
-    final launcherLaneX = size.x * 0.93;
+    final launcherLaneX = size.x * 0.865; // Lane center
     launcher = Launcher(position: Vector2(launcherLaneX, size.y * 0.8));
     add(launcher);
 
@@ -483,9 +483,11 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     
     // Reverted to original design: 0.88 to 0.98 offsets
     
-    // Left wall of launcher channel
+    // Widened launcher channel for reliability
+    
+    // Left wall of launcher channel moved to 0.75
     add(WallBody(
-      position: Vector2(size.x * 0.88, size.y * 0.6), 
+      position: Vector2(size.x * 0.75, size.y * 0.6), 
       size: Vector2(4.0, size.y * 0.8), 
       restitution: 0.1,
       friction: 0.0,
@@ -500,20 +502,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
       friction: 0.0,
     ));
     
-    // NO angled wall at top - clear exit path for ball
-    
-    // 45-Degree Deflector Geometry
+    // Smooth Deflector Geometry for large ball
     add(GuideWall([
-      Vector2(size.x * 0.98, size.y * 0.25), // Start simple
-      Vector2(size.x * 0.95, size.y * 0.20), // Approach
-      Vector2(size.x * 0.85, size.y * 0.10), // 45-degree ramp (dy=0.10, dx=0.10 -> slope 1)
-      Vector2(size.x * 0.75, size.y * 0.05), // Exit
-    ], color: Colors.cyan, restitution: 0.5));
+      Vector2(size.x * 0.98, size.y * 0.20), 
+      Vector2(size.x * 0.90, size.y * 0.08), 
+      Vector2(size.x * 0.70, size.y * 0.02), 
+    ], color: Colors.cyan, restitution: 0.8));
     
-    // Launcher Plate (Floor) to prevent ball loss if it falls back
+    // Launcher Plate (Floor) adjusted center
     add(WallBody(
-      position: Vector2(size.x * 0.93, size.y * 0.98),
-      size: Vector2(size.x * 0.1, 2.0),
+      position: Vector2(size.x * 0.865, size.y * 0.98),
+      size: Vector2(size.x * 0.23, 2.0),
       restitution: 0.2,
       color: Colors.grey,
     ));
