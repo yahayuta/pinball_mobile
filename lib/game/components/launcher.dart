@@ -55,7 +55,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   void increaseCharge(double dt) {
     if (!charging) return;
-    charge += dt * 45.0; // Balanced charging
+    charge += dt * 200.0; // Very fast charging
     if (charge > maxCharge) charge = maxCharge;
   }
 
@@ -74,9 +74,9 @@ class Launcher extends BodyComponent with ContactCallbacks {
       if (!ball.isAwake) ball.setAwake(true);
       // Balanced power for guaranteed clearance
       // Fast vertical launch with slight nudge
-      final launchSpeed = ((c / maxCharge).clamp(0.5, 1.0)) * 2400.0; 
+      final launchSpeed = ((c / maxCharge).clamp(0.5, 1.0)) * 12000.0; 
       debugPrint('Launcher: Launching $ball at speed $launchSpeed');
-      ball.linearVelocity = Vector2(-100, -launchSpeed); // Vertical launch with slight left bias
+      ball.linearVelocity = Vector2(-200, -launchSpeed); // Slight horizontal nudge to help clear top curve
       ball.angularVelocity = 0.0; 
 
     }
