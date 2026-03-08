@@ -190,8 +190,9 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
   }
 
   void spawnBall({Vector2? position, Vector2? velocity}) {
-    final launcherLaneX = size.x * 0.865; // True center of 0.75..0.98
-    final ballSpawnPosition = position ?? Vector2(launcherLaneX, size.y * 0.7);
+    final launcherLaneX = size.x * 0.915; // Center between 0.85 and 0.98
+    // Spawn exactly on the launcher plunger (at 0.78 height)
+    final ballSpawnPosition = position ?? Vector2(launcherLaneX, size.y * 0.78); 
     debugPrint('PinballGame: Spawning ball at $ballSpawnPosition with radius 15.0');
     final ball = PinballBall(
       initialPosition: ballSpawnPosition,
@@ -354,7 +355,7 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     );
 
     // Initialize launcher
-    final launcherLaneX = size.x * 0.865; // Lane center
+    final launcherLaneX = size.x * 0.915; // Adjusted lane center
     launcher = Launcher(position: Vector2(launcherLaneX, size.y * 0.8));
     add(launcher);
 
@@ -483,14 +484,14 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     
     // Reverted to original design: 0.88 to 0.98 offsets
     
-    // Widened launcher channel for reliability
+    // Widened launcher channel for reliability -> Narrowed for realism
     
-    // Left wall of launcher channel moved to 0.75
+    // Left wall of launcher channel moved to 0.85 to fit ball radius 15.0
     add(WallBody(
-      position: Vector2(size.x * 0.75, size.y * 0.6), 
+      position: Vector2(size.x * 0.85, size.y * 0.6), 
       size: Vector2(4.0, size.y * 0.8), 
-      restitution: 0.1,
-      friction: 0.0,
+      restitution: 0.0, // No bounce to avoid losing energy side-to-side
+      friction: 0.0, // Frictionless
       color: Colors.orange,
     ));
     
@@ -498,22 +499,22 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     add(WallBody(
       position: Vector2(size.x * 0.98, size.y / 2),
       size: Vector2(3, size.y), 
-      restitution: 0.1,
+      restitution: 0.0, // No bounce
       friction: 0.0,
     ));
     
-    // Smooth Deflector Geometry for large ball
+    // Smoother Deflector Geometry for large ball and high speed
     add(GuideWall([
-      Vector2(size.x * 0.98, size.y * 0.20), 
-      Vector2(size.x * 0.90, size.y * 0.08), 
-      Vector2(size.x * 0.70, size.y * 0.02), 
-    ], color: Colors.cyan, restitution: 0.8));
+      Vector2(size.x * 0.98, size.y * 0.20), // Start lower for smoother curve
+      Vector2(size.x * 0.92, size.y * 0.08), 
+      Vector2(size.x * 0.70, size.y * 0.03), // Goal: enter table at this height
+    ], color: Colors.cyan, restitution: 1.2)); // Extra restitution to boost energy into table
     
     // Launcher Plate (Floor) adjusted center
     add(WallBody(
-      position: Vector2(size.x * 0.865, size.y * 0.98),
-      size: Vector2(size.x * 0.23, 2.0),
-      restitution: 0.2,
+      position: Vector2(size.x * 0.915, size.y * 0.98),
+      size: Vector2(size.x * 0.13, 2.0),
+      restitution: 0.0, // No bounce
       color: Colors.grey,
     ));
   }
@@ -643,7 +644,17 @@ class PinballGame extends Forge2DGame with KeyboardEvents, TapCallbacks implemen
     if (balls.isNotEmpty) {
       final ballsToRemove = <PinballBall>[];
       for (final ball in balls) {
-        if (ball.isMounted && ball.body.position.y > size.y + 10.0) {
+        if (!ball.isMounted) continue;
+        
+        // Restore gravity once the ball leaves the launcher lane or starts falling
+        if (ball.body.gravityScale != 1.0) {
+          if (ball.body.position.x < size.x * 0.85 || ball.body.linearVelocity.y > 0) {
+            ball.body.gravityScale = Vector2(0, 1.0);
+            debugPrint('PinballGame: Restored gravity for ball');
+          }
+        }
+
+        if (ball.body.position.y > size.y + 10.0) {
           ballsToRemove.add(ball);
         }
       }

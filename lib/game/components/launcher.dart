@@ -20,13 +20,13 @@ class Launcher extends BodyComponent with ContactCallbacks {
   final Map<Body, Timer> _removalTimers = {};
   Timer? _autoLaunchTimer;
 
-  Launcher({required this.position, this.maxCharge = 10.0});
+  Launcher({required this.position, this.maxCharge = 40.0});
 
   @override
   Body createBody() {
     final shape = PolygonShape()
       ..setAsBox(
-        (game as PinballGame).size.x * 0.1, 
+        (game as PinballGame).size.x * 0.05, 
         15.0, // Reduced detection zone height (was 50)
         Vector2.zero(),
         0,
@@ -55,7 +55,7 @@ class Launcher extends BodyComponent with ContactCallbacks {
 
   void increaseCharge(double dt) {
     if (!charging) return;
-    charge += dt * 200.0; // Very fast charging
+    charge += dt * 80.0; // Slower charging for better control
     if (charge > maxCharge) charge = maxCharge;
   }
 
@@ -72,12 +72,17 @@ class Launcher extends BodyComponent with ContactCallbacks {
     
     for (final ball in balls) {
       if (!ball.isAwake) ball.setAwake(true);
-      // Balanced power for guaranteed clearance
-      // Fast vertical launch with slight nudge
-      final launchSpeed = ((c / maxCharge).clamp(0.5, 1.0)) * 12000.0; 
-      debugPrint('Launcher: Launching $ball at speed $launchSpeed');
-      ball.linearVelocity = Vector2(-200, -launchSpeed); // Slight horizontal nudge to help clear top curve
+      // Now that ball mass (density 0.005) is correct for its radius (15),
+      // we can use standard linearVelocity safely. Forge2D has velocity caps, 
+      // usually around 120 units/sec, so attempting 500,000 was causing 
+      // the solver to clamp the speed (hence -36 in logs).
+      final launchSpeed = ((c / maxCharge).clamp(0.6, 1.0)) * 180.0; // Increased base speed
+      debugPrint('Launcher: Applying velocity $launchSpeed to $ball');
+      ball.linearVelocity = Vector2(0, -launchSpeed); // Pure vertical
       ball.angularVelocity = 0.0; 
+      
+      // Temporarily remove gravity so the ball reaches the deflector curve without slowing down
+      ball.gravityScale = Vector2.zero();
 
     }
     
@@ -135,9 +140,17 @@ class Launcher extends BodyComponent with ContactCallbacks {
       }
     }
     
-    // Auto-fire if balls are present and not charging
-    if (_ballsToLaunch.isNotEmpty && !charging && !_rebounding) {
-       startCharging();
+    // Auto-fire with delay to allow manual control first
+    if (_ballsToLaunch.isNotEmpty && !charging && !_rebounding && _autoLaunchTimer == null) {
+      _autoLaunchTimer = Timer(const Duration(milliseconds: 1000), () { // Reduced from 2500 for higher frequency
+        if (_ballsToLaunch.isNotEmpty && !charging) {
+          startCharging();
+        }
+        _autoLaunchTimer = null;
+      });
+    } else if (_ballsToLaunch.isEmpty) {
+      _autoLaunchTimer?.cancel();
+      _autoLaunchTimer = null;
     }
   }
 
