@@ -255,7 +255,7 @@ class SpaceAdventureTable extends PinballGame {
     
     await add(RolloverSwitch(
       id: 'launcher_exit',
-      position: Vector2(size.x * 0.92, size.y * 0.50),
+      position: Vector2(size.x * 0.915, size.y * 0.50),
       onActivate: (ball) {
         scoringManager.awardSkillShot();
         addScore(1000, ball.body.position); // Base skill shot bonus
